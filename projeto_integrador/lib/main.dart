@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:projeto_integrador/pages/create_account_page.dart';
 import 'package:projeto_integrador/pages/login_page.dart';
 import 'package:projeto_integrador/themes/light_mode.dart';
 
 void main() {
   runApp(MaterialApp(
-    home: const LoginPage(),
+    initialRoute: '/login',
+    routes: {
+      '/login': (context) => LoginPage(),
+      '/createAccount': (context) => CreateAccountPage()
+    },
     theme: lightMode,
     debugShowCheckedModeBanner: false,
   ));
