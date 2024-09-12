@@ -1,7 +1,40 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
+import 'package:projeto_integrador/components/custom_button.dart';
+import 'package:projeto_integrador/components/custom_textfield.dart';
 
 class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+
+  final TextEditingController _usernameControler = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  LoginPage({super.key});
+
+  void login() async {
+    try {
+      String username = _usernameControler.text;
+      String password = _passwordController.text;
+
+      final response = await post(
+      Uri.parse("http://10.0.2.2:8080/login"), // substituir pela URL do servidor
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({'username': username, 'password': password}),
+    );
+
+    if (response.statusCode == 200) {
+      print('Success: ${response.body}');
+    } else {
+      print('Failed to login. Status code: ${response.statusCode}');
+    }
+
+    } catch (e) {
+      print(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,45 +69,13 @@ class LoginPage extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 50),
                 child: Column(
                   children: [
-                    TextField(
-                      cursorColor: Color(0xFF8F8F8F),
-                      decoration: InputDecoration(
-                        label: Text("E-mail"),
-                        labelStyle: TextStyle(color: Color(0xFF8F8F8F)),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Color(0xFF8F8F8F)),
-                        ),
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Color(0xFF8F8F8F)),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Color(0xFF8F8F8F)),
-                        ),
-                        focusColor: Color(0xFF8F8F8F)
-                      ),
-                    ),
+                    CustomTextfield(controller: _usernameControler, label: "E-mail"),
               
                     const SizedBox(height: 15,),
           
-                    const TextField(
-                      cursorColor: Color(0xFF8F8F8F),
-                      decoration: InputDecoration(
-                        label: Text("Senha"),
-                        labelStyle: TextStyle(color: Color(0xFF8F8F8F)),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Color(0xFF8F8F8F))
-                        ),
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Color(0xFF8F8F8F)),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Color(0xFF8F8F8F)),
-                        ),
-                        focusColor: Color(0xFF8F8F8F)
-                      )
-                    ),
+                    CustomTextfield(controller: _passwordController, label: "Senha"),
                     
-                    SizedBox(height: 5,),
+                    const SizedBox(height: 5,),
 
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -95,26 +96,9 @@ class LoginPage extends StatelessWidget {
 
                     const SizedBox(height: 5,),
 
-                    Container(
+                    SizedBox(
                       width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: null,
-                        style: ButtonStyle(
-                          backgroundColor: WidgetStateProperty.all(Theme.of(context).colorScheme.secondary),
-                          shape: WidgetStateProperty.all(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8.0), // Define o border radius de 8px
-                            ),
-                          )
-                        ),
-                        child: Text(
-                          "Entrar",
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.surface,
-                            fontWeight: FontWeight.bold
-                          ),
-                        )
-                      ),
+                      child: CustomButton(onPressed: login)
                     ),
 
                     const SizedBox(height: 5,),
@@ -133,19 +117,25 @@ class LoginPage extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
+                        const Text(
                           "Não possui uma conta? ",
                           style: TextStyle(
                             fontSize: 15
                           ),
                         ),
-                        Text(
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/createAccount');
+                          },
+                          child: Text(
                           "Crie uma",
                           style: TextStyle(
                             color: Theme.of(context).colorScheme.error,
                             fontSize: 15,
                             fontWeight: FontWeight.w600
                           ),
+                          )
+                          
                         )
                       ],
                     )
