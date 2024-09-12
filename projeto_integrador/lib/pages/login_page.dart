@@ -98,7 +98,7 @@ class LoginPage extends StatelessWidget {
 
                     SizedBox(
                       width: double.infinity,
-                      child: CustomButton(onPressed: login)
+                      child: CustomButton(onPressed: login, label: "Entrar",)
                     ),
 
                     const SizedBox(height: 5,),
