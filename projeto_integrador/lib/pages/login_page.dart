@@ -12,7 +12,7 @@ class LoginPage extends StatelessWidget {
 
   LoginPage({super.key});
 
-  void login() async {
+  void login(BuildContext context) async {
     try {
       String username = _usernameControler.text;
       String password = _passwordController.text;
@@ -33,6 +33,8 @@ class LoginPage extends StatelessWidget {
 
     } catch (e) {
       print(e);
+    } finally {
+      Navigator.pushNamed(context, '/home');
     }
   }
 
@@ -66,7 +68,7 @@ class LoginPage extends StatelessWidget {
               const SizedBox(height: 40,),
           
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 50),
+                padding: const EdgeInsets.symmetric(horizontal: 50),
                 child: Column(
                   children: [
                     CustomTextfield(controller: _usernameControler, label: "E-mail"),
@@ -98,7 +100,7 @@ class LoginPage extends StatelessWidget {
 
                     SizedBox(
                       width: double.infinity,
-                      child: CustomButton(onPressed: login, label: "Entrar",)
+                      child: CustomButton(onPressed: () {login(context);} , label: "Entrar",)
                     ),
 
                     const SizedBox(height: 5,),

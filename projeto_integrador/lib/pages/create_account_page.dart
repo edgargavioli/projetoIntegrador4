@@ -85,7 +85,7 @@ class CreateAccountPage extends StatelessWidget {
                         ),
                         TextButton(
                           onPressed: () {
-                            Navigator.pushNamed(context, '/login');
+                            Navigator.pop(context);
                           },
                           child: Text(
                           "Entrar",
