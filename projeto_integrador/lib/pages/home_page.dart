@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:projeto_integrador/components/custom_app_bar.dart';
+import 'package:projeto_integrador/components/custom_menu_bar.dart';
 import 'package:projeto_integrador/components/custom_textfield.dart';
 import 'package:projeto_integrador/models/item.dart';
 import 'package:http/http.dart' as http;
@@ -49,6 +50,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: const CustomAppBar(),
       backgroundColor: Theme.of(context).colorScheme.surface,
+      bottomNavigationBar: CustomMenuBar(),
       body: Padding(
         padding: const EdgeInsets.only(top: 40),
         child: Column(
