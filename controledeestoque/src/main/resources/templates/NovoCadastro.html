@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KeepInventory</title>
+
+  <link rel="stylesheet" th:href="@{/stylesheets/style.css}">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&family=Montserrat:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@100;200;300;400&display=swap" rel="stylesheet">
+
+</head>
+<body>
+
+  <div class="navbar">
+    <div class="toggle-btn" onclick="toggleSidebar()">
+      <img src="/img/burguer.png" alt="Toggle" class="toggle-image">
+    </div>
+    <div class="navbar-right">
+      <a href="/page/Avisos">
+        <img src="/img/campainha-off.png" alt="Alerts" class="navbar-campainha">
+      </a>
+      <a href="/page/Usuarios">
+        <img src="/img/usuario.png" alt="User" class="navbar-user-image">
+      </a>
+    </div>
+  </div>
+
+  <div id="mySidebar" class="sidebar">
+    <a href="/page/infoGeral">
+      <button class="sidebar-btn" >
+        <img src="/img/inventario.png" alt="Toggle" class="sidebar-image">
+        <a class="sidebar-text">Inventário</a>
+      </button>
+    </a>
+    <a href="/page/NovoCadastro">
+      <button class="sidebar-btn" >
+        <img src="/img/cadastrar.png" alt="Toggle" class="sidebar-image">
+        <a class="sidebar-text">Cadastrar</a>
+      </button>
+    </a>
+    <a href="/page/activeFieldRegistration">
+      <button class="sidebar-btn" >
+        <img src="/img/active.png" alt="Toggle" class="sidebar-image">
+        <a class="sidebar-text">Campos Ativos</a>
+      </button>
+    </a>
+    <a href="/page/location">
+      <button class="sidebar-btn" >
+        <img src="/img/location.png" alt="Toggle" class="sidebar-image">
+        <a class="sidebar-text">Localização</a>
+      </button>
+    </a>
+    <a href="/page/Usuarios">
+      <button class="sidebar-btn" >
+        <img src="/img/user.png" alt="Toggle" class="sidebar-image">
+        <a class="sidebar-text">Usuários</a>
+      </button>
+    </a>
+  </div>
+
+  <div class="main-content" th:object="${data}">
+
+    <div class="info-container">
+      <div class="info-text">
+        <a class="item-text" th:text="${isEdit} ? 'Editar item' : 'Novo Cadastro'"></a>
+      </div>
+      <div class="info-buttons">
+        <div class="buttons">
+          <button type="submit" class="body-btn-salvar" form="formCadastro">
+            Salvar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <form id="formCadastro" th:action="@{/page/NovoCadastro}" th:method="post">
+
+      <input type="hidden" th:field="*{id_item}">
+
+      <div class="input-container-novo-cadastro">
+        <div class="input-group">
+          <label for="input2">Item</label>
+          <input id="input2" type="text" th:field="*{descricao}" placeholder="Notebook" required>
+        </div>
+        <div class="input-group">
+          <label for="input5">Número de Série</label>
+          <input id="input5" type="text" th:field="*{numero_de_serie}" placeholder="20222720" required>
+        </div>
+        <div class="input-group">
+          <label for="input-disponibilidade">Disponibilidade</label>
+          <select id="input-disponibilidade" th:field="*{estado}" required>
+            <option value="">Selecione a disponibilidade</option>
+            <option th:each="state : ${states}" th:value="${state.id_estado}" th:text="${state.nome}"></option>
+          </select>
+        </div>
+      </div>
+      <div class="input-container-novo-cadastro">
+        <div class="input-group">
+          <label for="input3">Marca</label>
+          <select id="input3" th:field="*{marca}" required>
+            <option value="">Selecione a marca</option>
+            <option th:each="brand : ${brands}" th:value="${brand.id_marca}" th:text="${brand.nome}"></option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label for="input4">Modelo</label>
+          <select id="input4" th:field="*{modelo}" required>
+            <option value="">Selecione o modelo</option>
+            <option th:each="model : ${models}" th:value="${model.id_model}" th:text="${model.nome}"></option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label for="input6">Categoria</label>
+          <select id="input6" th:field="*{categoria}" required>
+            <option value="">Selecione a categoria</option>
+            <option th:each="category : ${categories}" th:value="${category.id_categoria}" th:text="${category.nome}"></option>
+          </select>
+        </div>
+      </div>
+      <div class="input-container-novo-cadastro">
+        <div class="input-group">
+          <label for="input7">Origem</label>
+          <select id="input7" th:field="*{localizacao}" required>
+            <option value="">Selecione o local de origem</option>
+            <option th:each="location : ${locations}" th:value="${location.id_localizacao}" th:text="${location.nome}"></option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label for="input8">Local Atual</label>
+          <select id="input8" th:field="*{localizacao_atual}" required>
+            <option value="">Selecione o local atual</option>
+            <option th:each="location : ${locations}" th:value="${location.nome}" th:text="${location.nome}"></option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label for="input10">Potência</label>
+          <input id="input10" type="text" th:field="*{potencia}" placeholder="127" required>
+        </div>
+      </div>
+      <div class="input-container-novo-cadastro">
+        <div class="input-group">
+          <label for="input11">Nota Fiscal</label>
+          <input id="input11" type="text" th:field="*{numero_nota_fiscal}" placeholder="123456789" required>
+        </div>
+        <div class="input-group">
+          <label for="input12">Data da Nota Fiscal</label>
+          <input id="input12" type="date" th:field="*{data_nota_fiscal}" placeholder="2024-03-30" required>
+        </div>
+        <div class="input-group">
+          <label for="input9">Data de Entrada</label>
+          <input id="input9" type="date" th:field="*{data_entrada}" placeholder="2024-03-30" required>
+        </div>
+      </div>
+      <div class="input-container-novo-cadastro">
+        <div class="input-group">
+          <label for="input13">Última Manutenção</label>
+          <input id="input13" type="date" th:field="*{ultima_qualificacao}" placeholder="2024-03-30" required>
+        </div>
+        <div class="input-group">
+          <label for="input14">Próxima Manutenção</label>
+          <input id="input14" type="date" th:field="*{proxima_qualificacao}" placeholder="2024-03-30" required>
+        </div>
+        <div class="input-group">
+          <label for="input15">Prazo de Manutenção</label>
+          <input id="input15" type="date" th:field="*{prazo_manutencao}" placeholder="2024-03-30" required>
+        </div>
+      </div>
+      <div class="input-container-novo-cadastro">
+        <div class="input-group">
+          <label for="input16">Comentários Sobre a Última Manutenção</label>
+          <input id="input16" type="text" th:field="*{comentario_manutencao}" placeholder="Comentário" required>
+        </div>
+        <div class="input-group">
+          <label for="input17">Status</label>
+          <select id="input17" th:field="*{status}" required>
+            <option value="">Selecione o status</option>
+            <option th:each="status : ${statuses}" th:value="${status.id_status}" th:text="${status.nome}"></option>
+          </select>
+        </div>
+        <div class="input-group" style="display: none;">
+          <label for="input18">Anexo</label>
+          <input id="input18" type="text" placeholder="Anexar novo arquivo">
+        </div>
+      </div>
+
+    </form>
+
+  </div>
+
+  <script th:src="@{/navbar.js}"></script>
+  <script th:src="@{/input.js}"></script>
+
+</body>
+</html>

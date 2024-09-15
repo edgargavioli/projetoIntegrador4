@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KeepInventory</title>
+
+  <link rel="stylesheet" th:href="@{/stylesheets/style.css}">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&family=Montserrat:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@100;200;300;400&display=swap" rel="stylesheet">
+
+</head>
+<body>
+  <div class="navbar">
+    <div class="toggle-btn" onclick="toggleSidebar()">
+      <img src="/img/burguer.png" alt="Toggle" class="toggle-image">
+    </div>
+    <div class="navbar-right">
+      <a href="/page/Avisos">
+        <img src="/img/campainha-off.png" alt="Alerts" class="navbar-campainha">
+      </a>
+      <a href="/page/Usuarios">
+        <img src="/img/usuario.png" alt="User" class="navbar-user-image">
+      </a>
+    </div>
+  </div>
+
+  <div id="mySidebar" class="sidebar">
+    <a href="/page/infoGeral">
+      <button class="sidebar-btn" >
+        <img src="/img/inventario.png" alt="Toggle" class="sidebar-image">
+        <a class="sidebar-text">Inventário</a>
+      </button>
+    </a>
+    <a href="/page/NovoCadastro">
+      <button class="sidebar-btn" >
+        <img src="/img/cadastrar.png" alt="Toggle" class="sidebar-image">
+        <a class="sidebar-text">Cadastrar</a>
+      </button>
+    </a>
+    <a href="/page/activeFieldRegistration">
+      <button class="sidebar-btn" >
+        <img src="/img/active.png" alt="Toggle" class="sidebar-image">
+        <a class="sidebar-text">Campos Ativos</a>
+      </button>
+    </a>
+    <a href="/page/location">
+      <button class="sidebar-btn" >
+        <img src="/img/location.png" alt="Toggle" class="sidebar-image">
+        <a class="sidebar-text">Localização</a>
+      </button>
+    </a>
+    <a href="/page/Usuarios">
+      <button class="sidebar-btn" >
+        <img src="/img/user.png" alt="Toggle" class="sidebar-image">
+        <a class="sidebar-text">Usuários</a>
+      </button>
+    </a>
+  </div>
+
+  <div class="main-content" th:object="${item}">
+
+    <div class="info-container">
+      <div class="info-text">
+        <a class="item-text" th:text="${item.descricao}"></a>
+      </div>
+      <div class="info-buttons">
+        <div class="buttons">
+          <a th:href="@{/page/EditarItem(id=${item.id_item})}">
+            <button class="body-btn">
+              <img src="/img/plus.png" alt="Image description" class="button-img">
+              Atualizar Item
+            </button>
+          </a>
+          <a th:href="@{/page/Emprestimo(id=${item.id_item})}">
+            <button class="body-btn">
+              <img src="/img/plus.png" alt="Image description" class="button-img">
+              Novo Empréstimo
+            </button>
+          </a>
+          <a th:href="@{/page/Devolucao(id=${item.id_item})}">
+            <button class="body-btn">
+              <img src="/img/plus.png" alt="Image description" class="button-img">
+              Devolução
+            </button>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="input-container" >
+      <div class="input-group">
+        <label for="input2">Item</label>
+        <input id="input2" type="text" th:value="${item.descricao}" readonly>
+      </div>
+      <div class="input-group">
+        <label for="input11">Numero De Serie</label>
+        <input id="input11" type="text" th:value="${item.numero_de_serie}" readonly>
+      </div>
+      <div class="input-group">
+        <label for="input-disponibilidade">Disponibilidade</label>
+        <input id="input-disponibilidade" type="text" th:value="${item.estado.nome}" th:classappend="${item.estado.nome == 'Disponivel' ? 'green' : item.estado.nome == 'Emprestado' ? 'blue' : 'yellow'}" readonly>
+      </div>
+    </div>
+    <div class="input-container">
+      <div class="input-group">
+        <label for="input6">Marca</label>
+        <input id="input6" type="text" th:value="${item.marca.nome}" readonly>
+      </div>
+      <div class="input-group">
+        <label for="input7">Modelo</label>
+        <input id="input7" type="text" th:value="${item.modelo.nome}" readonly>
+      </div>
+      <div class="input-group">
+        <label for="input8">Categoria</label>
+        <input id="input8" type="text" th:value="${item.categoria.nome}" readonly>
+      </div>
+    </div>
+    <div class="input-container">
+      <div class="input-group">
+        <label for="input3">Origem</label>
+        <input id="input3" type="text" th:value="${item.localizacao.nome}" readonly>
+      </div>
+      <div class="input-group">
+        <label for="input4">Local Atual</label>
+        <input id="input4" type="text" th:value="${item.localizacao_atual}" readonly>
+      </div>
+      <div class="input-group">
+        <label for="input9">Potência</label>
+        <input id="input9" type="text" th:value="${item.potencia}" readonly>
+      </div>
+    </div>
+    <div class="input-container">
+      <div class="input-group">
+        <label for="input10">Nota Fiscal</label>
+        <input id="input10" type="text" th:value="${item.numero_nota_fiscal}" readonly>
+      </div>
+      <div class="input-group">
+        <label for="input18">Data da Nota Fiscal</label>
+        <input id="input18" type="text" th:value="${item.data_nota_fiscal}" readonly>
+      </div>
+      <div class="input-group">
+        <label for="input5">Data de Entrada</label>
+        <input id="input5" type="text" th:value="${item.data_entrada}" readonly>
+      </div>
+    </div>
+    <div class="input-container">
+      <div class="input-group">
+        <label for="input12">Última Manutenção</label>
+        <input id="input12" type="text" th:value="${item.ultima_qualificacao}" readonly>
+      </div>
+      <div class="input-group">
+        <label for="input13">Próxima Manutenção</label>
+        <input id="input13" type="text" th:value="${item.proxima_qualificacao}" readonly>
+      </div>
+      <div class="input-group">
+        <label for="input14">Prazo de Manutenção</label>
+        <input id="input14" type="text" th:value="${item.prazo_manutencao}" readonly>
+      </div>
+    </div>
+    <div class="input-container">
+      <div class="input-group">
+        <label for="input15">Comentários Sobre a Última Manutenção</label>
+        <input id="input15" type="text" th:value="${item.comentario_manutencao}" readonly>
+      </div>
+      <div class="input-group">
+        <label for="input16">Status</label>
+        <input id="input16" type="text" th:value="${item.status.nome}" readonly>
+      </div>
+      <!--      colocar no banco ?  -->
+      <div class="input-group" style="display: none;">
+        <label for="input17">Anexo</label>
+        <input id="input17" type="text" value="Anexar novo arquivo" readonly>
+      </div>
+    </div>
+
+    <div class="line"></div>
+
+    <div class="tab-container">
+      <button class="tab-button" id="tab1">Histórico</button>
+    </div>
+
+    <div class="content-container" th:each="action : ${actions}">
+      <div id="content1" th:class="'tab-content ' + (${action.id_estado == 3 ? 'status-yellow' :
+        (action.id_estado == 2 ? 'status-blue' : 'status-green')})">
+        <p>
+        <span th:text="${action.usuario.nome}"></span> <span th:text="${action.id_estado == 1 ? 'devolveu' : action.id_estado == 2 ? 'emprestou' : 'mandou para manutenção'}"></span>
+          para  <span th:text="${action.id_estado == 1 ? action.item.localizacao.nome : 'empresa ' + action.entidade}"></span> no dia <span th:text="${action.data_emprestimo}"></span>.
+      </div>
+      </p>
+      <button class="content-button" id="button1" style="display: none;"></button>
+    </div>
+
+    <div class="content-container" style="display: none;">
+      <div id="content4" class="tab-content">Anexo de relatórios de manutenção.</div>
+      <button class="content-button" id="button4"></button>
+    </div>
+
+  </div>
+
+  <script th:src="@{/navbar.js}"></script>
+  <script th:src="@{/input.js}"></script>
+
+</body>
+</html>
