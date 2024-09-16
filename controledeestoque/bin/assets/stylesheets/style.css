@@ -1,0 +1,378 @@
+:root {
+  --main-background-color: #f0f0f0;
+  --main-background-color-2: #243646;
+  --main-text-color: #121619;
+  --main-text-color-2: #2e2e2e;
+  --light-gray: #f1f1f1;
+  --blue-color: #1e88e5;
+  --white-color: #fafbfc;
+  --gray-code: #c4c7c5;
+  --dark-gray-code: #6c757d;
+  --orange-code: #fa903e;
+  --purple-code: #c589f8;
+  --green-code: #52b788;
+  --red-code: #ea0044;
+  --yellow-code: #ffda6a;
+  --dark-yellow-code: #ffc107;
+  --input-background-color: #edf0f2;
+  --button-background-color: #52b788;
+}
+
+* {
+  font-family: 'Manrope', sans-serif;
+}
+
+body {
+  background: var(--main-background-color);
+  background-color: var(--main-background-color);
+  margin: 0;
+}
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: transparent;
+}
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.logo {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.logo img {
+  width: 750px;
+  height: 750px;
+}
+.linha-azul {
+  background-color: var(--main-background-color-2);
+  width: 100%;
+  height: 35px;
+  margin-bottom: 2.5rem;
+}
+.form {
+  flex: 1;
+  background-color: var(--main-background-color);
+  margin: 20px;
+  padding: 20px;
+  border-radius: 10px;
+}
+.label-username {
+  color: var(--main-text-color);
+  font-size: 1rem;
+  margin-bottom: 5px;
+}
+.label-senha {
+  color: var(--main-text-color);
+  font-size: 1rem;
+  margin-bottom: 5px;
+}
+.input-username {
+  padding-bottom: 20px;
+}
+.form label {
+  font-size: 1rem;
+  color: var(--main-text-color);
+  margin-bottom: 5px;
+}
+.form input {
+  width: 100%;
+  height: 60px;
+  padding: 0 10px;
+  font-family: 'Manrope', sans-serif;
+  color: var(--dark-gray-code);
+  font-size: 0.9rem;
+  border: transparent;
+  border-radius: 5px;
+  box-sizing: border-box;
+  outline: none;
+}
+.form input:focus {
+  border: 1px solid var(--main-text-color-2);
+}
+.manter-conectado {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  padding-bottom: 5px;
+}
+.form .manter-conectado label {
+  font-size: 1rem;
+  color: var(--main-text-color);
+  margin: auto 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.manter-conectado input {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
+.form .submit {
+  width: 100%;
+  height: 60px;
+  margin-top: 10px;
+  font-family: 'Manrope', sans-serif;
+  color: var(--white-color);
+  font-size: 0.9rem;
+  background-color: var(--red-code);
+  border: 1px solid var(--white-color);
+  border-radius: 20px;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+  outline: none;
+  cursor: pointer;
+}
+.esqueceu {
+  color: var(--main-text-color);
+  text-decoration: none;
+  text-align: right;
+  display: block;
+  font-weight: 500;
+}
+.crie-conta {
+  margin-top: 1rem;
+  color: var(--main-text-color);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.logon-page {
+  background-color: var(--main-background-color-2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+.logon-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+}
+.form-logon {
+  display: flex;
+  justify-content: space-between;
+  flex: 1;
+  background-color: transparent;
+  margin: 20px;
+  padding: 20px;
+  border-radius: 10px;
+}
+.form-content {
+  display: flex;
+  flex-direction: column;
+  background-color: transparent;
+}
+.linha-vermelha {
+  height: 35px;
+  background-color: var(--red-code);
+  margin-bottom: 10px;
+}
+.columns {
+  display: flex;
+  justify-content: space-between;
+  background-color: transparent;
+  width: 1000px;
+}
+.column-logon {
+  display: flex;
+  flex-direction: column;
+  background-color: transparent;
+  width: 50%;
+  justify-content: center;
+}
+.column input {
+  margin-bottom: 10px;
+  background-color: transparent;
+}
+.form2 {
+  flex: 1;
+  background-color: var(--main-background-color);
+  margin: 20px 20px 20px 0;
+  padding: 0;
+  border-radius: 10px;
+}
+.form2 input {
+  width: 100%;
+  height: 60px;
+  padding: 0 10px;
+  font-family: 'Manrope', sans-serif;
+  color: var(--dark-gray-code);
+  font-size: 0.9rem;
+  border: transparent;
+  border-radius: 5px;
+  box-sizing: border-box;
+  outline: none;
+}
+.form2 input:focus {
+  border: 1px solid var(--main-text-color-2);
+}
+.form3 {
+  flex: 1;
+  background-color: var(--main-background-color);
+  margin: 20px 0px 20px 20px;
+  padding: 0;
+  border-radius: 10px;
+}
+.form3 input {
+  width: 100%;
+  height: 60px;
+  padding: 0 10px;
+  font-family: 'Manrope', sans-serif;
+  color: var(--dark-gray-code);
+  font-size: 0.9rem;
+  border: transparent;
+  border-radius: 5px;
+  box-sizing: border-box;
+  outline: none;
+}
+.form3 input:focus {
+  border: 1px solid var(--main-text-color-2);
+}
+.label-username-2 {
+  color: var(--white-color);
+  background-color: var(--main-background-color-2);
+  font-size: 1rem;
+  padding-bottom: 5px;
+}
+.input-username-2 {
+  padding-bottom: 20px;
+  background-color: var(--main-background-color-2);
+}
+.label-sobrenome-2 {
+  color: var(--white-color);
+  background-color: var(--main-background-color-2);
+  font-size: 1rem;
+  padding-bottom: 5px;
+}
+.input-sobrenome-2 {
+  padding-bottom: 20px;
+  background-color: var(--main-background-color-2);
+}
+.label-email-2 {
+  color: var(--white-color);
+  background-color: var(--main-background-color-2);
+  font-size: 1rem;
+  padding-bottom: 5px;
+}
+.input-email-2 {
+  padding-bottom: 20px;
+  background-color: var(--main-background-color-2);
+}
+.label-senha-2 {
+  color: var(--white-color);
+  background-color: var(--main-background-color-2);
+  font-size: 1rem;
+  padding-bottom: 5px;
+}
+.input-senha-2 {
+  padding-bottom: 20px;
+  background-color: var(--main-background-color-2);
+}
+.label-numero-cadastro-2 {
+  color: var(--white-color);
+  background-color: var(--main-background-color-2);
+  font-size: 1rem;
+  padding-bottom: 5px;
+}
+.input-numero-cadastro-2 {
+  padding-bottom: 20px;
+  background-color: var(--main-background-color-2);
+}
+.form-logon .submit {
+  width: 20%;
+  height: 60px;
+  margin-top: 0px;
+  font-family: 'Manrope', sans-serif;
+  color: var(--white-color);
+  font-size: 0.9rem;
+  background-color: var(--red-code);
+  border: 1px solid var(--white-color);
+  border-radius: 20px;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+  outline: none;
+  cursor: pointer;
+}
+.entrar-conta {
+  margin-top: 1.5rem;
+  color: var(--white-color);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+// Active Field Registration
+.containerActiveField {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+  width: 100%;
+  background-color: var(--main-background-color);
+}
+
+.containerActiveField .headerActiveField {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+}
+.containerActiveField .headerActiveField .buttonActiveField {
+  width: 172px;
+  height: 60px;
+  border-radius: 20px;
+  background-color: var(--button-background-color);
+  border: none;
+  color: white;
+}
+.containerActiveField .headerActiveField .buttonActiveField:hover {
+  background-color: #4ba47b;
+  transition: 0.3s;
+}
+.containerActiveField .hrActiveField {
+  background-color: #d9d9d9;
+  margin-left: 10px;
+}
+.containerActiveField .formActiveField {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 1rem;
+  gap: 2rem;
+}
+.containerActiveField .formActiveField .selectActiveField {
+  display: flex;
+  flex-direction: column;
+  width: 20%;
+}
+
+.containerActiveField .formActiveField .inputActiveField {
+  width: 100%;
+  height: 60px;
+  padding: 1rem;
+  font-family: 'Manrope', sans-serif;
+  color: var(--dark-gray-code);
+  font-size: 0.9rem;
+  border-radius: 5px;
+  box-sizing: border-box;
+  outline: none;
+  background-color: var(--input-background-color);
+}
+
+.containerActiveField .flex {
+  display: flex;
+  gap: 5rem;
+  width: 100%;
+}
+
+.containerActiveField #hideMarca {
+  display: none;
+}

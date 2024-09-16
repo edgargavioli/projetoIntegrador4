@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" href="/assets/stylesheets/style.css" />
+
+    <title>Inventário</title>
+  </head>
+  <body>
+    <div class="containerActiveField">
+      <div class="activeField">
+        <div class="headerActiveField">
+          <h1>Cadastro de campo ativo</h1>
+          <button
+            type="submit"
+            form="formActiveField"
+            class="buttonActiveField"
+          >
+            Salvar
+          </button>
+        </div>
+        <hr class="hrActiveField" />
+        <form action="" class="formActiveField" id="formActiveField">
+          <div class="selectActiveField">
+            <label for="a">Seleção de Campo Ativo</label>
+            <select name="a" id="a" class="inputActiveField">
+              <option selected option="" disabled>
+                Selecione um campo ativo
+              </option>
+              <option value="Marca">Marca</option>
+              <option value="Modelo">Modelo</option>
+              <option value="Categoria">Categoria</option>
+            </select>
+          </div>
+          <div class="flex">
+            <div class="selectActiveField">
+              <label for="b">Nome do campo ativo</label>
+              <input
+                type="text"
+                name="b"
+                id="b"
+                class="inputActiveField"
+                placeholder="Digite o nome do campo ativo"
+              />
+            </div>
+            <div class="selectActiveField" id="hideMarca">
+              <label for="ab">Marca</label>
+              <select name="ab" id="ab" class="inputActiveField">
+                <option selected option="" disabled>
+                  Selecione um campo ativo
+                </option>
+                <option value="Marca 1">Marca 1</option>
+                <option value="Marca 2">Marca 2</option>
+                <option value="Marca 3">Marca 3</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
+
+  <script>
+    const select = document.getElementById('a');
+    const hideMarca = document.getElementById('hideMarca');
+
+    select.addEventListener('change', (e) => {
+      if (e.target.value === 'Modelo') {
+        hideMarca.style.display = 'block';
+      } else {
+        hideMarca.style.display = 'none';
+      }
+    });
+  </script>
+</html>

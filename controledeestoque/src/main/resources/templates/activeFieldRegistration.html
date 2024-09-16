@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KeepInventory</title>
+  <link rel="stylesheet" th:href="@{/stylesheets/style.css}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&family=Montserrat:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@100;200;300;400&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="navbar">
+  <div class="toggle-btn" onclick="toggleSidebar()">
+    <img src="/img/burguer.png" alt="Toggle" class="toggle-image">
+  </div>
+  <div class="navbar-right">
+    <a href="/page/Avisos">
+      <img src="/img/campainha-off.png" alt="Alerts" class="navbar-campainha">
+    </a>
+    <a href="/page/Usuarios">
+      <img src="/img/usuario.png" alt="User" class="navbar-user-image">
+    </a>
+  </div>
+</div>
+
+<div id="mySidebar" class="sidebar">
+  <a href="/page/infoGeral">
+    <button class="sidebar-btn">
+      <img src="/img/inventario.png" alt="Toggle" class="sidebar-image">
+      <a class="sidebar-text">Inventário</a>
+    </button>
+  </a>
+  <a href="/page/NovoCadastro">
+    <button class="sidebar-btn">
+      <img src="/img/cadastrar.png" alt="Toggle" class="sidebar-image">
+      <a class="sidebar-text">Cadastrar</a>
+    </button>
+  </a>
+  <a href="/page/activeFieldRegistration">
+    <button class="sidebar-btn">
+      <img src="/img/active.png" alt="Toggle" class="sidebar-image">
+      <a class="sidebar-text">Campos Ativos</a>
+    </button>
+  </a>
+  <a href="/page/location">
+    <button class="sidebar-btn">
+      <img src="/img/location.png" alt="Toggle" class="sidebar-image">
+      <a class="sidebar-text">Localização</a>
+    </button>
+  </a>
+  <a href="/page/Usuarios">
+    <button class="sidebar-btn">
+      <img src="/img/user.png" alt="Toggle" class="sidebar-image">
+      <a class="sidebar-text">Usuários</a>
+    </button>
+  </a>
+</div>
+
+<div class="main-content-registration" th:object="${activeField}">
+  <div class="info-container">
+    <div class="info-text">
+      <a class="item-text">Cadastro de campo ativo</a>
+    </div>
+    <div class="info-buttons">
+      <div class="buttons">
+        <button type="submit" class="body-btn-salvar" form="formFields">
+          Salvar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <form id="formFields" th:action="@{/activeFieldRegistration}" th:method="post">
+    <div class="input-container-novo-cadastro">
+      <div class="input-group">
+        <label for="input1">Seleção de campo ativo</label>
+        <select id="input1" th:field="*{activeFieldType}">
+          <option value="" selected disabled>Selecione um campo ativo</option>
+          <option value="Marca">Marca</option>
+          <option value="Modelo">Modelo</option>
+          <option value="Categoria">Categoria</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <label for="input2">Nome do novo campo ativo</label>
+        <input id="input2" type="text" th:field="*{name}">
+      </div>
+    </div>
+  </form>
+
+  <div class="tables-container">
+    <div class="tables-row">
+      <table class="marca-table">
+        <thead>
+        <tr>
+          <th>Marcas Cadastradas</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="brand : ${brands}" th:data-id="${brand.id_marca}">
+          <td>
+            <div class="marca-row">
+              <span th:text="${brand.nome}"></span>
+              <div class="button-container">
+                <button type="button" class="edit-btn-2" th:data-id="${brand.id_marca}" th:data-name="${brand.nome}" onclick="editBrand(this)">
+                  <img src="/img/editar.png" alt="View Details" class="edit-icon-2">
+                </button>
+              </div>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+
+      <table class="modelo-table">
+        <thead>
+        <tr>
+          <th>Modelos Cadastrados</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="model : ${models}" th:data-id="${model.id_model}">
+          <td>
+            <div class="modelo-row">
+              <span th:text="${model.nome}"></span>
+              <div class="button-container">
+                <button type="button" class="edit-btn-2" th:data-id="${model.id_model}" th:data-name="${model.nome}" onclick="editModel(this)">
+                  <img src="/img/editar.png" alt="View Details" class="edit-icon-2">
+                </button>
+              </div>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+
+      <table class="categoria-table">
+        <thead>
+        <tr>
+          <th>Categorias Cadastradas</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="category : ${categories}" th:data-id="${category.id_categoria}">
+          <td>
+            <div class="categoria-row">
+              <span th:text="${category.nome}"></span>
+              <div class="button-container">
+                <button type="button" class="edit-btn-2" th:data-id="${category.id_categoria}" th:data-name="${category.nome}" onclick="editCategory(this)">
+                  <img src="/img/editar.png" alt="View Details" class="edit-icon-2">
+                </button>
+              </div>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div id="myModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <p id="modalText"></p>
+  </div>
+</div>
+
+<!-- Brand Edit Modal -->
+<div id="BrandModal" class="modal">
+  <div class="modal-content" id="modalContentContainer">
+    <span class="close" id="closeModal">&times;</span>
+    <p id="BrandModalText"></p>
+  </div>
+</div>
+
+<!-- Model Edit Modal -->
+<div id="ModelModal" class="modal">
+  <div class="modal-content" id="modelModalContentContainer">
+    <span class="close" id="closeModelModal">&times;</span>
+    <p id="ModelModalText"></p>
+  </div>
+</div>
+
+<!-- Category Edit Modal -->
+<div id="CategoryModal" class="modal">
+  <div class="modal-content" id="categoryModalContentContainer">
+    <span class="close" id="closeCategoryModal">&times;</span>
+    <p id="CategoryModalText"></p>
+  </div>
+</div>
+
+<!-- Hidden fields for message passing -->
+<div th:if="${successMessage}">
+  <input type="hidden" id="successMessage" th:value="${successMessage}" />
+</div>
+<div th:if="${errorMessage}">
+  <input type="hidden" id="errorMessage" th:value="${errorMessage}" />
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script th:src="@{/navbar.js}"></script>
+<script th:src="@{/fieldRegistration.js}"></script>
+<script th:src="@{/brandEdit.js}"></script>
+<script th:src="@{/modelEdit.js}"></script>
+<script th:src="@{/categoryEdit.js}"></script>
+</body>
+</html>

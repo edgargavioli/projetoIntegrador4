@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KeepInventory</title>
+
+  <link rel="stylesheet" th:href="@{/stylesheets/style.css}">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&family=Montserrat:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@100;200;300;400&display=swap" rel="stylesheet">
+
+</head>
+<body>
+
+  <div class="navbar">
+    <div class="toggle-btn" onclick="toggleSidebar()">
+      <img src="/img/burguer.png" alt="Toggle" class="toggle-image">
+    </div>
+    <div class="navbar-right">
+      <a href="/page/Avisos">
+        <img src="/img/campainha-off.png" alt="Alerts" class="navbar-campainha">
+      </a>
+      <a href="/page/Usuarios">
+        <img src="/img/usuario.png" alt="User" class="navbar-user-image">
+      </a>
+    </div>
+  </div>
+
+  <div id="mySidebar" class="sidebar">
+    <a href="/page/infoGeral">
+      <button class="sidebar-btn" >
+        <img src="/img/inventario.png" alt="Toggle" class="sidebar-image">
+        <a class="sidebar-text">Inventário</a>
+      </button>
+    </a>
+    <a href="/page/NovoCadastro">
+      <button class="sidebar-btn" >
+        <img src="/img/cadastrar.png" alt="Toggle" class="sidebar-image">
+        <a class="sidebar-text">Cadastrar</a>
+      </button>
+    </a>
+    <a href="/page/activeFieldRegistration">
+      <button class="sidebar-btn" >
+        <img src="/img/active.png" alt="Toggle" class="sidebar-image">
+        <a class="sidebar-text">Campos Ativos</a>
+      </button>
+    </a>
+    <a href="/page/location">
+      <button class="sidebar-btn" >
+        <img src="/img/location.png" alt="Toggle" class="sidebar-image">
+        <a class="sidebar-text">Localização</a>
+      </button>
+    </a>
+    <a href="/page/Usuarios">
+      <button class="sidebar-btn" >
+        <img src="/img/user.png" alt="Toggle" class="sidebar-image">
+        <a class="sidebar-text">Usuários</a>
+      </button>
+    </a>
+  </div>
+
+  <div class="main-content-usuarios">
+
+    <div class="info-container info-container-after">
+      <div class="info-text">
+        <a class="item-text">Usuários</a>
+      </div>
+    </div>
+
+    <table class="user-table">
+      <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Sobrenome</th>
+        <th>Email</th>
+        <th>Tipo de Usuário</th>
+      </tr>
+      </thead>
+      <tbody id="userTableBody">
+      <tr th:each="usuario : ${page.content}">
+        <td th:text="${usuario.nome}"></td>
+        <td th:text="${usuario.sobrenome}"></td>
+        <td th:text="${usuario.email}"></td>
+        <td th:text="${usuario.tipo_usuario}"></td>
+      </tr>
+      </tbody>
+    </table>
+
+    <form id="paginationForm" th:action="@{/usuarios}" method="get">
+      <input type="hidden" name="pageSize" value="${page.size}">
+      <input type="hidden" name="page" th:value="${page.number}">
+      <div th:if="${page.totalPages > 1}">
+        <ul class="pagination">
+          <li th:class="${page.number == 0} ? 'disabled' : ''">
+            <a th:if="${page.number > 0}" th:href="@{/page/Usuarios(page=${page.number - 1})}">&laquo; Previous</a>
+            <span th:unless="${page.number > 0}">&laquo; Previous</span>
+          </li>
+          <li>
+            <span>Page: <span th:text="${page.number + 1}"></span> of <span th:text="${page.totalPages}"></span></span>
+          </li>
+          <li th:class="${page.number == (page.totalPages - 1)} ? 'disabled' : ''">
+            <a th:if="${page.number < (page.totalPages - 1)}" th:href="@{/page/Usuarios(page=${page.number + 1})}">Next &raquo;</a>
+            <span th:unless="${page.number < (page.totalPages - 1)}">Next &raquo;</span>
+          </li>
+        </ul>
+      </div>
+    </form>
+
+
+
+
+
+  </div>
+
+  <script th:src="@{/navbar.js}"></script>
+  <script th:src="@{/input.js}"></script>
+  <script th:src="@{/usuarios.js}"></script>
+
+</body>
+</html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KeepInventory</title>
+
+  <link rel="stylesheet" href="/stylesheets/style.css">
+  <script src="/navbar.js"></script>
+  <script src="/input.js"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&family=Montserrat:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@100;200;300;400&display=swap" rel="stylesheet">
+
+</head>
+<body>
+<div class="navbar">
+  <div class="toggle-btn" onclick="toggleSidebar()">
+    <img src="/img/burguer.png" alt="Toggle" class="toggle-image">
+  </div>
+  <div class="navbar-right">
+    <a href="/page/Avisos">
+      <img src="/img/campainha-off.png" alt="Alerts" class="navbar-campainha">
+    </a>
+    <a href="/page/Usuarios">
+      <img src="/img/usuario.png" alt="User" class="navbar-user-image">
+    </a>
+  </div>
+</div>
+
+<div id="mySidebar" class="sidebar">
+  <a href="/page/infoGeral">
+    <button class="sidebar-btn" >
+      <img src="/img/inventario.png" alt="Toggle" class="sidebar-image">
+      <a class="sidebar-text">Inventário</a>
+    </button>
+  </a>
+  <a href="/page/NovoCadastro">
+    <button class="sidebar-btn" >
+      <img src="/img/cadastrar.png" alt="Toggle" class="sidebar-image">
+      <a class="sidebar-text">Cadastrar</a>
+    </button>
+  </a>
+  <a href="/page/activeFieldRegistration">
+    <button class="sidebar-btn" >
+      <img src="/img/active.png" alt="Toggle" class="sidebar-image">
+      <a class="sidebar-text">Campos Ativos</a>
+    </button>
+  </a>
+  <a href="/page/location">
+    <button class="sidebar-btn" >
+      <img src="/img/location.png" alt="Toggle" class="sidebar-image">
+      <a class="sidebar-text">Localização</a>
+    </button>
+  </a>
+  <a href="/page/Usuarios">
+    <button class="sidebar-btn" >
+      <img src="/img/user.png" alt="Toggle" class="sidebar-image">
+      <a class="sidebar-text">Usuários</a>
+    </button>
+  </a>
+</div>
+
+<div class="main-content">
+
+  <div class="info-container" th:object="${data}">
+    <div class="info-text">
+      <a class="item-text" th:text="${action.item.descricao}"></a>
+    </div>
+    <div class="info-buttons">
+      <div class="buttons">
+        <button type="submit" class="body-btn-salvar" form="formEmprestimo">
+          Salvar
+        </button>
+      </div>
+    </div>
+  </div>
+  <form id="formEmprestimo" th:action="@{/page/Emprestimo(id=${action.item.id_item})}" method="post">
+    <div class="input-container-novo-cadastro" >
+      <div class="input-group">
+        <label for="input1">Entidade</label>
+        <input id="input1" type="text" th:field="${data.entidade}" th:value="${action.entidade}" placeholder="Biopark" required>
+      </div>
+      <div class="input-group">
+        <label for="input2">Item</label>
+        <input id="input2" type="text" th:value="${action.item.descricao}" disabled>
+      </div>
+      <div class="input-group">
+        <label for="input-disponibilidade">Disponibilidade</label>
+        <select id="input-disponibilidade" th:field="*{data.id_estado}" required>
+          <option th:each="state : ${states}" th:value="${state.id_estado}"  th:text="${state.nome}"></option>
+        </select>
+      </div>
+    </div>
+    <div class="input-container-novo-cadastro">
+      <div class="input-group">
+        <label for="input3">Marca</label>
+        <input id="input3" type="text" th:value="${action.item.marca.nome}" disabled>
+      </div>
+      <div class="input-group">
+        <label for="input4">Modelo</label>
+        <input id="input4" type="text" th:value="${action.item.modelo.nome}" disabled>
+      </div>
+      <div class="input-group">
+        <label for="input5">Número de Série</label>
+        <input id="input5" type="text" th:value="${action.item.numero_de_serie}" disabled>
+      </div>
+      <div class="input-group">
+        <label for="input6">Categoria</label>
+        <input id="input6" type="text" th:value="${action.item.categoria.nome}" disabled>
+      </div>
+    </div>
+    <div class="input-container-novo-cadastro">
+      <div class="input-group">
+        <label for="input7">Origem</label>
+        <input id="input7" type="text" th:value="${action.item.localizacao.nome}" disabled>
+      </div>
+      <div class="input-group">
+        <label for="input8">Local Atual</label>
+        <select id="input8" th:field="*{data.id_localizacao_atual}" required>
+          <option value=0>Selecione o local atual</option>
+          <option th:each="location : ${locations}" th:value="${location.id_localizacao}" th:text="${location.nome}"></option>
+        </select>
+      </div>
+      <div class="input-group">
+        <label for="input9">Responsável</label>
+        <input id="input9" type="text" value="Nome do responsável pela Empresa" placeholder="Luiz" required>
+      </div>
+      <div class="input-group">
+        <label for="input10">Responsável Empréstimo</label>
+        <select id="input10" th:field="*{data.id_usuario}" required>
+          <option value=0>Selecione o usuário responsável</option>
+          <option th:each="user : ${users}" th:value="${user.id_usuario}" th:text="${user.nome}"></option>
+        </select>
+
+      </div>
+    </div>
+    <div class="input-container-novo-cadastro">
+      <div class="input-group">
+        <label for="input11">Data de Empréstimo</label>
+        <input id="input11" type="date" th:field="${data.data_emprestimo}" th:value=${data.data_emprestimo}>
+      </div>
+      <div class="input-group">
+        <label for="input12">Data de Devolução</label>
+        <input id="input12" type="date" th:field="${data.data_devolucao}" th:value=${data.data_devolucao}>
+      </div>
+      <div class="input-group">
+        <label for="input13">Nota Fiscal</label>
+        <input id="input13" type="text" th:value="${action.item.numero_nota_fiscal}" disabled>
+      </div>
+      <div class="input-group">
+        <label for="input14">Data da Nota Fiscal</label>
+        <input id="input14" type="text" value="02/02/2024" disabled>
+      </div>
+    </div>
+    <div class="input-container-novo-cadastro">
+      <div class="input-group">
+        <label for="input15">Potência</label>
+        <input id="input15" type="text" th:value="${action.item.potencia}" disabled>
+      </div>
+      <div class="input-group">
+        <label for="input16">Última Manutenção</label>
+        <input id="input16" type="date" th:value="${action.item.ultima_qualificacao}">
+      </div>
+      <div class="input-group">
+        <label for="input17">Próxima Manutenção</label>
+        <input id="input17" type="date" th:value="${action.item.proxima_qualificacao}">
+      </div>
+      <div class="input-group">
+        <label for="input18">Prazo de Manutenção</label>
+        <input id="input18" th:field="${data.prazo_manutencao}" type="date">
+      </div>
+    </div>
+    <div class="input-container-novo-cadastro">
+      <div class="input-group">
+        <label for="input19">Comentários Sobre a Manutenção</label>
+        <input id="input19" type="text" placeholder="Comentário de manutenção">
+      </div>
+      <div class="input-group">
+        <label for="input20">Status</label>
+        <select id="input20" th:field="*{action.item.status}" required>
+          <option value="">Selecione o status</option>
+          <option th:each="status : ${statuses}" th:value="${status.id_status}" th:text="${status.nome}"></option>
+        </select>
+      </div>
+      <div class="input-group">
+        <label for="input21">Anexos</label>
+        <input id="input21" type="text" value="Anexar novo arquivo">
+      </div>
+    </div>
+  </form>
+
+</div>
+
+</body>
+</html>

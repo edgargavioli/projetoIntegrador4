@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KeepInventory</title>
+
+  <link rel="stylesheet" href="/stylesheets/style.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&family=Montserrat:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@100;200;300;400&display=swap" rel="stylesheet">
+
+</head>
+<body>
+
+  <div class="login-page">
+    <div class="login-container">
+      <div class="logo">
+          <img src="/img/biopark_edu.png" alt="Logo">
+      </div>
+      <div class="form">
+          <div class="linha-azul">
+            <div id="error-mensage-login" class="hidden">
+
+            </div>
+          </div>
+          <form>
+            <div class="label-username">
+              <label for="email">Email:</label>
+            </div>
+            <div class="input-username">
+              <input type="text" id="email" name="email" placeholder="email">
+            </div>
+            <div class="label-senha">
+              <label for="senha">Senha:</label><br>
+            </div>
+            <div class="input-username">
+              <input type="password" id="senha" name="senha" placeholder="senha">
+            </div>
+          
+            <div class="manter-conectado"> 
+              <input type="checkbox" id="manter-conectado" name="manter-conectado" value="manter-conectado">
+              <label for="manter-conectado">Mantenha-me conectado</label>
+              <a class="esqueceu" href="/forgot-password" style="margin-left: 3rem ">Esqueceu a senha?</a>
+            </div>
+            
+            <button id="login-button" class="submit" style="font-size: 1.2rem">Entrar</button>
+            
+            <div class="crie-conta">
+              <a class="crie-conta" href="/page/logon">Não é cadastrado? Crie uma conta</a>
+            </div>
+
+          </form>
+        <div th:if="${error}" class="error-message" th:text="${error}"></div>
+
+      </div>
+    </div>
+  </div>
+<script th:src="@{/login.js}"></script>
+</body>
+</html>

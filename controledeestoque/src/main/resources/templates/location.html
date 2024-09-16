@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KeepInventory</title>
+
+  <link rel="stylesheet" th:href="@{/stylesheets/style.css}">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&family=Montserrat:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@100;200;300;400&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+
+  <div class="navbar">
+    <div class="toggle-btn" onclick="toggleSidebar()">
+      <img src="/img/burguer.png" alt="Toggle" class="toggle-image">
+    </div>
+    <div class="navbar-right">
+      <a href="/page/Avisos">
+        <img src="/img/campainha-off.png" alt="Alerts" class="navbar-campainha">
+      </a>
+      <a href="/page/Usuarios">
+        <img src="/img/usuario.png" alt="User" class="navbar-user-image">
+      </a>
+    </div>
+  </div>
+
+  <div id="mySidebar" class="sidebar">
+    <a href="/page/infoGeral">
+      <button class="sidebar-btn" >
+        <img src="/img/inventario.png" alt="Toggle" class="sidebar-image">
+        <a class="sidebar-text">Inventário</a>
+      </button>
+    </a>
+    <a href="/page/NovoCadastro">
+      <button class="sidebar-btn" >
+        <img src="/img/cadastrar.png" alt="Toggle" class="sidebar-image">
+        <a class="sidebar-text">Cadastrar</a>
+      </button>
+    </a>
+    <a href="/page/activeFieldRegistration">
+      <button class="sidebar-btn" >
+        <img src="/img/active.png" alt="Toggle" class="sidebar-image">
+        <a class="sidebar-text">Campos Ativos</a>
+      </button>
+    </a>
+    <a href="/page/location">
+      <button class="sidebar-btn" >
+        <img src="/img/location.png" alt="Toggle" class="sidebar-image">
+        <a class="sidebar-text">Localização</a>
+      </button>
+    </a>
+    <a href="/page/Usuarios">
+      <button class="sidebar-btn" >
+        <img src="/img/user.png" alt="Toggle" class="sidebar-image">
+        <a class="sidebar-text">Usuários</a>
+      </button>
+    </a>
+  </div>
+
+  <div class="main-content-registration" th:object="${location}">
+
+    <div class="info-container">
+      <div class="info-text">
+        <a class="item-text">Cadastro de localizacao</a>
+      </div>
+      <div class="info-buttons">
+        <div class="buttons">
+          <button type="submit" class="body-btn-salvar" form="formLocation">
+            Salvar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <form id="formLocation" th:action="@{/page/location}" th:method="post">
+      <div class="input-container-novo-cadastro">
+        <div class="input-group">
+          <label for="nome">Nome da localização</label>
+          <input id="nome" type="text" th:field="*{nome}" name="nome">
+        </div>
+      </div>
+    </form>
+
+    <table class="location-table">
+      <thead>
+      <tr>
+        <th>Localizações Cadastradas</th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="location, stat : ${locations}" th:if="${stat.index % 2 == 0}">
+        <td>
+          <div class="location-row">
+            <span th:text="${location.nome}"></span>
+            <div class="button-container">
+              <button type="button" class="edit-btn-2" th:data-id="${location.id_localizacao}" th:data-name="${location.nome}" onclick="editLocation(this)">
+                <a class="edit-icon-2">
+                  <img src="/img/editar.png" alt="View Details" class="edit-icon-2">
+                </a>
+              </button>
+            </div>
+          </div>
+        </td>
+        <td th:if="${stat.count < locations.size()}">
+          <div class="location-row">
+            <span th:text="${locations[stat.count].nome}"></span>
+            <div class="button-container">
+              <button type="button" class="edit-btn-2" th:data-id="${locations[stat.count].id_localizacao}" th:data-name="${locations[stat.count].nome}" onclick="editLocation(this)">
+                <a class="edit-icon-2">
+                  <img src="/img/editar.png" alt="View Details" class="edit-icon-2">
+                </a>
+              </button>
+            </div>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
+  </div>
+
+  <div id="modalLocation" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <p id="modalText"></p>
+    </div>
+  </div>
+
+  <!-- Location Edit Modal -->
+  <div id="LocationModal" class="modal">
+    <div class="modal-content">
+      <span id="closeModal" class="close">&times;</span>
+      <div id="modalContentContainer"></div>
+      <p id="LocationModalText"></p>
+    </div>
+  </div>
+
+  <!-- Hidden fields for message passing -->
+  <div th:if="${successMessage}">
+    <input type="hidden" id="successMessage" th:value="${successMessage}" />
+  </div>
+  <div th:if="${errorMessage}">
+    <input type="hidden" id="errorMessage" th:value="${errorMessage}" />
+  </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script th:src="@{/navbar.js}"></script>
+  <script th:src="@{/location.js}"></script>
+  <script th:src="@{/locationEdit.js}"></script>
+
+</body>
+
+</html>
