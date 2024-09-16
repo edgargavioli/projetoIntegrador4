@@ -84,15 +84,15 @@
 
       <div class="input-container-novo-cadastro">
         <div class="input-group">
-          <label for="input2">Item</label>
+          <label for="input2">Item<span class="required">*</span></label>
           <input id="input2" type="text" th:field="*{descricao}" placeholder="Notebook" required>
         </div>
         <div class="input-group">
-          <label for="input5">Número de Série</label>
+          <label for="input5">Número de Série<span class="required">*</span></label>
           <input id="input5" type="text" th:field="*{numero_de_serie}" placeholder="20222720" required>
         </div>
         <div class="input-group">
-          <label for="input-disponibilidade">Disponibilidade</label>
+          <label for="input-disponibilidade">Disponibilidade<span class="required">*</span></label>
           <select id="input-disponibilidade" th:field="*{estado}" required>
             <option value="">Selecione a disponibilidade</option>
             <option th:each="state : ${states}" th:value="${state.id_estado}" th:text="${state.nome}"></option>
@@ -101,21 +101,21 @@
       </div>
       <div class="input-container-novo-cadastro">
         <div class="input-group">
-          <label for="input3">Marca</label>
+          <label for="input3">Marca<span class="required">*</span></label>
           <select id="input3" th:field="*{marca}" required>
             <option value="">Selecione a marca</option>
             <option th:each="brand : ${brands}" th:value="${brand.id_marca}" th:text="${brand.nome}"></option>
           </select>
         </div>
         <div class="input-group">
-          <label for="input4">Modelo</label>
+          <label for="input4">Modelo<span class="required">*</span></label>
           <select id="input4" th:field="*{modelo}" required>
             <option value="">Selecione o modelo</option>
             <option th:each="model : ${models}" th:value="${model.id_model}" th:text="${model.nome}"></option>
           </select>
         </div>
         <div class="input-group">
-          <label for="input6">Categoria</label>
+          <label for="input6">Categoria<span class="required">*</span></label>
           <select id="input6" th:field="*{categoria}" required>
             <option value="">Selecione a categoria</option>
             <option th:each="category : ${categories}" th:value="${category.id_categoria}" th:text="${category.nome}"></option>
@@ -124,14 +124,14 @@
       </div>
       <div class="input-container-novo-cadastro">
         <div class="input-group">
-          <label for="input7">Origem</label>
+          <label for="input7">Origem<span class="required">*</span></label>
           <select id="input7" th:field="*{localizacao}" required>
             <option value="">Selecione o local de origem</option>
             <option th:each="location : ${locations}" th:value="${location.id_localizacao}" th:text="${location.nome}"></option>
           </select>
         </div>
         <div class="input-group">
-          <label for="input8">Local Atual</label>
+          <label for="input8">Local Atual<span class="required">*</span></label>
           <select id="input8" th:field="*{localizacao_atual}" required>
             <option value="">Selecione o local atual</option>
             <option th:each="location : ${locations}" th:value="${location.nome}" th:text="${location.nome}"></option>
@@ -139,44 +139,44 @@
         </div>
         <div class="input-group">
           <label for="input10">Potência</label>
-          <input id="input10" type="text" th:field="*{potencia}" placeholder="127" required>
+          <input id="input10" type="text" th:field="*{potencia}" placeholder="127">
         </div>
       </div>
       <div class="input-container-novo-cadastro">
         <div class="input-group">
-          <label for="input11">Nota Fiscal</label>
+          <label for="input11">Nota Fiscal<span class="required">*</span></label>
           <input id="input11" type="text" th:field="*{numero_nota_fiscal}" placeholder="123456789" required>
         </div>
         <div class="input-group">
-          <label for="input12">Data da Nota Fiscal</label>
+          <label for="input12">Data da Nota Fiscal<span class="required">*</span></label>
           <input id="input12" type="date" th:field="*{data_nota_fiscal}" placeholder="2024-03-30" required>
         </div>
         <div class="input-group">
-          <label for="input9">Data de Entrada</label>
+          <label for="input9">Data de Entrada<span class="required">*</span></label>
           <input id="input9" type="date" th:field="*{data_entrada}" placeholder="2024-03-30" required>
         </div>
       </div>
       <div class="input-container-novo-cadastro">
         <div class="input-group">
-          <label for="input13">Última Manutenção</label>
+          <label for="input13">Última Manutenção<span class="required">*</span></label>
           <input id="input13" type="date" th:field="*{ultima_qualificacao}" placeholder="2024-03-30" required>
         </div>
         <div class="input-group">
-          <label for="input14">Próxima Manutenção</label>
+          <label for="input14">Próxima Manutenção<span class="required">*</span></label>
           <input id="input14" type="date" th:field="*{proxima_qualificacao}" placeholder="2024-03-30" required>
         </div>
         <div class="input-group">
-          <label for="input15">Prazo de Manutenção</label>
+          <label for="input15">Prazo de Manutenção<span class="required">*</span></label>
           <input id="input15" type="date" th:field="*{prazo_manutencao}" placeholder="2024-03-30" required>
         </div>
       </div>
       <div class="input-container-novo-cadastro">
         <div class="input-group">
           <label for="input16">Comentários Sobre a Última Manutenção</label>
-          <input id="input16" type="text" th:field="*{comentario_manutencao}" placeholder="Comentário" required>
+          <input id="input16" type="text" th:field="*{comentario_manutencao}" placeholder="Comentário">
         </div>
         <div class="input-group">
-          <label for="input17">Status</label>
+          <label for="input17">Status<span class="required">*</span></label>
           <select id="input17" th:field="*{status}" required>
             <option value="">Selecione o status</option>
             <option th:each="status : ${statuses}" th:value="${status.id_status}" th:text="${status.nome}"></option>

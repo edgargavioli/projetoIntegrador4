@@ -81,7 +81,7 @@
   <form id="formEmprestimo" th:action="@{/page/Emprestimo(id=${action.item.id_item})}" method="post">
     <div class="input-container-novo-cadastro" >
       <div class="input-group">
-        <label for="input1">Entidade</label>
+        <label for="input1">Entidade<span class="required">*</span></label>
         <input id="input1" type="text" th:field="${data.entidade}" th:value="${action.entidade}" placeholder="Biopark" required>
       </div>
       <div class="input-group">
@@ -89,7 +89,7 @@
         <input id="input2" type="text" th:value="${action.item.descricao}" disabled>
       </div>
       <div class="input-group">
-        <label for="input-disponibilidade">Disponibilidade</label>
+        <label for="input-disponibilidade">Disponibilidade<span class="required">*</span></label>
         <select id="input-disponibilidade" th:field="*{data.id_estado}" required>
           <option th:each="state : ${states}" th:value="${state.id_estado}"  th:text="${state.nome}"></option>
         </select>
@@ -119,20 +119,18 @@
         <input id="input7" type="text" th:value="${action.item.localizacao.nome}" disabled>
       </div>
       <div class="input-group">
-        <label for="input8">Local Atual</label>
+        <label for="input8">Local Atual<span class="required">*</span></label>
         <select id="input8" th:field="*{data.id_localizacao_atual}" required>
-          <option value=0>Selecione o local atual</option>
           <option th:each="location : ${locations}" th:value="${location.id_localizacao}" th:text="${location.nome}"></option>
         </select>
       </div>
       <div class="input-group">
-        <label for="input9">Responsável</label>
-        <input id="input9" type="text" value="Nome do responsável pela Empresa" placeholder="Luiz" required>
+        <label for="input9">Responsável Pela Empresa<span class="required">*</span></label>
+        <input id="input9" type="text" value="" placeholder="Luiz" required>
       </div>
       <div class="input-group">
-        <label for="input10">Responsável Empréstimo</label>
+        <label for="input10">Responsável Empréstimo<span class="required">*</span></label>
         <select id="input10" th:field="*{data.id_usuario}" required>
-          <option value=0>Selecione o usuário responsável</option>
           <option th:each="user : ${users}" th:value="${user.id_usuario}" th:text="${user.nome}"></option>
         </select>
 
@@ -140,12 +138,12 @@
     </div>
     <div class="input-container-novo-cadastro">
       <div class="input-group">
-        <label for="input11">Data de Empréstimo</label>
-        <input id="input11" type="date" th:field="${data.data_emprestimo}" th:value=${data.data_emprestimo}>
+        <label for="input11">Data de Empréstimo<span class="required">*</span></label>
+        <input id="input11" type="date" th:field="${data.data_emprestimo}" th:value=${data.data_emprestimo} required>
       </div>
       <div class="input-group">
-        <label for="input12">Data de Devolução</label>
-        <input id="input12" type="date" th:field="${data.data_devolucao}" th:value=${data.data_devolucao}>
+        <label for="input12">Data de Devolução<span class="required">*</span></label>
+        <input id="input12" type="date" th:field="${data.data_devolucao}" th:value=${data.data_devolucao} required>
       </div>
       <div class="input-group">
         <label for="input13">Nota Fiscal</label>
@@ -162,16 +160,16 @@
         <input id="input15" type="text" th:value="${action.item.potencia}" disabled>
       </div>
       <div class="input-group">
-        <label for="input16">Última Manutenção</label>
-        <input id="input16" type="date" th:value="${action.item.ultima_qualificacao}">
+        <label for="input16">Última Manutenção<span class="required">*</span></label>
+        <input id="input16" type="date" th:value="${action.item.ultima_qualificacao}" required>
       </div>
       <div class="input-group">
-        <label for="input17">Próxima Manutenção</label>
-        <input id="input17" type="date" th:value="${action.item.proxima_qualificacao}">
+        <label for="input17">Próxima Manutenção<span class="required">*</span></label>
+        <input id="input17" type="date" th:value="${action.item.proxima_qualificacao}" required>
       </div>
       <div class="input-group">
-        <label for="input18">Prazo de Manutenção</label>
-        <input id="input18" th:field="${data.prazo_manutencao}" type="date">
+        <label for="input18">Prazo de Manutenção<span class="required">*</span></label>
+        <input id="input18" th:field="${data.prazo_manutencao}" type="date" required>
       </div>
     </div>
     <div class="input-container-novo-cadastro">
@@ -180,7 +178,7 @@
         <input id="input19" type="text" placeholder="Comentário de manutenção">
       </div>
       <div class="input-group">
-        <label for="input20">Status</label>
+        <label for="input20">Status<span class="required">*</span></label>
         <select id="input20" th:field="*{action.item.status}" required>
           <option value="">Selecione o status</option>
           <option th:each="status : ${statuses}" th:value="${status.id_status}" th:text="${status.nome}"></option>
