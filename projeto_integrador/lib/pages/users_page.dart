@@ -73,14 +73,17 @@ class _UsersPageState extends State<UsersPage> {
             ),
             const SizedBox(height: 20),
             // Lista de usuários
-            Expanded(
-              child: ListView.builder(
-                itemCount: filteredUsers.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(filteredUsers[index].name),
-                    );
-                },
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 50),
+              child: Expanded(
+                child: ListView.builder(
+                  itemCount: filteredUsers.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(filteredUsers[index].name),
+                      );
+                  },
+                ),
               ),
             ),
           ],
