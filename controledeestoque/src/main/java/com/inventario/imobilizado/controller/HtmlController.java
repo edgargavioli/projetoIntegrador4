@@ -246,6 +246,7 @@ public class HtmlController {
             }
             else {
                 Action devolver = new Action();
+                devolver.setRa_rna(lastAction.getRa_rna());
                 devolver.setEntidade(lastAction.getEntidade());
                 devolver.setData_emprestimo(lastAction.getData_emprestimo());
                 devolver.setData_devolucao(lastAction.getData_devolucao());
@@ -319,8 +320,8 @@ public class HtmlController {
     public ModelAndView registrarEmprestimo(@ModelAttribute ActionRequest action, @RequestParam(name = "id") Integer id) {
         action.setId_item(id);
 
-
         Action postAction = new Action();
+        postAction.setRa_rna(action.getRa_rna());
         postAction.setEntidade(action.getEntidade());
         postAction.setData_emprestimo(action.getData_emprestimo());
         postAction.setData_devolucao(action.getData_devolucao());
@@ -357,6 +358,7 @@ public class HtmlController {
         item.setId_item(data.getId_item());
         item.setDescricao(data.getDescricao());
         item.setPotencia(data.getPotencia());
+        item.setPatrimonio(data.getPatrimonio());
         item.setData_nota_fiscal(data.getData_nota_fiscal());
         item.setLocalizacao_atual(data.getLocalizacao_atual());
         item.setData_entrada(data.getData_entrada());

@@ -21,6 +21,8 @@ public class RequestItem {
 
         private Integer potencia;
 
+        private String patrimonio;
+
         @DateTimeFormat(pattern = "yyyy-MM-dd")
         private Date data_entrada;
 

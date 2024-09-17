@@ -47,6 +47,7 @@ public class ActionController {
     @PostMapping("/")
     public ResponseEntity<Action> postAction(@RequestBody ActionRequest data) {
         Action action = new Action();
+        action.setRa_rna(data.getRa_rna());
         action.setEntidade(data.getEntidade());
 //            action.setData_emprestimo(new Date(data.getData_emprestimo()));
 //            action.setData_devolucao(new Date(data.getData_devolucao()));
