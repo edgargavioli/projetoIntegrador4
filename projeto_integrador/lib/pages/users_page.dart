@@ -12,9 +12,9 @@ class UsersPage extends StatefulWidget {
 class _UsersPageState extends State<UsersPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CustomAppBar(),
-      bottomNavigationBar: CustomMenuBar(),
+    return Padding(
+      padding: const EdgeInsets.only(top: 40),
+      child: Placeholder(),
     );
   }
 }
