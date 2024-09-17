@@ -21,6 +21,8 @@ public class Action {
 
     private String entidade;
 
+    private String ra_rna;
+
     @Temporal(TemporalType.DATE)
     private String data_emprestimo;
 

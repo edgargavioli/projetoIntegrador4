@@ -1916,3 +1916,7 @@ ul.pagination {
 .button-modal[type="submit"]:hover {
     background-color: #0a8f66; /* Hover color */
 }
+
+.required {
+  color: red;
+}
