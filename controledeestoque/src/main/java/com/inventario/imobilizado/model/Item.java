@@ -28,6 +28,8 @@ public class Item {
 
     private Integer potencia;
 
+    private String patrimonio;
+
     private String numero_de_serie;
 
     private String numero_nota_fiscal;

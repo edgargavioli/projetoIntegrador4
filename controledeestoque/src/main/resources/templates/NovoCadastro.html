@@ -176,8 +176,12 @@
           <input id="input16" type="text" th:field="*{comentario_manutencao}" placeholder="Comentário">
         </div>
         <div class="input-group">
-          <label for="input17">Status<span class="required">*</span></label>
-          <select id="input17" th:field="*{status}" required>
+          <label for="input17">Patrimônio<span class="required">*</span></label>
+          <input id="input17" type="text" th:field="*{patrimonio}" placeholder="123456" required>
+        </div>
+        <div class="input-group">
+          <label for="input18">Status<span class="required">*</span></label>
+          <select id="input18" th:field="*{status}" required>
             <option value="">Selecione o status</option>
             <option th:each="status : ${statuses}" th:value="${status.id_status}" th:text="${status.nome}"></option>
           </select>

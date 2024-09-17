@@ -15,9 +15,9 @@ import java.util.Date;
 @ToString
 public class ActionRequest {
 
+    private String ra_rna;
 
     private String entidade;
-
 
     private String data_emprestimo;
 

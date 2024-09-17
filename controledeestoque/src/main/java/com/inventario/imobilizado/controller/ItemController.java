@@ -59,6 +59,8 @@ public class ItemController {
 
         item.setPotencia(data.getPotencia());
 
+        item.setPatrimonio(data.getPatrimonio());
+
         item.setData_nota_fiscal(data.getData_nota_fiscal());
 
         item.setLocalizacao_atual(data.getLocalizacao_atual());
@@ -110,6 +112,7 @@ public class ItemController {
         itemInterface.findById(id_item).map(item -> {
             item.setDescricao(newItem.getDescricao());
             item.setPotencia(newItem.getPotencia());
+            item.setPatrimonio(newItem.getPatrimonio());
             item.setData_nota_fiscal(newItem.getData_nota_fiscal());
             item.setLocalizacao_atual(newItem.getLocalizacao_atual());
             item.setData_entrada(newItem.getData_entrada());
