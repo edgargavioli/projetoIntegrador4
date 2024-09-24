@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:projeto_integrador/components/custom_textfield.dart';
 import 'package:projeto_integrador/models/item.dart';
 import 'package:http/http.dart' as http;
+import 'package:projeto_integrador/pages/item_registration_page.dart';
 
 class InventarioPage extends StatefulWidget {
   const InventarioPage({super.key});
@@ -42,10 +43,11 @@ class _InventarioPageState extends State<InventarioPage> {
       });
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return Scaffold(
+      body: Padding(
         padding: const EdgeInsets.only(top: 40),
         child: Column(
           children: [
@@ -88,6 +90,19 @@ class _InventarioPageState extends State<InventarioPage> {
             ),
           ],
         ),
-      );
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const ItemRegistrationPage()),
+          );
+        },
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        child: const Icon(Icons.add),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+    );
   }
 }
