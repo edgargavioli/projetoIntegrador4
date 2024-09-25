@@ -8,7 +8,9 @@ ThemeData lightMode = ThemeData(
     secondary: Color(0xFF243646),
     onSurface: Color(0xFF2C2828),
     error: Color(0xFFEA0044),
-    tertiary: Color(0xFF17A2B8)
+    tertiary: Color(0xFF17A2B8),
+    inversePrimary: Color(0xFF28A745),
+    inverseSurface: Color(0xFFB3261E)
   ),
   navigationBarTheme: const NavigationBarThemeData(
     backgroundColor: Color(0xFF243646), // Cor de fundo do NavigationBar

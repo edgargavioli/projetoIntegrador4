@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:projeto_integrador/components/custom_app_bar.dart';
-import 'package:projeto_integrador/components/custom_menu_bar.dart';
 import 'package:projeto_integrador/components/custom_notification.dart';
 
 class NotificationsPage extends StatefulWidget {

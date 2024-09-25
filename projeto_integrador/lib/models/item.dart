@@ -1,8 +1,11 @@
+import 'package:projeto_integrador/models/estado.dart';
+
 class Item {
   final int id;
   final String descricao;
   final String localizacaoAtual;
   final int potencia;
+  final Estado estado;
   final String numeroDeSerie;
   final String numeroNotaFiscal;
   final String comentarioManutencao;
@@ -17,6 +20,7 @@ class Item {
     required this.descricao,
     required this.localizacaoAtual,
     required this.potencia,
+    required this.estado,
     required this.numeroDeSerie,
     required this.numeroNotaFiscal,
     required this.comentarioManutencao,
@@ -33,6 +37,7 @@ class Item {
       descricao: json['descricao'],
       localizacaoAtual: json['localizacao_atual'],
       potencia: json['potencia'],
+      estado: Estado.fromJson(json['estado']),
       numeroDeSerie: json['numero_de_serie'],
       numeroNotaFiscal: json['numero_nota_fiscal'],
       comentarioManutencao: json['comentario_manutencao'],
