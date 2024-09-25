@@ -88,6 +88,19 @@ class _HomePageState extends State<HomePage> {
                             padding: const EdgeInsets.symmetric(horizontal: 50),
                             child: Text(item.descricao),
                           ),
+                          subtitle: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 50),
+                            child: Text(
+                              item.estado.nome,
+                              style: TextStyle(
+                                color: item.estado.id_estado == 1
+                                    ? Theme.of(context).colorScheme.inversePrimary
+                                    : item.estado.id_estado == 2
+                                        ? Theme.of(context).colorScheme.tertiary
+                                        : Theme.of(context).colorScheme.error,
+                              ),
+                            ),
+                          ),
                         );
                       },
                     ),
