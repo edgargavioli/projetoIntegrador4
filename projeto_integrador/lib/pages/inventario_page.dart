@@ -168,14 +168,14 @@ class _InventarioPageState extends State<InventarioPage> {
                 FloatingActionButton(
                   backgroundColor: Theme.of(context).colorScheme.secondary,
                   onPressed: () {
-                    // Ação do botão de adicionar
+                    Navigator.pushNamed(context, '/itemRegistration');
                   },
                   child: const Icon(Icons.add),
                 ),
             ],
           ),
         ),
-
+      ],
     );
   }
 }
