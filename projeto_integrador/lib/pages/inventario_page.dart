@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:projeto_integrador/components/custom_textfield.dart';
 import 'package:projeto_integrador/models/item.dart';
 import 'package:http/http.dart' as http;
+import 'package:projeto_integrador/pages/item_registration_page.dart';
 
 class InventarioPage extends StatefulWidget {
   const InventarioPage({super.key});
@@ -174,7 +175,7 @@ class _InventarioPageState extends State<InventarioPage> {
             ],
           ),
         ),
-      ],
+
     );
   }
 }
