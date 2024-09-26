@@ -52,6 +52,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Get the name field
     var nameField = document.getElementById('input2');
+    var activeFieldType = document.getElementById('input1').value;
+    var brandSelect = document.getElementById('brandSelect');
 
     // Check if the name field is filled
     if (!nameField.value) {
@@ -59,6 +61,20 @@ document.addEventListener('DOMContentLoaded', function() {
       document.getElementById("modalText").innerText = 'Campo não pode ser vazio';
       modal.style.display = "block";
       return;
+    }
+
+    if (document.getElementById('input1').value === "Modelo" && !brandSelect.value) {
+      document.getElementById("modalText").innerText = 'Selecione uma marca';
+      modal.style.display = "block";
+      return;
+    }
+
+    // Create a FormData object to hold the form data
+    var formData = new FormData(form);
+
+    // If the active field type is "Modelo", append the marcaId to the form data
+    if (activeFieldType === "Modelo") {
+      formData.append('marcaId', brandSelect.value);
     }
 
     // Make an AJAX request to the server
@@ -75,7 +91,7 @@ document.addEventListener('DOMContentLoaded', function() {
       // Reload the page
       window.location.reload();
     };
-    xhr.send(new FormData(form));
+    xhr.send(formData); // Send the FormData object
   });
 
   // When the page is loaded, check if there is a message in localStorage

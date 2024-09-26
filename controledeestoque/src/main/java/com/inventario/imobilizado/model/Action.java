@@ -21,6 +21,7 @@ public class Action {
 
     private String entidade;
 
+    @Column(name = "ra_rna")
     private String ra_rna;
 
     @Temporal(TemporalType.DATE)
@@ -43,11 +44,6 @@ public class Action {
     @JoinColumn(name = "anexos_id_anexos")
     private Attachment anexos;
 
-    private boolean status_emprestimo;
-
     private int localizacao_id_localizacao;
-
-
-    private int id_estado;
 
 }

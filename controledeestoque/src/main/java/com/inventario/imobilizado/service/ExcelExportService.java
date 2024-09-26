@@ -109,7 +109,7 @@ public class ExcelExportService {
         for (Item item : itens) {
             Row row = sheet.createRow(rowNum++);
             row.createCell(0).setCellValue(item.getDescricao());
-            row.createCell(1).setCellValue(item.getMarca().toString());
+            row.createCell(1).setCellValue(item.getModelo().getMarca().toString());
             row.createCell(2).setCellValue(item.getModelo().toString());
             row.createCell(3).setCellValue(item.getCategoria().toString());
             row.createCell(4).setCellValue(item.getNumero_de_serie());

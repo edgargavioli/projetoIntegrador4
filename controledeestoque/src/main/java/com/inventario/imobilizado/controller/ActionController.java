@@ -21,22 +21,10 @@ public class ActionController {
     private ActionInterface actionInterface;
 
     @Autowired
-    private StateInterface stateInterface;
-
-    @Autowired
     private CategoryInterface categoryInterface;
 
     @Autowired
-    private BrandInterface brandInterface;
-
-    @Autowired
-    private StatusInterface statusInterface;
-
-    @Autowired
     private LocationInterface locationInterface;
-
-    @Autowired
-    private ModelInterface modelInterface;
 
     @Autowired
     private AttachmentInterface attachmentInterface;
@@ -52,9 +40,8 @@ public class ActionController {
 //            action.setData_emprestimo(new Date(data.getData_emprestimo()));
 //            action.setData_devolucao(new Date(data.getData_devolucao()));
         action.setUsuario(userInterface.findById(data.getId_usuario()).get());
-//            action.setItem(data.getItem());
+        action.setItem(itemInterface.findById(data.getId_item()).get());
         action.setAnexos(attachmentInterface.findById(data.getId_anexos()).get());
-        action.setStatus_emprestimo(data.isStatus_emprestimo());
 //            action.setLocalizacao(data.getItem().getLocalizacao_atual());
         actionInterface.save(action);
 

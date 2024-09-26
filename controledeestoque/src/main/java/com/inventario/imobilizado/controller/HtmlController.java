@@ -30,6 +30,10 @@ public class HtmlController {
     private ItemInterface itemInterface;
     @Autowired
     private UserInterface userInterface;
+    @Autowired
+    private ModeloInterface modeloInterface;
+    @Autowired
+    private BrandInterface brandInterface;
 
     @GetMapping("/login")
     public ModelAndView loginForm(Model model) {
@@ -133,9 +137,6 @@ public class HtmlController {
         return modelAndView;
     }
 
-    @Autowired
-    private StatusInterface statusInterface;
-
     @GetMapping("/NovoCadastro")
     public ModelAndView novoCadastro(Model model) {
         ModelAndView modelAndView = new ModelAndView();
@@ -143,20 +144,16 @@ public class HtmlController {
         List<Item> allItens = itemInterface.findAll();
         Integer id = allItens.get(allItens.size() - 1).getId_item() + 1;
 
-        List<Brand> brands = brandInterface.findAll();
-        List<com.inventario.imobilizado.model.Model> models = modelInterface.findAll();
         List<Category> categories = categoryInterface.findAll();
         List<Location> locations = locationInterface.findAll();
-        List<Status> statuses = statusInterface.findAll();
-        List<State> states = stateInterface.findAll();
+        List<Modelo> modelo = modeloInterface.findAll();
+        List<Brand> brands = brandInterface.findAll();
 
-        modelAndView.addObject("brands", brands);
         modelAndView.addObject("id", id);
-        modelAndView.addObject("models", models);
+        modelAndView.addObject("brands", brands);
+        modelAndView.addObject("modelo", modelo);
         modelAndView.addObject("categories", categories);
         modelAndView.addObject("locations", locations);
-        modelAndView.addObject("statuses", statuses);
-        modelAndView.addObject("states", states);
 
         modelAndView.addObject("data", new RequestItem());
         modelAndView.addObject("isEdit", false);
@@ -172,20 +169,16 @@ public class HtmlController {
 
         Item item = itemInterface.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid item Id:" + id));
 
-        List<Brand> brands = brandInterface.findAll();
-        List<com.inventario.imobilizado.model.Model> models = modelInterface.findAll();
         List<Category> categories = categoryInterface.findAll();
         List<Location> locations = locationInterface.findAll();
-        List<Status> statuses = statusInterface.findAll();
-        List<State> states = stateInterface.findAll();
+        List<Modelo> modelo = modeloInterface.findAll();
+        List<Brand> brands = brandInterface.findAll();
 
-        modelAndView.addObject("brands", brands);
         modelAndView.addObject("id", id);
-        modelAndView.addObject("models", models);
+        modelAndView.addObject("brands", brands);
+        modelAndView.addObject("modelo", modelo);
         modelAndView.addObject("categories", categories);
         modelAndView.addObject("locations", locations);
-        modelAndView.addObject("statuses", statuses);
-        modelAndView.addObject("states", states);
 
         modelAndView.addObject("data", item);
         modelAndView.addObject("isEdit", true);
@@ -201,7 +194,7 @@ public class HtmlController {
         Action action = new Action();
 
         Item item = itemInterface.findById(id).get();
-        if (item.getEstado().getId_estado() == 2 || item.getEstado().getId_estado() == 3){
+        if (item.getEstado().equals("Emprestado") || item.getEstado().equals("Manutenção")) {
             System.out.println("item Indisponível");
 
             return new ModelAndView("redirect:/page/infoGeral");
@@ -211,15 +204,10 @@ public class HtmlController {
         modelAndView.addObject("action", action);
 
         List<Location> locations = locationInterface.findAll();
-        List<Status> statuses = statusInterface.findAll();
         List<User> users = userInterface.findAll();
-        List<State> states = stateInterface.findAll();
-        states.remove(0);
 
         modelAndView.addObject("locations", locations);
-        modelAndView.addObject("statuses", statuses);
         modelAndView.addObject("users", users);
-        modelAndView.addObject("states", states);
 
 
         modelAndView.setViewName("Emprestimo");
@@ -254,9 +242,7 @@ public class HtmlController {
                 devolver.setItem(lastAction.getItem());
                 devolver.setTipo_acao(0);
                 devolver.setAnexos(lastAction.getAnexos());
-                devolver.setStatus_emprestimo(lastAction.isStatus_emprestimo());
                 devolver.setLocalizacao_id_localizacao(lastAction.getLocalizacao_id_localizacao());
-                devolver.setId_estado(1);
 
                 actionInterface.save(devolver);
             }
@@ -265,7 +251,7 @@ public class HtmlController {
         }
 
         itemInterface.findById(id).map(item -> {
-            item.setEstado(stateInterface.findById(1).get());
+            item.setEstado("Disponível");
             return itemInterface.save(item);
         }).orElseThrow();
 
@@ -273,19 +259,15 @@ public class HtmlController {
         return new ModelAndView("redirect:/page/infoGeral");
     }
 
-    @Autowired
-    private BrandInterface brandInterface;
-    @Autowired
-    private ModelInterface modelInterface;
 
     @GetMapping("/activeFieldRegistration")
     public ModelAndView activeFieldRegistration(Model model) {
         ModelAndView modelAndView = new ModelAndView();
         List<Brand> brands = brandInterface.findAll();
-        List<com.inventario.imobilizado.model.Model> models = modelInterface.findAll();
+        List<Modelo> modelos = modeloInterface.findAll();
         List<Category> categories = categoryInterface.findAll();
         modelAndView.addObject("brands", brands);
-        modelAndView.addObject("models", models);
+        modelAndView.addObject("modelos", modelos);
         modelAndView.addObject("categories", categories);
         modelAndView.addObject("activeField", new ActiveFieldForm());
         modelAndView.setViewName("activeFieldRegistration");
@@ -308,9 +290,6 @@ public class HtmlController {
     private static final Logger logger = LoggerFactory.getLogger(HtmlController.class);
 
     @Autowired
-    private StateInterface stateInterface;
-
-    @Autowired
     private AttachmentInterface attachmentInterface;
 
     @Autowired
@@ -329,14 +308,12 @@ public class HtmlController {
         postAction.setItem(itemInterface.findById(action.getId_item()).get());
         postAction.setTipo_acao(1);
         postAction.setAnexos(attachmentInterface.findById(1).get());
-        postAction.setStatus_emprestimo(action.isStatus_emprestimo());
         postAction.setLocalizacao_id_localizacao(action.getId_localizacao_atual());
-        postAction.setId_estado(stateInterface.findById(action.getId_estado()).get().getId_estado());
 
         actionInterface.save(postAction);
         // altera a disponibilidade do item
         itemInterface.findById(id).map(item -> {
-            item.setEstado(stateInterface.findById(action.getId_estado()).get());
+            item.setEstado(action.getEstado());
             item.setPrazo_manutencao(action.getPrazo_manutencao());
             return itemInterface.save(item);
         }).orElseThrow();
@@ -368,12 +345,11 @@ public class HtmlController {
         item.setComentario_manutencao(data.getComentario_manutencao());
         item.setPrazo_manutencao(data.getPrazo_manutencao());
         item.setNumero_nota_fiscal(data.getNumero_nota_fiscal());
-        
-        item.setEstado(stateInterface.findById(data.getEstado()).get());
+        item.setEstado(data.getEstado());
+        item.setStatus(data.getStatus());
+
+        item.setModelo(modeloInterface.findById(data.getModelo()).get());
         item.setCategoria(categoryInterface.findById(data.getCategoria()).get());
-        item.setStatus(statusInterface.findById(data.getStatus()).get());
-        item.setModelo(modelInterface.findById(data.getModelo()).get());
-        item.setMarca(brandInterface.findById(data.getMarca()).get());
         item.setLocalizacao(locationInterface.findById(data.getLocalizacao()).get());
 
         System.out.println("item:" + item.toString());

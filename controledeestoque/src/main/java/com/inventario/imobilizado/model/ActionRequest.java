@@ -33,7 +33,7 @@ public class ActionRequest {
 
     private boolean status_emprestimo;
 
-    private int id_estado;
+    private String estado;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date prazo_manutencao;
