@@ -95,23 +95,24 @@
           <label for="input-disponibilidade">Disponibilidade<span class="required">*</span></label>
           <select id="input-disponibilidade" th:field="*{estado}" required>
             <option value="">Selecione a disponibilidade</option>
-            <option th:each="state : ${states}" th:value="${state.id_estado}" th:text="${state.nome}"></option>
+            <option value="Disponível">Disponivel</option>
+            <option value="Emprestado">Emprestado</option>
+            <option value="Manutenção">Manutenção</option>
           </select>
         </div>
       </div>
       <div class="input-container-novo-cadastro">
         <div class="input-group">
           <label for="input3">Marca<span class="required">*</span></label>
-          <select id="input3" th:field="*{marca}" required>
-            <option value="">Selecione a marca</option>
+          <select id="input3" required onchange="filterModels()">
+            <option value="">Selecione a Marca</option>
             <option th:each="brand : ${brands}" th:value="${brand.id_marca}" th:text="${brand.nome}"></option>
           </select>
         </div>
         <div class="input-group">
           <label for="input4">Modelo<span class="required">*</span></label>
-          <select id="input4" th:field="*{modelo}" required>
-            <option value="">Selecione o modelo</option>
-            <option th:each="model : ${models}" th:value="${model.id_model}" th:text="${model.nome}"></option>
+          <select id="input4" th:field="*{modelo}" required th:disabled="true">
+            <option value="">Selecione o Modelo</option>
           </select>
         </div>
         <div class="input-group">
@@ -183,7 +184,8 @@
           <label for="input18">Status<span class="required">*</span></label>
           <select id="input18" th:field="*{status}" required>
             <option value="">Selecione o status</option>
-            <option th:each="status : ${statuses}" th:value="${status.id_status}" th:text="${status.nome}"></option>
+            <option value="Ativo">Ativo</option>
+            <option value="Desativo">Desativo</option>
           </select>
         </div>
         <div class="input-group" style="display: none;">
@@ -198,6 +200,46 @@
 
   <script th:src="@{/navbar.js}"></script>
   <script th:src="@{/input.js}"></script>
+  <script>
+    function filterModels() {
+      const marcaId = document.getElementById("input3").value;
+      const modeloSelect = document.getElementById("input4");
+
+      // Limpa opções anteriores
+      modeloSelect.innerHTML = '<option value="">Selecione o Modelo</option>';
+      modeloSelect.disabled = true; // Desabilita o select de modelo por padrão
+
+      if (marcaId) {
+        fetch(`/models/${marcaId}`)
+                .then(response => {
+                  if (!response.ok) {
+                    throw new Error('Erro ao buscar modelos');
+                  }
+                  return response.json();
+                })
+                .then(modelos => {
+                  if (modelos.length > 0) {
+                    modelos.forEach(modelo => {
+                      const option = document.createElement("option");
+                      option.value = modelo.id_modelo; // Ajuste conforme a estrutura do seu modelo
+                      option.textContent = modelo.nome; // Ajuste conforme a estrutura do seu modelo
+                      modeloSelect.appendChild(option);
+                    });
+                    modeloSelect.disabled = false; // Habilita o select se houver modelos
+                  } else {
+                    modeloSelect.disabled = true; // Desabilita se não houver modelos
+                  }
+                })
+                .catch(error => {
+                  console.error(error);
+                  modeloSelect.disabled = true; // Desabilita em caso de erro
+                });
+      } else {
+        modeloSelect.disabled = true; // Desabilita se nenhuma marca estiver selecionada
+      }
+    }
+
+  </script>
 
 </body>
 </html>

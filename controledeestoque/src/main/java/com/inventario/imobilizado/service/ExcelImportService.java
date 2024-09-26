@@ -18,22 +18,14 @@ public class ExcelImportService {
     private ItemInterface itemInterface;
 
     @Autowired
-    private StateInterface stateInterface;
-
-    @Autowired
     private CategoryInterface categoryInterface;
 
     @Autowired
-    private StatusInterface statusInterface;
-
+    private LocationInterface locationInterface;
     @Autowired
-    private ModelInterface modelInterface;
-
+    private ModeloInterface modeloInterface;
     @Autowired
     private BrandInterface brandInterface;
-
-    @Autowired
-    private LocationInterface locationInterface;
 
     @Transactional
     public List<Item> importItemsFromExcel(InputStream is) {
@@ -48,11 +40,11 @@ public class ExcelImportService {
 
                 Item item = new Item();
                 item.setDescricao(getCellValueAsString(row.getCell(0)));
-                item.setMarca(getOrCreateBrand(getCellValueAsString(row.getCell(1))));
-                item.setModelo(getOrCreateModel(getCellValueAsString(row.getCell(2))));
+                Brand marca = getOrCreateMarca(getCellValueAsString(row.getCell(1)));
+                item.setModelo(getOrCreateModelo(getCellValueAsString(row.getCell(2)), marca));
                 item.setCategoria(getOrCreateCategory(getCellValueAsString(row.getCell(3))));
                 item.setNumero_de_serie(getCellValueAsString(row.getCell(4)));
-                item.setEstado(getOrCreateState(getCellValueAsString(row.getCell(5))));
+                item.setEstado(getCellValueAsString(row.getCell(5)));
                 item.setLocalizacao(getOrCreateLocation(getCellValueAsString(row.getCell(6))));
                 item.setLocalizacao_atual(getCellValueAsString(row.getCell(7)));
                 item.setPotencia(getCellValueAsInteger(row.getCell(8)));
@@ -64,7 +56,7 @@ public class ExcelImportService {
                 item.setProxima_qualificacao(getCellValueAsDate(row.getCell(13)));
                 item.setPrazo_manutencao(getCellValueAsDate(row.getCell(14)));
                 item.setComentario_manutencao(getCellValueAsString(row.getCell(15)));
-                item.setStatus(getOrCreateStatus(getCellValueAsString(row.getCell(16))));
+                item.setStatus(getCellValueAsString(row.getCell(16)));
 
                 items.add(item);
             }
@@ -144,16 +136,6 @@ public class ExcelImportService {
         }
     }
 
-
-    private State getOrCreateState(String stateName) {
-        State state = stateInterface.findByNome(stateName);
-        if (state == null) {
-            state = new State(stateName);
-            state = stateInterface.save(state);
-        }
-        return state;
-    }
-
     private Category getOrCreateCategory(String categoryName) {
         Category category = categoryInterface.findByNome(categoryName);
         if (category == null) {
@@ -163,33 +145,6 @@ public class ExcelImportService {
         return category;
     }
 
-    private Status getOrCreateStatus(String statusName) {
-        Status status = statusInterface.findByNome(statusName);
-        if (status == null) {
-            status = new Status(statusName);
-            status = statusInterface.save(status);
-        }
-        return status;
-    }
-
-    private Model getOrCreateModel(String modelName) {
-        Model model = modelInterface.findByNome(modelName);
-        if (model == null) {
-            model = new Model(modelName);
-            model = modelInterface.save(model);
-        }
-        return model;
-    }
-
-    private Brand getOrCreateBrand(String brandName) {
-        Brand brand = brandInterface.findByNome(brandName);
-        if (brand == null) {
-            brand = new Brand(brandName);
-            brand = brandInterface.save(brand);
-        }
-        return brand;
-    }
-
     private Location getOrCreateLocation(String locationName) {
         Location location = locationInterface.findByNome(locationName);
         if (location == null) {
@@ -197,5 +152,23 @@ public class ExcelImportService {
             location = locationInterface.save(location);
         }
         return location;
+    }
+
+    private Brand getOrCreateMarca(String marcaName) {
+        Brand marca = brandInterface.findByNome(marcaName);
+        if (marca == null) {
+            marca = new Brand(marcaName);
+            marca = brandInterface.save(marca);
+        }
+        return marca;
+    }
+
+    private Modelo getOrCreateModelo(String modelName, Brand marca) {
+        Modelo model = modeloInterface.findByNomeAndMarca(modelName, marca);
+        if (model == null) {
+            model = new Modelo(modelName, marca);
+            model = modeloInterface.save(model);
+        }
+        return model;
     }
 }

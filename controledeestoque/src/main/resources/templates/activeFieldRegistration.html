@@ -76,7 +76,7 @@
     <div class="input-container-novo-cadastro">
       <div class="input-group">
         <label for="input1">Seleção de campo ativo</label>
-        <select id="input1" th:field="*{activeFieldType}">
+        <select id="input1" th:field="*{activeFieldType}" onchange="handleFieldTypeChange()">
           <option value="" selected disabled>Selecione um campo ativo</option>
           <option value="Marca">Marca</option>
           <option value="Modelo">Modelo</option>
@@ -86,6 +86,13 @@
       <div class="input-group">
         <label for="input2">Nome do novo campo ativo</label>
         <input id="input2" type="text" th:field="*{name}">
+      </div>
+      <div class="input-group" id="brandSelectContainer" style="display: none;">
+        <label for="brandSelect">Selecione uma Marca</label>
+        <select id="brandSelect" name="brandId" th:required="false">
+          <option value="" selected disabled>Selecione uma marca</option>
+          <option th:each="brand : ${brands}" th:value="${brand.id_marca}" th:text="${brand.nome}"></option>
+        </select>
       </div>
     </div>
   </form>
@@ -121,12 +128,12 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="model : ${models}" th:data-id="${model.id_model}">
+        <tr th:each="modelo : ${modelos}" th:data-id="${modelo.id_modelo}">
           <td>
             <div class="modelo-row">
-              <span th:text="${model.nome}"></span>
+              <span th:text="${modelo.nome}"></span>
               <div class="button-container">
-                <button type="button" class="edit-btn-2" th:data-id="${model.id_model}" th:data-name="${model.nome}" onclick="editModel(this)">
+                <button type="button" class="edit-btn-2" th:data-id="${modelo.id_modelo}" th:data-marcas="${brands}" th:data-name="${modelo.nome}" onclick="editModel(this)">
                   <img src="/img/editar.png" alt="View Details" class="edit-icon-2">
                 </button>
               </div>
@@ -206,5 +213,21 @@
 <script th:src="@{/brandEdit.js}"></script>
 <script th:src="@{/modelEdit.js}"></script>
 <script th:src="@{/categoryEdit.js}"></script>
+<script>
+  function handleFieldTypeChange() {
+    const activeFieldType = document.getElementById("input1").value;
+    const brandSelectContainer = document.getElementById("brandSelectContainer");
+    const brandSelect = document.getElementById("brandSelect");
+
+    // Mostra ou esconde o seletor de marca com base na seleção
+    if (activeFieldType === "Modelo") {
+      brandSelectContainer.style.display = "block";
+      brandSelect.required = true; // Torna o campo obrigatório se for Modelo
+    } else {
+      brandSelectContainer.style.display = "none";
+      brandSelect.required = false; // Remove a obrigatoriedade se não for Marca ou Modelo
+    }
+  }
+</script>
 </body>
 </html>

@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
         var estadoText = lastCell.textContent.trim();
         lastCell.innerHTML = '<span>' + estadoText + '</span>';
 
-        if (estadoText === 'Disponivel') {
+        if (estadoText === 'Disponível') {
         lastCell.classList.add('disponibilidade-disponivel');
         } else if (estadoText === 'Emprestado') {
         lastCell.classList.add('disponibilidade-emprestado');

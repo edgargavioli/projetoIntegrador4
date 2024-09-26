@@ -94,19 +94,21 @@
       </div>
       <div class="input-group">
         <label for="input-disponibilidade">Disponibilidade<span class="required">*</span></label>
-        <select id="input-disponibilidade" th:field="*{data.id_estado}" required>
-          <option th:each="state : ${states}" th:value="${state.id_estado}"  th:text="${state.nome}"></option>
+        <select id="input-disponibilidade" th:field="*{data.estado}" required>
+          <option value="Disponível">Disponível</option>
+          <option value="Emprestado">Emprestado</option>
+          <option value="Manutenção">Manutenção</option>
         </select>
       </div>
     </div>
     <div class="input-container-novo-cadastro">
       <div class="input-group">
         <label for="input3">Marca</label>
-        <input id="input3" type="text" th:value="${action.item.marca.nome}" disabled>
+        <input id="input3" type="text" th:value="${action.item.modelo.marca}" disabled>
       </div>
       <div class="input-group">
         <label for="input4">Modelo</label>
-        <input id="input4" type="text" th:value="${action.item.modelo.nome}" disabled>
+        <input id="input4" type="text" th:value="${action.item.modelo}" disabled>
       </div>
       <div class="input-group">
         <label for="input5">Número de Série</label>
@@ -188,7 +190,8 @@
         <label for="input21">Status<span class="required">*</span></label>
         <select id="input21" th:field="*{action.item.status}" required>
           <option value="">Selecione o status</option>
-          <option th:each="status : ${statuses}" th:value="${status.id_status}" th:text="${status.nome}"></option>
+          <option value="Ativo">Ativo</option>
+          <option value="Desativo">Desativo</option>
         </select>
       </div>
       <div class="input-group">
