@@ -24,7 +24,7 @@ public class BrandController {
     @Autowired
     private BrandInterface brandInterface;
 
-    @GetMapping
+    @GetMapping("/")
     public List<Brand> getAllBrands() {
         return brandInterface.findAll();
     }

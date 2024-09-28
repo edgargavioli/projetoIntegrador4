@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:projeto_integrador/components/custom_textfield.dart';
-import 'package:projeto_integrador/models/item.dart';
+import 'package:projeto_integrador/models/item_list.dart';
 import 'package:http/http.dart' as http;
 
 class InventarioPage extends StatefulWidget {
@@ -13,7 +13,7 @@ class InventarioPage extends StatefulWidget {
 
 class _InventarioPageState extends State<InventarioPage> {
   final TextEditingController _searchController = TextEditingController();
-  List<Item> _items = [];
+  List<Item_List> _items = [];
   bool _isLoading = true;
   bool _isSelecting = false;
   List<bool> _selectedItems = [];
@@ -29,11 +29,15 @@ class _InventarioPageState extends State<InventarioPage> {
       final response = await http.get(Uri.parse('http://10.0.2.2:8080/item/'));
 
       if (response.statusCode == 200) {
-        List<dynamic> jsonResponse = json.decode(response.body);
+        List<dynamic> jsonResponse =
+            json.decode(utf8.decode(response.bodyBytes));
         setState(() {
           _isLoading = false;
-          _items = jsonResponse.map((json) => Item.fromJson(json)).toList();
-          _selectedItems = List<bool>.filled(_items.length, false);
+          _items = jsonResponse
+              .map((json) => Item_List.fromJson(json))
+              .toList(); // problema: aqui é onde acontece o erro de marca dentro modelo
+          _selectedItems = List<bool>.filled(_items.length,
+              false); // Quando resolver o problema descrito em modelo.dart, trocar Item_List por Item, como era originalmente
         });
       } else {
         throw Exception('Failed to load items');
@@ -108,15 +112,23 @@ class _InventarioPageState extends State<InventarioPage> {
                                 child: Text(item.descricao),
                               ),
                               subtitle: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 50),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 50),
                                 child: Text(
-                                  item.estado.nome,
+                                  item.estado,
                                   style: TextStyle(
-                                    color: item.estado.id_estado == 1
-                                    ? Theme.of(context).colorScheme.inversePrimary
-                                    : item.estado.id_estado == 2
-                                      ? Theme.of(context).colorScheme.inverseSurface
-                                      : Theme.of(context).colorScheme.error,
+                                    color: item.estado == "Disponível"
+                                        ? Theme.of(context)
+                                            .colorScheme
+                                            .inversePrimary
+                                        : item.estado == "Manutenção" ||
+                                                item.estado == "Manutenção"
+                                            ? Theme.of(context)
+                                                .colorScheme
+                                                .inverseSurface
+                                            : Theme.of(context)
+                                                .colorScheme
+                                                .error,
                                   ),
                                 ),
                               ),

@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:projeto_integrador/components/custom_app_bar.dart';
 import 'package:projeto_integrador/components/custom_textfield.dart';
 import 'package:projeto_integrador/components/custom_select_field.dart';
+import 'package:projeto_integrador/components/custom_date_field.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:projeto_integrador/models/item.dart';
 
 class ItemRegistrationPage extends StatefulWidget {
   const ItemRegistrationPage({super.key});
@@ -18,6 +22,15 @@ class _ItemRegistrationPageState extends State<ItemRegistrationPage> {
   final TextEditingController patrimonioController = TextEditingController();
   final TextEditingController comentarioManutencaoController =
       TextEditingController();
+  final TextEditingController dataEntradaController = TextEditingController();
+  final TextEditingController ultimaQualificacaoController =
+      TextEditingController();
+  final TextEditingController dataNotaFiscalController =
+      TextEditingController();
+  final TextEditingController proximaQualificacaoController =
+      TextEditingController();
+  final TextEditingController prazoManutencaoController =
+      TextEditingController();
 
   String? selectedEstado;
   String? selectedMarca;
@@ -26,6 +39,134 @@ class _ItemRegistrationPageState extends State<ItemRegistrationPage> {
   String? selectedLocalOrigem;
   String? selectedLocalAtual;
   String? selectedStatus;
+
+  List<DropdownMenuItem<String>> marcas = [];
+  List<DropdownMenuItem<String>> modelos = [];
+  List<DropdownMenuItem<String>> categorias = [];
+  List<DropdownMenuItem<String>> locaisOrigem = [];
+  List<DropdownMenuItem<String>> locaisAtual = [];
+
+  bool isModeloEnabled = false;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchMarcas();
+    fetchCategorias();
+    fetchLocais();
+  }
+
+  Future<void> fetchMarcas() async {
+    final response = await http.get(Uri.parse('http://10.0.2.2:8080/brands/'));
+    if (response.statusCode == 200) {
+      List<dynamic> data = jsonDecode(utf8.decode(response.bodyBytes));
+      setState(() {
+        marcas = data
+            .map((item) => DropdownMenuItem<String>(
+                  value: item['id_marca'].toString(),
+                  child: Text(item['nome']),
+                ))
+            .toList();
+      });
+    }
+  }
+
+  Future<void> fetchModelos(String marcaId) async {
+    final response =
+        await http.get(Uri.parse('http://10.0.2.2:8080/models/$marcaId'));
+    if (response.statusCode == 200) {
+      List<dynamic> data = jsonDecode(utf8.decode(response.bodyBytes));
+      setState(() {
+        modelos = data
+            .map((item) => DropdownMenuItem<String>(
+                  value: item['id_modelo'].toString(),
+                  child: Text(item['nome']),
+                ))
+            .toList();
+      });
+    }
+  }
+
+  Future<void> fetchCategorias() async {
+    final response =
+        await http.get(Uri.parse('http://10.0.2.2:8080/categories/'));
+    if (response.statusCode == 200) {
+      List<dynamic> data = jsonDecode(utf8.decode(response.bodyBytes));
+      setState(() {
+        categorias = data
+            .map((item) => DropdownMenuItem<String>(
+                  value: item['id_categoria'].toString(),
+                  child: Text(item['nome']),
+                ))
+            .toList();
+      });
+    }
+  }
+
+  Future<void> fetchLocais() async {
+    final response = await http.get(Uri.parse('http://10.0.2.2:8080/page/'));
+    if (response.statusCode == 200) {
+      List<dynamic> data = jsonDecode(utf8.decode(response.bodyBytes));
+      setState(() {
+        locaisOrigem = data
+            .map<DropdownMenuItem<String>>((item) => DropdownMenuItem<String>(
+                  value: item['id_localizacao'].toString(),
+                  child: Text(item['nome']),
+                ))
+            .toList();
+
+        locaisAtual = data
+            .map<DropdownMenuItem<String>>((item) => DropdownMenuItem<String>(
+                  value: item['nome'],
+                  child: Text(item['nome']),
+                ))
+            .toList();
+      });
+    }
+  }
+
+  Future<void> registrarProduto() async {
+    Item item = Item(
+      id: 0,
+      descricao: descricaoController.text,
+      localizacaoAtual: selectedLocalAtual!,
+      potencia: int.parse(potenciaController.text),
+      estado: selectedEstado!,
+      numeroDeSerie: numeroSerieController.text,
+      numeroNotaFiscal: notaFiscalController.text,
+      comentarioManutencao: comentarioManutencaoController.text,
+      patrimonio: patrimonioController.text,
+      categoria: int.parse(selectedCategoria!),
+      status: selectedStatus!,
+      modelo: int.parse(selectedModelo!),
+      marca: selectedMarca!,
+      localizacao: int.parse(selectedLocalOrigem!),
+      dataEntrada: DateTime.parse(dataEntradaController.text),
+      ultimaQualificacao: DateTime.parse(ultimaQualificacaoController.text),
+      dataNotaFiscal: DateTime.parse(dataNotaFiscalController.text),
+      proximaQualificacao: DateTime.parse(proximaQualificacaoController.text),
+      prazoManutencao: DateTime.parse(prazoManutencaoController.text),
+    );
+
+    var body = jsonEncode(item.toJson());
+
+    final response = await http.post(
+      Uri.parse('http://10.0.2.2:8080/item/'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: body,
+    );
+
+    if (response.statusCode == 200) {
+      Navigator.pop(context,
+          true); // retorna para o inventário apos o cadastro, mas não atualiza a lista
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Erro ao cadastrar o item')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +211,9 @@ class _ItemRegistrationPageState extends State<ItemRegistrationPage> {
                   DropdownMenuItem(
                       value: 'Disponível', child: Text('Disponível')),
                   DropdownMenuItem(
-                      value: 'Indisponível', child: Text('Indisponível')),
+                      value: 'Emprestado', child: Text('Emprestado')),
+                  DropdownMenuItem(
+                      value: 'Manutenção', child: Text('Manutenção')),
                 ],
                 selectedValue: selectedEstado,
                 onChanged: (value) {
@@ -82,40 +225,34 @@ class _ItemRegistrationPageState extends State<ItemRegistrationPage> {
               const SizedBox(height: 16),
               CustomSelectField(
                 label: 'Marca',
-                items: const [
-                  DropdownMenuItem(value: 'Marca 1', child: Text('Marca 1')),
-                  DropdownMenuItem(value: 'Marca 2', child: Text('Marca 2')),
-                ],
+                items: marcas,
                 selectedValue: selectedMarca,
                 onChanged: (value) {
                   setState(() {
                     selectedMarca = value;
+                    selectedModelo = null;
+                    isModeloEnabled = true;
                   });
+                  fetchModelos(value!);
                 },
               ),
               const SizedBox(height: 16),
               CustomSelectField(
                 label: 'Modelo',
-                items: const [
-                  DropdownMenuItem(value: 'Modelo 1', child: Text('Modelo 1')),
-                  DropdownMenuItem(value: 'Modelo 2', child: Text('Modelo 2')),
-                ],
+                items: modelos,
                 selectedValue: selectedModelo,
-                onChanged: (value) {
-                  setState(() {
-                    selectedModelo = value;
-                  });
-                },
+                onChanged: isModeloEnabled
+                    ? (value) {
+                        setState(() {
+                          selectedModelo = value;
+                        });
+                      }
+                    : null,
               ),
               const SizedBox(height: 16),
               CustomSelectField(
                 label: 'Categoria',
-                items: const [
-                  DropdownMenuItem(
-                      value: 'Categoria 1', child: Text('Categoria 1')),
-                  DropdownMenuItem(
-                      value: 'Categoria 2', child: Text('Categoria 2')),
-                ],
+                items: categorias,
                 selectedValue: selectedCategoria,
                 onChanged: (value) {
                   setState(() {
@@ -126,14 +263,22 @@ class _ItemRegistrationPageState extends State<ItemRegistrationPage> {
               const SizedBox(height: 16),
               CustomSelectField(
                 label: 'Origem',
-                items: const [
-                  DropdownMenuItem(value: 'Origem 1', child: Text('Origem 1')),
-                  DropdownMenuItem(value: 'Origem 2', child: Text('Origem 2')),
-                ],
+                items: locaisOrigem,
                 selectedValue: selectedLocalOrigem,
                 onChanged: (value) {
                   setState(() {
                     selectedLocalOrigem = value;
+                  });
+                },
+              ),
+              const SizedBox(height: 16),
+              CustomSelectField(
+                label: 'Local Atual',
+                items: locaisAtual,
+                selectedValue: selectedLocalAtual,
+                onChanged: (value) {
+                  setState(() {
+                    selectedLocalAtual = value;
                   });
                 },
               ),
@@ -146,6 +291,30 @@ class _ItemRegistrationPageState extends State<ItemRegistrationPage> {
               CustomTextfield(
                 controller: notaFiscalController,
                 label: 'Nota Fiscal',
+              ),
+              const SizedBox(height: 16),
+              CustomDateField(
+                  controller: dataNotaFiscalController,
+                  label: 'Data da Nota Fiscal'),
+              const SizedBox(height: 16),
+              CustomDateField(
+                  controller: dataEntradaController, label: 'Data de Entrada'),
+              const SizedBox(height: 16),
+              CustomDateField(
+                  controller: ultimaQualificacaoController,
+                  label: 'Última Manutenção'),
+              const SizedBox(height: 16),
+              CustomDateField(
+                  controller: proximaQualificacaoController,
+                  label: 'Próxima Manutenção'),
+              const SizedBox(height: 16),
+              CustomDateField(
+                  controller: prazoManutencaoController,
+                  label: 'Prazo de Manutenção'),
+              const SizedBox(height: 16),
+              CustomTextfield(
+                controller: comentarioManutencaoController,
+                label: 'Comentário Sobre a Última Manutenção',
               ),
               const SizedBox(height: 16),
               CustomTextfield(
@@ -171,7 +340,7 @@ class _ItemRegistrationPageState extends State<ItemRegistrationPage> {
                 alignment: Alignment.bottomRight,
                 child: FloatingActionButton(
                   onPressed: () {
-                    // SUBMIT AQUI
+                    registrarProduto();
                   },
                   backgroundColor: Colors.green,
                   child: const Icon(Icons.check),
