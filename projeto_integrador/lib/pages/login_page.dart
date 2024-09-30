@@ -1,9 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:projeto_integrador/components/custom_button.dart';
 import 'package:projeto_integrador/components/custom_textfield.dart';
+import 'package:projeto_integrador/services/auth_service.dart';
 
 class LoginPage extends StatelessWidget {
 
@@ -16,25 +14,18 @@ class LoginPage extends StatelessWidget {
     try {
       String username = _usernameControler.text;
       String password = _passwordController.text;
-
-      final response = await post(
-      Uri.parse("http://10.0.2.2:8080/login"), // substituir pela URL do servidor
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode({'username': username, 'password': password}),
-    );
-
-    if (response.statusCode == 200) {
-      print('Success: ${response.body}');
-    } else {
-      print('Failed to login. Status code: ${response.statusCode}');
-    }
-
-    } catch (e) {
-      print(e);
-    } finally {
+    
+      await AuthService.login(username, password);
+      
       Navigator.pushNamed(context, '/home');
+    
+    } on FormatException catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.message),
+          backgroundColor: Theme.of(context).colorScheme.error,
+        )
+      );
     }
   }
 
