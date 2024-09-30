@@ -1,8 +1,7 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:projeto_integrador/components/custom_textfield.dart';
 import 'package:projeto_integrador/models/item_list.dart';
-import 'package:http/http.dart' as http;
+import 'package:projeto_integrador/services/item_service.dart';
 
 class InventarioPage extends StatefulWidget {
   const InventarioPage({super.key});
@@ -13,7 +12,7 @@ class InventarioPage extends StatefulWidget {
 
 class _InventarioPageState extends State<InventarioPage> {
   final TextEditingController _searchController = TextEditingController();
-  List<Item_List> _items = [];
+  List<ItemList> _items = [];
   bool _isLoading = true;
   bool _isSelecting = false;
   List<bool> _selectedItems = [];
@@ -21,27 +20,17 @@ class _InventarioPageState extends State<InventarioPage> {
   @override
   void initState() {
     super.initState();
-    fetchItems();
+    loading();
   }
 
-  Future<void> fetchItems() async {
+  Future<void> loading() async {
     try {
-      final response = await http.get(Uri.parse('http://10.0.2.2:8080/item/'));
-
-      if (response.statusCode == 200) {
-        List<dynamic> jsonResponse =
-            json.decode(utf8.decode(response.bodyBytes));
-        setState(() {
-          _isLoading = false;
-          _items = jsonResponse
-              .map((json) => Item_List.fromJson(json))
-              .toList(); // problema: aqui é onde acontece o erro de marca dentro modelo
-          _selectedItems = List<bool>.filled(_items.length,
-              false); // Quando resolver o problema descrito em modelo.dart, trocar Item_List por Item, como era originalmente
-        });
-      } else {
-        throw Exception('Failed to load items');
-      }
+      final items = await ItemService.fetchItemsInventarioPage();
+      setState(() {
+        _items = items;
+        _isLoading = false;
+        _selectedItems = List<bool>.filled(_items.length, false);
+      });
     } catch (e) {
       print(e);
       setState(() {
@@ -186,7 +175,6 @@ class _InventarioPageState extends State<InventarioPage> {
                 ),
                 const SizedBox(height: 10),
               ],
-
               // Mostrar o botão de adicionar se não estiver selecionando
               if (!_isSelecting)
                 FloatingActionButton(
