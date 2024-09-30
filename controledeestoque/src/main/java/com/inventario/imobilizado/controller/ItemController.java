@@ -42,9 +42,7 @@ public class ItemController {
     private BrandInterface brandInterface;
 
     @PostMapping("/")
-    public ResponseEntity<?> registrarProduto(@ModelAttribute RequestItem data) {
-
-        System.out.println(data.toJson());
+    public ResponseEntity<?> registrarProduto(@RequestBody RequestItem data) {
 
         Brand brand = brandInterface.findById(data.getMarca()).get();
 

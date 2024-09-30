@@ -22,7 +22,7 @@ public class LocationController {
     @Autowired
     private LocationInterface locationInterface;
 
-    @GetMapping
+    @GetMapping("/")
     public List<Location> getAllLocations() {
         return locationInterface.findAll();
     }

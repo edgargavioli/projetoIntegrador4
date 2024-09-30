@@ -21,7 +21,7 @@ public class CategoryController {
     @Autowired
     private CategoryInterface categoryInterface;
 
-    @GetMapping
+    @GetMapping("/")
     public List<Category> getAllCategories() {
         return categoryInterface.findAll();
     }
