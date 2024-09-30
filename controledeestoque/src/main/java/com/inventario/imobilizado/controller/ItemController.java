@@ -29,28 +29,25 @@ public class ItemController {
     private ItemInterface itemInterface;
 
     @Autowired
-    private StateInterface stateInterface;
-
-    @Autowired
     private CategoryInterface categoryInterface;
-
-    @Autowired
-    private BrandInterface brandInterface;
-
-    @Autowired
-    private StatusInterface statusInterface;
 
     @Autowired
     private LocationInterface locationInterface;
 
     @Autowired
-    private ModelInterface modelInterface;
-
-    @Autowired
     private ExcelExportService excelExportService;
+    @Autowired
+    private ModeloInterface modeloInterface;
+    @Autowired
+    private BrandInterface brandInterface;
 
     @PostMapping("/")
-    public ResponseEntity<?> registrarProduto(@ModelAttribute RequestItem data) {
+    public ResponseEntity<?> registrarProduto(@RequestBody RequestItem data) {
+
+        Brand brand = brandInterface.findById(data.getMarca()).get();
+
+        Modelo modelo = modeloInterface.findById(data.getModelo()).get();
+
         Item item = new Item();
 
         item.setId_item(data.getId_item());
@@ -75,17 +72,15 @@ public class ItemController {
 
         item.setPrazo_manutencao(data.getPrazo_manutencao());
 
-        item.setEstado(stateInterface.findById(data.getEstado()).get());
+        item.setEstado(data.getEstado());
 
         item.setCategoria(categoryInterface.findById(data.getCategoria()).get());
 
-        item.setStatus(statusInterface.findById(data.getStatus()).get());
+        item.setStatus(data.getStatus());
 
         item.setNumero_de_serie(data.getNumero_de_serie());
 
-        item.setModelo(modelInterface.findById(data.getModelo()).get());
-
-        item.setMarca(brandInterface.findById(data.getMarca()).get());
+        item.setModelo(modeloInterface.findByNomeAndMarca(modelo.getNome(), brand));
 
         item.setLocalizacao(locationInterface.findById(data.getLocalizacao()).get());
 
@@ -105,8 +100,6 @@ public class ItemController {
         return ResponseEntity.ok(AllItems);
     }
 
-
-
     @PutMapping("/{id_item}")
     public ResponseEntity<Item> PutUser(@PathVariable Integer id_item,@RequestBody Item newItem){
         itemInterface.findById(id_item).map(item -> {
@@ -123,7 +116,6 @@ public class ItemController {
             item.setStatus(newItem.getStatus());
             item.setNumero_de_serie(newItem.getNumero_de_serie());
             item.setModelo(newItem.getModelo());
-            item.setMarca(newItem.getMarca());
             item.setLocalizacao(newItem.getLocalizacao());
             item.setNumero_de_serie(newItem.getNumero_de_serie());
             item.setComentario_manutencao(newItem.getComentario_manutencao());
@@ -145,12 +137,6 @@ public class ItemController {
         // http://localhost:8080/page/Usuarios?order=sobrenome
         if (order.equals("descricao")){
             Page<Item> itemList = itemInterface.findAll(PageRequest.of(page,pageSize, Sort.by("descricao")));
-            return itemList;
-        }
-
-        // http://localhost:8080/page/Usuarios?order=email
-        if (order.equals("status")){
-            Page<Item> itemList = itemInterface.findAll(PageRequest.of(page,pageSize, Sort.by("status")));
             return itemList;
         }
         else {

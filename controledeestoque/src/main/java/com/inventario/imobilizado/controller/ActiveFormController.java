@@ -2,11 +2,11 @@ package com.inventario.imobilizado.controller;
 
 import com.inventario.imobilizado.model.ActiveFieldForm;
 import com.inventario.imobilizado.model.Brand;
-import com.inventario.imobilizado.model.Model;
 import com.inventario.imobilizado.model.Category;
+import com.inventario.imobilizado.model.Modelo;
 import com.inventario.imobilizado.repository.BrandInterface;
-import com.inventario.imobilizado.repository.ModelInterface;
 import com.inventario.imobilizado.repository.CategoryInterface;
+import com.inventario.imobilizado.repository.ModeloInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,13 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class ActiveFormController {
 
     @Autowired
-    private BrandInterface brandInterface;
-
-    @Autowired
-    private ModelInterface modelInterface;
-
-    @Autowired
     private CategoryInterface categoryInterface;
+    @Autowired
+    private BrandInterface brandInterface;
+    @Autowired
+    private ModeloInterface modeloInterface;
 
     @PostMapping("/activeFieldRegistration")
     public ResponseEntity<String> handleActiveFieldRegistration(@ModelAttribute ActiveFieldForm activeFieldForm) {
@@ -34,15 +32,16 @@ public class ActiveFormController {
 
         // Check the activeFieldType and save the name to the corresponding instance
         switch (activeFieldForm.getActiveFieldType()) {
+            case "Modelo":
+                Modelo modelo = new Modelo();
+                modelo.setName(activeFieldForm.getName());
+                modelo.setMarca(brandInterface.findById(activeFieldForm.getBrandId()).orElse(null));
+                modeloInterface.save(modelo);
+                break;
             case "Marca":
                 Brand brand = new Brand();
-                brand.setNome(activeFieldForm.getName());
+                brand.setName(activeFieldForm.getName());
                 brandInterface.save(brand);
-                break;
-            case "Modelo":
-                Model model = new Model();
-                model.setNome(activeFieldForm.getName());
-                modelInterface.save(model);
                 break;
             case "Categoria":
                 Category category = new Category();

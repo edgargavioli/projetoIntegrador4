@@ -1,5 +1,6 @@
 package com.inventario.imobilizado.model;
 
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -10,24 +11,28 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = "id_model")
-public class Model {
+@EqualsAndHashCode(of = "id_modelo")
+public class Modelo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_modelo")
-    private int id_model;
+    private int id_modelo;
     private String nome;
+    @ManyToOne
+    @JoinColumn(name = "marca_id_marca")
+    private Brand marca;
 
     @Override
     public String toString() {
         return nome;
     }
 
-    public void setName(String modelName) {
-        this.nome = modelName;
+    public void setName(String modeloName) {
+        this.nome = modeloName;
     }
 
-    public Model(String modelName) {
-        this.nome = modelName;
+    public Modelo(String nome, Brand marca) {
+        this.nome = nome;
+        this.marca = marca;
     }
 }
