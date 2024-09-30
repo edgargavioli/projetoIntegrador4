@@ -1,16 +1,16 @@
-class Item_List {
+class ItemList {
   final int id;
   final String descricao;
   final String estado;
 
-  Item_List({
+  ItemList({
     required this.id,
     required this.descricao,
     required this.estado,
   });
 
-  factory Item_List.fromJson(Map<String, dynamic> json) {
-    Item_List item = Item_List(
+  factory ItemList.fromJson(Map<String, dynamic> json) {
+    ItemList item = ItemList(
       id: json['id_item'],
       descricao: json['descricao'],
       estado: json['estado'],

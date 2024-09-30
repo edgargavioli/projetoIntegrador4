@@ -3,9 +3,12 @@ import 'package:projeto_integrador/components/custom_app_bar.dart';
 import 'package:projeto_integrador/components/custom_textfield.dart';
 import 'package:projeto_integrador/components/custom_select_field.dart';
 import 'package:projeto_integrador/components/custom_date_field.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 import 'package:projeto_integrador/models/item.dart';
+import 'package:projeto_integrador/services/brand_service.dart';
+import 'package:projeto_integrador/services/category_service.dart';
+import 'package:projeto_integrador/services/item_service.dart';
+import 'package:projeto_integrador/services/location_service.dart';
+import 'package:projeto_integrador/services/model_service.dart';
 
 class ItemRegistrationPage extends StatefulWidget {
   const ItemRegistrationPage({super.key});
@@ -51,15 +54,12 @@ class _ItemRegistrationPageState extends State<ItemRegistrationPage> {
   @override
   void initState() {
     super.initState();
-    fetchMarcas();
-    fetchCategorias();
-    fetchLocais();
+    carregarDados();
   }
 
-  Future<void> fetchMarcas() async {
-    final response = await http.get(Uri.parse('http://10.0.2.2:8080/brands/'));
-    if (response.statusCode == 200) {
-      List<dynamic> data = jsonDecode(utf8.decode(response.bodyBytes));
+  Future<void> carregarDados() async {
+    try {
+      final data = await BrandService.fetchMarcas();
       setState(() {
         marcas = data
             .map((item) => DropdownMenuItem<String>(
@@ -68,30 +68,12 @@ class _ItemRegistrationPageState extends State<ItemRegistrationPage> {
                 ))
             .toList();
       });
+    } catch (e) {
+      print('Erro ao buscar marcas: $e');
     }
-  }
 
-  Future<void> fetchModelos(String marcaId) async {
-    final response =
-        await http.get(Uri.parse('http://10.0.2.2:8080/models/$marcaId'));
-    if (response.statusCode == 200) {
-      List<dynamic> data = jsonDecode(utf8.decode(response.bodyBytes));
-      setState(() {
-        modelos = data
-            .map((item) => DropdownMenuItem<String>(
-                  value: item['id_modelo'].toString(),
-                  child: Text(item['nome']),
-                ))
-            .toList();
-      });
-    }
-  }
-
-  Future<void> fetchCategorias() async {
-    final response =
-        await http.get(Uri.parse('http://10.0.2.2:8080/categories/'));
-    if (response.statusCode == 200) {
-      List<dynamic> data = jsonDecode(utf8.decode(response.bodyBytes));
+    try {
+      final data = await CategoryService.fetchCategorias();
       setState(() {
         categorias = data
             .map((item) => DropdownMenuItem<String>(
@@ -100,68 +82,76 @@ class _ItemRegistrationPageState extends State<ItemRegistrationPage> {
                 ))
             .toList();
       });
+    } catch (e) {
+      print('Erro ao buscar categorias: $e');
     }
-  }
 
-  Future<void> fetchLocais() async {
-    final response = await http.get(Uri.parse('http://10.0.2.2:8080/page/'));
-    if (response.statusCode == 200) {
-      List<dynamic> data = jsonDecode(utf8.decode(response.bodyBytes));
+    try {
+      final data = await LocationService.fetchLocais();
       setState(() {
         locaisOrigem = data
-            .map<DropdownMenuItem<String>>((item) => DropdownMenuItem<String>(
+            .map((item) => DropdownMenuItem<String>(
                   value: item['id_localizacao'].toString(),
                   child: Text(item['nome']),
                 ))
             .toList();
 
         locaisAtual = data
-            .map<DropdownMenuItem<String>>((item) => DropdownMenuItem<String>(
+            .map((item) => DropdownMenuItem<String>(
                   value: item['nome'],
                   child: Text(item['nome']),
                 ))
             .toList();
       });
+    } catch (e) {
+      print('Erro ao buscar locais: $e');
     }
   }
 
-  Future<void> registrarProduto() async {
-    Item item = Item(
-      id: 0,
-      descricao: descricaoController.text,
-      localizacaoAtual: selectedLocalAtual!,
-      potencia: int.parse(potenciaController.text),
-      estado: selectedEstado!,
-      numeroDeSerie: numeroSerieController.text,
-      numeroNotaFiscal: notaFiscalController.text,
-      comentarioManutencao: comentarioManutencaoController.text,
-      patrimonio: patrimonioController.text,
-      categoria: int.parse(selectedCategoria!),
-      status: selectedStatus!,
-      modelo: int.parse(selectedModelo!),
-      marca: selectedMarca!,
-      localizacao: int.parse(selectedLocalOrigem!),
-      dataEntrada: DateTime.parse(dataEntradaController.text),
-      ultimaQualificacao: DateTime.parse(ultimaQualificacaoController.text),
-      dataNotaFiscal: DateTime.parse(dataNotaFiscalController.text),
-      proximaQualificacao: DateTime.parse(proximaQualificacaoController.text),
-      prazoManutencao: DateTime.parse(prazoManutencaoController.text),
-    );
+  Future<void> carregarModelos(String marcaId) async {
+    try {
+      final data = await ModelService.fetchModelos(marcaId);
+      setState(() {
+        modelos = data
+            .map((item) => DropdownMenuItem<String>(
+                  value: item['id_modelo'].toString(),
+                  child: Text(item['nome']),
+                ))
+            .toList();
+      });
+    } catch (e) {
+      print('Erro ao buscar modelos: $e');
+    }
+  }
 
-    var body = jsonEncode(item.toJson());
+  Future<void> cadastrarProduto() async {
+    try {
+      Item item = Item(
+        id: 0,
+        descricao: descricaoController.text,
+        localizacaoAtual: selectedLocalAtual!,
+        potencia: int.parse(potenciaController.text),
+        estado: selectedEstado!,
+        numeroDeSerie: numeroSerieController.text,
+        numeroNotaFiscal: notaFiscalController.text,
+        comentarioManutencao: comentarioManutencaoController.text,
+        patrimonio: patrimonioController.text,
+        categoria: int.parse(selectedCategoria!),
+        status: selectedStatus!,
+        modelo: int.parse(selectedModelo!),
+        marca: selectedMarca!,
+        localizacao: int.parse(selectedLocalOrigem!),
+        dataEntrada: DateTime.parse(dataEntradaController.text),
+        ultimaQualificacao: DateTime.parse(ultimaQualificacaoController.text),
+        dataNotaFiscal: DateTime.parse(dataNotaFiscalController.text),
+        proximaQualificacao: DateTime.parse(proximaQualificacaoController.text),
+        prazoManutencao: DateTime.parse(prazoManutencaoController.text),
+      );
 
-    final response = await http.post(
-      Uri.parse('http://10.0.2.2:8080/item/'),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: body,
-    );
+      await ItemService.createItem(item.toJson());
 
-    if (response.statusCode == 200) {
-      Navigator.pop(context,
-          true); // retorna para o inventário apos o cadastro, mas não atualiza a lista
-    } else {
+      Navigator.pop(context, true); // retorna para o inventário apos o cadastro, mas não atualiza a lista
+    } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Erro ao cadastrar o item')),
       );
@@ -233,7 +223,7 @@ class _ItemRegistrationPageState extends State<ItemRegistrationPage> {
                     selectedModelo = null;
                     isModeloEnabled = true;
                   });
-                  fetchModelos(value!);
+                  carregarModelos(value!);
                 },
               ),
               const SizedBox(height: 16),
@@ -340,7 +330,7 @@ class _ItemRegistrationPageState extends State<ItemRegistrationPage> {
                 alignment: Alignment.bottomRight,
                 child: FloatingActionButton(
                   onPressed: () {
-                    registrarProduto();
+                    cadastrarProduto();
                   },
                   backgroundColor: Colors.green,
                   child: const Icon(Icons.check),
