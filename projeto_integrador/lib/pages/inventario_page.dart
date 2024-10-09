@@ -160,7 +160,7 @@ class _InventarioPageState extends State<InventarioPage> {
                 ),
                 const SizedBox(height: 10),
                 FloatingActionButton(
-                  backgroundColor: const Color(0x66B3261E),
+                  backgroundColor: const Color(0xFFB3261E),
                   onPressed: () {
                     // Ação do segundo botão extra
                   },
@@ -168,7 +168,7 @@ class _InventarioPageState extends State<InventarioPage> {
                 ),
                 const SizedBox(height: 10),
                 FloatingActionButton(
-                  backgroundColor: const Color(0x401E88E5),
+                  backgroundColor: const Color(0xFF1E88E5),
                   onPressed: () {
                     // Ação do terceiro botão extra
                   },
