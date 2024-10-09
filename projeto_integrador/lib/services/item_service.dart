@@ -1,3 +1,4 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:projeto_integrador/models/item_list.dart';
@@ -5,9 +6,17 @@ import 'package:projeto_integrador/models/item_notification.dart';
 
 class ItemService {
 
+  static Future<String> getApiUrl() async {
+    await dotenv.load(fileName: ".env");
+    return dotenv.env['API_URL'] ?? '';
+  }
+
   static Future<List<ItemList>> fetchItemsInventarioPage() async {
     try {
-      final response = await http.get(Uri.parse('http://10.0.2.2:8080/item/'));
+
+      final apiUrl = await getApiUrl();
+
+      final response = await http.get(Uri.parse('$apiUrl/item/'));
 
       if (response.statusCode == 200) {
         List<dynamic> jsonResponse = json.decode(utf8.decode(response.bodyBytes));
@@ -23,7 +32,10 @@ class ItemService {
 
   static Future<List<ItemNotification>> fetchItemsNotificationsPage() async {
     try {
-      final response = await http.get(Uri.parse('http://10.0.2.2:8080/item/'));
+
+      final apiUrl = await getApiUrl();
+
+      final response = await http.get(Uri.parse('$apiUrl/item/'));
 
       if (response.statusCode == 200) {
         List<dynamic> jsonResponse = json.decode(utf8.decode(response.bodyBytes));
@@ -39,8 +51,11 @@ class ItemService {
 
   static Future<void> createItem(Map<String, dynamic> item) async {
     var body = jsonEncode(item);
+
+    final apiUrl = await getApiUrl();
+
     final response = await http.post(
-      Uri.parse('http://10.0.2.2:8080/item/'),
+      Uri.parse('$apiUrl/item/'),
       headers: {'Content-Type': 'application/json'},
       body: body,
     );

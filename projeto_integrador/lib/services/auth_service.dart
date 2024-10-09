@@ -1,3 +1,4 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart';
 import 'dart:convert';
 
@@ -11,14 +12,22 @@ class AuthService {
     return isLoggedIn;
   }
 
+  static Future<String> getApiUrl() async {
+    await dotenv.load(fileName: ".env");
+    return dotenv.env['API_URL'] ?? '';
+  }
+
   // Simulação de login
   static Future<Token> login(username, password) async {
       final body = {
         'email': username,
         'password': password,
       };
+
+      final apiUrl = await getApiUrl();
+      
       final response = await post(
-      Uri.parse("http://10.0.2.2:8080/login"), // substituir pela URL do servidor
+      Uri.parse("$apiUrl/login"), // substituir pela URL do servidor
       headers: {
         'Content-Type': 'application/json',
       },
