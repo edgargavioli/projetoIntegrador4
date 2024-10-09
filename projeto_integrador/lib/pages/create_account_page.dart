@@ -43,27 +43,27 @@ class CreateAccountPage extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 50),
                 child: Column(
                   children: [
-                    CustomTextfield(controller: _nomeController, label: "Nome"),
+                    CustomTextfield(controller: _nomeController, label: "Nome", obscureText: false,),
                     
                     const SizedBox(height: 15,),
                     
-                    CustomTextfield(controller: _sobrenomeController, label: "Sobrenome"),
+                    CustomTextfield(controller: _sobrenomeController, label: "Sobrenome", obscureText: false,),
                     
                     const SizedBox(height: 15,),
                     
-                    CustomTextfield(controller: _emailController, label: "E-mail"),
+                    CustomTextfield(controller: _emailController, label: "E-mail", obscureText: false,),
                     
                     const SizedBox(height: 15,),
                     
-                    CustomTextfield(controller: _cadastroController, label: "Número de cadastro"),
+                    CustomTextfield(controller: _cadastroController, label: "Número de cadastro", obscureText: false,),
                                 
                     const SizedBox(height: 15,),
                     
-                    CustomTextfield(controller: _senhaController, label: "Senha"),
+                    CustomTextfield(controller: _senhaController, label: "Senha", obscureText: true,),
                     
                     const SizedBox(height: 15,),
                     
-                    CustomTextfield(controller: _confirmarSenhaController, label: "Confirmar Senha"),
+                    CustomTextfield(controller: _confirmarSenhaController, label: "Confirmar Senha", obscureText: true,),
 
                     const SizedBox(height: 15,),
 
