@@ -62,11 +62,11 @@ class LoginPage extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 50),
                 child: Column(
                   children: [
-                    CustomTextfield(controller: _usernameControler, label: "E-mail"),
+                    CustomTextfield(controller: _usernameControler, label: "E-mail", obscureText: false,),
               
                     const SizedBox(height: 15,),
           
-                    CustomTextfield(controller: _passwordController, label: "Senha"),
+                    CustomTextfield(controller: _passwordController, label: "Senha", obscureText: true,),
                     
                     const SizedBox(height: 5,),
 
