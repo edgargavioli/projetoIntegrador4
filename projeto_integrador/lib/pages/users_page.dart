@@ -60,6 +60,7 @@ class _UsersPageState extends State<UsersPage> {
               controller: _searchController,
               icon: const Icon(Icons.search),
               label: "Buscar...",
+              obscureText: false,
             ),
           ),
           const SizedBox(height: 20),

@@ -188,11 +188,13 @@ class _ItemRegistrationPageState extends State<ItemRegistrationPage> {
               CustomTextfield(
                 controller: descricaoController,
                 label: 'Item',
+                obscureText: false,
               ),
               const SizedBox(height: 16),
               CustomTextfield(
                 controller: numeroSerieController,
                 label: 'Número de Série',
+                obscureText: false,
               ),
               const SizedBox(height: 16),
               CustomSelectField(
@@ -276,11 +278,13 @@ class _ItemRegistrationPageState extends State<ItemRegistrationPage> {
               CustomTextfield(
                 controller: potenciaController,
                 label: 'Potência',
+                obscureText: false,
               ),
               const SizedBox(height: 16),
               CustomTextfield(
                 controller: notaFiscalController,
                 label: 'Nota Fiscal',
+                obscureText: false,
               ),
               const SizedBox(height: 16),
               CustomDateField(
@@ -305,11 +309,13 @@ class _ItemRegistrationPageState extends State<ItemRegistrationPage> {
               CustomTextfield(
                 controller: comentarioManutencaoController,
                 label: 'Comentário Sobre a Última Manutenção',
+                obscureText: false,
               ),
               const SizedBox(height: 16),
               CustomTextfield(
                 controller: patrimonioController,
                 label: 'Patrimônio',
+                obscureText: false,
               ),
               const SizedBox(height: 16),
               CustomSelectField(
