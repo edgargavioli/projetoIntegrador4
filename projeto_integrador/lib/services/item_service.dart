@@ -5,7 +5,6 @@ import 'package:projeto_integrador/models/item_list.dart';
 import 'package:projeto_integrador/models/item_notification.dart';
 
 class ItemService {
-
   static Future<String> getApiUrl() async {
     await dotenv.load(fileName: ".env");
     return dotenv.env['API_URL'] ?? '';
@@ -13,15 +12,13 @@ class ItemService {
 
   static Future<List<ItemList>> fetchItemsInventarioPage() async {
     try {
-
       final apiUrl = await getApiUrl();
-
       final response = await http.get(Uri.parse('$apiUrl/item/'));
 
       if (response.statusCode == 200) {
         List<dynamic> jsonResponse = json.decode(utf8.decode(response.bodyBytes));
-        return jsonResponse.map((json) => ItemList.fromJson(json)).toList(); // problema: aqui é onde acontece o erro de marca dentro modelo
-      } else { // Quando resolver o problema descrito em modelo.dart, trocar Item_List por Item, como era originalmente
+        return jsonResponse.map((json) => ItemList.fromJson(json)).toList();
+      } else {
         throw Exception('Failed to load items');
       }
     } catch (e) {
@@ -32,26 +29,23 @@ class ItemService {
 
   static Future<List<ItemNotification>> fetchItemsNotificationsPage() async {
     try {
-
       final apiUrl = await getApiUrl();
-
       final response = await http.get(Uri.parse('$apiUrl/item/'));
 
       if (response.statusCode == 200) {
         List<dynamic> jsonResponse = json.decode(utf8.decode(response.bodyBytes));
         return jsonResponse.map((json) => ItemNotification.fromJson(json)).toList();
       } else {
-        throw Exception('Failed to load items');
+        throw Exception('Failed to load notifications');
       }
     } catch (e) {
       print('Error fetching notification items: $e');
-      throw Exception('Failed to load items');
+      throw Exception('Failed to load notifications');
     }
   }
 
   static Future<void> createItem(Map<String, dynamic> item) async {
     var body = jsonEncode(item);
-
     final apiUrl = await getApiUrl();
 
     final response = await http.post(

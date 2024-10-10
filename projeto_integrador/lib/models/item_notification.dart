@@ -1,16 +1,16 @@
 class ItemNotification {
   final String descricao;
-  final DateTime? proximaManutencao;
+  final DateTime? proximaQualificacao;
 
   ItemNotification({
     required this.descricao,
-    this.proximaManutencao
+    this.proximaQualificacao, // Adicionar este campo no construtor
   });
 
   factory ItemNotification.fromJson(Map<String, dynamic> json) {
     return ItemNotification(
       descricao: json['descricao'],
-      proximaManutencao: json['proximaManutencao'] != null ? DateTime.parse(json['proximaManutencao']) : null,
+      proximaQualificacao: json['proximaQualificacao'] != null ? DateTime.parse(json['proximaQualificacao']) : null, // Adicionar essa linha
     );
   }
 }

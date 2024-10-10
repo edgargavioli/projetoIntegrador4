@@ -40,9 +40,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
     DateTime agora = DateTime.now();
 
     for (var item in itens) {
-      DateTime? dataProximaManutencao = item.proximaManutencao;
-      if (dataProximaManutencao != null) {
-        int diasRestantes = dataProximaManutencao.difference(agora).inDays;
+      DateTime? dataProximaQualificacao = item.proximaQualificacao;
+      if (dataProximaQualificacao != null) {
+        int diasRestantes = dataProximaQualificacao.difference(agora).inDays;
         if ([30, 15, 7, 1].contains(diasRestantes)) {
           notificacoes.add(NotificationItem(
             descricao: item.descricao,
