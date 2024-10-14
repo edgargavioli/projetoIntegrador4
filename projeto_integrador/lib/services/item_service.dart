@@ -63,4 +63,16 @@ class ItemService {
       throw Exception('Erro ao cadastrar o item');
     }
   }
+
+  static Future<void> deleteItem(Map<String, dynamic> item) async {
+    final apiUrl = await getApiUrl();
+
+    final response = await http.delete(
+      Uri.parse('$apiUrl/item/$item["id"]'),
+      headers: {'Content-Type': 'application/json'},
+    );
+    if (response.statusCode != 200) {
+      throw Exception('Erro ao deletar o item');
+    }
+  }
 }
