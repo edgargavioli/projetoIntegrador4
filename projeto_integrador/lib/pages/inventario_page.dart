@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:projeto_integrador/components/custom_textfield.dart';
 import 'package:projeto_integrador/models/item_list.dart';
 import 'package:projeto_integrador/services/item_service.dart';
+import 'package:projeto_integrador/pages/item_registration_page.dart';
 
 class InventarioPage extends StatefulWidget {
   const InventarioPage({super.key});
@@ -21,6 +22,17 @@ class _InventarioPageState extends State<InventarioPage> {
   void initState() {
     super.initState();
     loading();
+  }
+
+  Future<void> _navigateToItemRegistrationPage() async {
+    final bool? result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const ItemRegistrationPage()),
+    );
+
+    if (result == true) {
+      loading();
+    }
   }
 
   Future<void> loading() async {
@@ -51,15 +63,18 @@ class _InventarioPageState extends State<InventarioPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: Theme.of(context).colorScheme.secondary, // Cor de fundo personalizada
+          backgroundColor: Theme.of(context)
+              .colorScheme
+              .secondary, // Cor de fundo personalizada
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
           ),
-          title: Row(
-            children: const [
+          title: const Row(
+            children: [
               Icon(Icons.delete, color: Colors.red),
               SizedBox(width: 10),
-              Text('Excluir Item', style: TextStyle(color: Color.fromARGB(255, 255, 254, 254))),
+              Text('Excluir Item',
+                  style: TextStyle(color: Color.fromARGB(255, 255, 254, 254))),
             ],
           ),
           content: const Text(
@@ -73,7 +88,10 @@ class _InventarioPageState extends State<InventarioPage> {
               },
               child: const Text('Cancelar'),
               style: TextButton.styleFrom(
-                foregroundColor: Colors.white, backgroundColor: Theme.of(context).colorScheme.secondary, // Cor do botão Cancelar
+                foregroundColor: Colors.white,
+                backgroundColor: Theme.of(context)
+                    .colorScheme
+                    .secondary, // Cor do botão Cancelar
               ),
             ),
             ElevatedButton.icon(
@@ -84,9 +102,7 @@ class _InventarioPageState extends State<InventarioPage> {
               icon: const Icon(Icons.delete, color: Colors.white),
               label: const Text('Excluir'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red, 
-                foregroundColor: Colors.white
-              ),
+                  backgroundColor: Colors.red, foregroundColor: Colors.white),
             ),
           ],
         );
@@ -166,7 +182,7 @@ class _InventarioPageState extends State<InventarioPage> {
                                                 .inverseSurface
                                             : Theme.of(context)
                                                 .colorScheme
-                                                .error,
+                                                .tertiary,
                                   ),
                                 ),
                               ),
@@ -209,7 +225,8 @@ class _InventarioPageState extends State<InventarioPage> {
                 FloatingActionButton(
                   backgroundColor: const Color(0xFFB3261E),
                   onPressed: () {
-                    _showDeleteConfirmation(context); // Chama o diálogo de exclusão
+                    _showDeleteConfirmation(
+                        context); // Chama o diálogo de exclusão
                   },
                   child: const Icon(Icons.delete_outline),
                 ),
@@ -227,7 +244,7 @@ class _InventarioPageState extends State<InventarioPage> {
                 FloatingActionButton(
                   backgroundColor: Theme.of(context).colorScheme.secondary,
                   onPressed: () {
-                    Navigator.pushNamed(context, '/itemRegistration');
+                    _navigateToItemRegistrationPage();
                   },
                   child: const Icon(Icons.add),
                 ),
