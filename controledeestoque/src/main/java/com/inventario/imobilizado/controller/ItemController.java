@@ -17,8 +17,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -91,7 +97,34 @@ public class ItemController {
 
     }
 
+    @GetMapping("/notificacoes")
+    public ResponseEntity<List<Item>> getItemsForNotifications() {
+        Date hoje = new Date();
 
+        List<Item> itensParaNotificacao = itemInterface.findAll().stream()
+                .filter(item -> {
+                    try {
+                        if (item.getProxima_qualificacao() == null) {
+                            return false;
+                        }
+
+                        Date dataProximaQualificacao = item.getProxima_qualificacao();
+
+                        long diferencaMillis = dataProximaQualificacao.getTime() - hoje.getTime();
+                        long diasRestantes = TimeUnit.DAYS.convert(diferencaMillis, TimeUnit.MILLISECONDS);
+                        diasRestantes += 1;
+
+                        return diasRestantes == 30 || diasRestantes == 15 ||
+                            diasRestantes == 7 || diasRestantes == 1 || diasRestantes == 0;
+
+                    } catch (Exception e) {
+                        return false;
+                    }
+                })
+                .collect(Collectors.toList());
+                
+        return ResponseEntity.ok(itensParaNotificacao);
+    }
 
     @GetMapping("/")
     public ResponseEntity<List<Item>> GetAll(){

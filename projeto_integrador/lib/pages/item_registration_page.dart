@@ -126,6 +126,19 @@ class _ItemRegistrationPageState extends State<ItemRegistrationPage> {
 
   Future<void> cadastrarProduto() async {
     try {
+      DateTime dataEntrada = DateTime.parse(dataEntradaController.text)
+          .add(const Duration(days: 1));
+      DateTime ultimaQualificacao =
+          DateTime.parse(ultimaQualificacaoController.text)
+              .add(const Duration(days: 1));
+      DateTime dataNotaFiscal = DateTime.parse(dataNotaFiscalController.text)
+          .add(const Duration(days: 1));
+      DateTime proximaQualificacao =
+          DateTime.parse(proximaQualificacaoController.text)
+              .add(const Duration(days: 1));
+      DateTime prazoManutencao = DateTime.parse(prazoManutencaoController.text)
+          .add(const Duration(days: 1));
+
       Item item = Item(
         id: 0,
         descricao: descricaoController.text,
@@ -141,11 +154,11 @@ class _ItemRegistrationPageState extends State<ItemRegistrationPage> {
         modelo: int.parse(selectedModelo!),
         marca: selectedMarca!,
         localizacao: int.parse(selectedLocalOrigem!),
-        dataEntrada: DateTime.parse(dataEntradaController.text),
-        ultimaQualificacao: DateTime.parse(ultimaQualificacaoController.text),
-        dataNotaFiscal: DateTime.parse(dataNotaFiscalController.text),
-        proximaQualificacao: DateTime.parse(proximaQualificacaoController.text),
-        prazoManutencao: DateTime.parse(prazoManutencaoController.text),
+        dataEntrada: dataEntrada,
+        ultimaQualificacao: ultimaQualificacao,
+        dataNotaFiscal: dataNotaFiscal,
+        proximaQualificacao: proximaQualificacao,
+        prazoManutencao: prazoManutencao,
       );
 
       await ItemService.createItem(item.toJson());
