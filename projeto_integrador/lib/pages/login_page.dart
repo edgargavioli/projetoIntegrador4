@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_integrador/components/custom_button.dart';
 import 'package:projeto_integrador/components/custom_textfield.dart';
+import 'package:projeto_integrador/models/token.dart';
 import 'package:projeto_integrador/services/auth_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatelessWidget {
+
 
   final TextEditingController _usernameControler = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -12,10 +15,12 @@ class LoginPage extends StatelessWidget {
 
   void login(BuildContext context) async {
     try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
       String username = _usernameControler.text;
       String password = _passwordController.text;
     
-      await AuthService.login(username, password);
+      Token token = await AuthService.login(username, password);
+      await prefs.setString('token', token.toString());
       
       Navigator.pushNamed(context, '/home');
     
