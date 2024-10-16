@@ -34,6 +34,10 @@ public class HtmlController {
     private ModeloInterface modeloInterface;
     @Autowired
     private BrandInterface brandInterface;
+    @Autowired
+    private EmprestanteInterface emprestanteInterface;
+    @Autowired
+    private EmprestanteController emprestanteController;
 
     @GetMapping("/login")
     public ModelAndView loginForm(Model model) {
@@ -205,9 +209,11 @@ public class HtmlController {
 
         List<Location> locations = locationInterface.findAll();
         List<User> users = userInterface.findAll();
+        List<Emprestante> emprestantes = emprestanteInterface.findAll();
 
         modelAndView.addObject("locations", locations);
         modelAndView.addObject("users", users);
+        modelAndView.addObject("emprestantes", emprestantes);
 
 
         modelAndView.setViewName("Emprestimo");
@@ -234,7 +240,7 @@ public class HtmlController {
             }
             else {
                 Action devolver = new Action();
-                devolver.setRa_rna(lastAction.getRa_rna());
+                devolver.setEmprestante(lastAction.getEmprestante());
                 devolver.setEntidade(lastAction.getEntidade());
                 devolver.setData_emprestimo(lastAction.getData_emprestimo());
                 devolver.setData_devolucao(lastAction.getData_devolucao());
@@ -300,7 +306,7 @@ public class HtmlController {
         action.setId_item(id);
 
         Action postAction = new Action();
-        postAction.setRa_rna(action.getRa_rna());
+        postAction.setEmprestante(emprestanteInterface.findByNumIdentificacao(action.getNum_identificacao_emprestante()));
         postAction.setEntidade(action.getEntidade());
         postAction.setData_emprestimo(action.getData_emprestimo());
         postAction.setData_devolucao(action.getData_devolucao());
@@ -358,4 +364,39 @@ public class HtmlController {
         itemInterface.save(item);
         return new ModelAndView("redirect:/page/infoGeral");
     }
+
+    @GetMapping("/Emprestantes")
+    public ModelAndView emprestante(@RequestParam(name = "pageSize", required = false, defaultValue = "12") Integer pageSize,
+                                 @RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
+                                 @RequestParam(name = "order", required = false, defaultValue = "nome") String order) {
+        ModelAndView modelAndView = new ModelAndView();
+
+        // Ensure page size and page number are within valid range
+        pageSize = Math.max(1, pageSize);
+        page = Math.max(0, page);
+
+
+        Page<Emprestante> emprestantesList = emprestanteController.PagedUser(page, pageSize, emprestanteInterface, order);
+
+        modelAndView.addObject("emprestantes", emprestantesList.getContent()); // Add users to the model
+        modelAndView.addObject("page", emprestantesList); // Add page information to the model
+        modelAndView.setViewName("Emprestantes");
+
+        return modelAndView;
+    }
+
+    @GetMapping("/NovoEmprestante")
+    public ModelAndView novoEmprestante(Model model) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("data", new Emprestante());
+        modelAndView.setViewName("NovoEmprestante");
+        return modelAndView;
+    }
+
+    @PostMapping("/NovoEmprestante")
+    public ModelAndView registrarEmprestante(@ModelAttribute Emprestante data) {
+        emprestanteController.createEmprestante(data);
+        return new ModelAndView("redirect:/page/Emprestantes");
+    }
+
 }
