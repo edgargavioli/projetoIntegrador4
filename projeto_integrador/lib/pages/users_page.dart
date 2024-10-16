@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_integrador/components/custom_textfield.dart';
+import 'package:projeto_integrador/models/user.dart';
+import 'package:projeto_integrador/services/user_service.dart';
 
 class UsersPage extends StatefulWidget {
   const UsersPage({super.key});
@@ -11,18 +13,31 @@ class UsersPage extends StatefulWidget {
 // Controlador para o campo de busca
 final TextEditingController _searchController = TextEditingController();
 
-class User {
-  String name;
-  User(this.name);
-}
-
 class _UsersPageState extends State<UsersPage> {
-  List<User> users = [
-    User("User 1"),
-    User("User 2"),
-    User("User 3"),
-    User("User 4"),
-  ];
+  List<User> users = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUsers();
+  }
+
+  Future<void> _loadUsers() async {
+    try {
+      final fetchedUsers = await UserService.getUsers();
+      setState(() {
+        users = fetchedUsers;
+        print(users);
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Erro ao carregar usuários: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
 
   List<User> get filteredUsers {
     if (_searchController.text.isEmpty) {
@@ -30,7 +45,12 @@ class _UsersPageState extends State<UsersPage> {
     } else {
       return users
           .where((user) =>
-              user.name.toLowerCase().contains(_searchController.text.toLowerCase()))
+              user.nome
+                  .toLowerCase()
+                  .contains(_searchController.text.toLowerCase()) ||
+              user.sobrenome
+                  .toLowerCase()
+                  .contains(_searchController.text.toLowerCase()))
           .toList();
     }
   }
@@ -72,7 +92,22 @@ class _UsersPageState extends State<UsersPage> {
                 itemCount: filteredUsers.length,
                 itemBuilder: (context, index) {
                   return ListTile(
-                    title: Text(filteredUsers[index].name),
+                    title: Text(
+                      "${filteredUsers[index].nome} ${filteredUsers[index].sobrenome}",
+                    ),
+                    subtitle: Text(
+                      filteredUsers[index].tipo_usuario,
+                      style: TextStyle(
+                        color: filteredUsers[index].tipo_usuario ==
+                                "Administrador"
+                            ? Theme.of(context).colorScheme.primary
+                            : filteredUsers[index].tipo_usuario == "Colaborador"
+                                ? Theme.of(context).colorScheme.inversePrimary
+                                : filteredUsers[index].tipo_usuario == "Aluno"
+                                    ? Theme.of(context).colorScheme.tertiary
+                                    : Theme.of(context).colorScheme.onSurface,
+                      ),
+                    ),
                   );
                 },
               ),

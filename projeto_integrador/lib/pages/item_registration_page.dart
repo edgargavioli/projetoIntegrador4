@@ -150,7 +150,14 @@ class _ItemRegistrationPageState extends State<ItemRegistrationPage> {
 
       await ItemService.createItem(item.toJson());
 
-      Navigator.pop(context, true); // retorna para o inventário apos o cadastro, mas não atualiza a lista
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Item cadastrado com sucesso!'),
+          backgroundColor: Colors.green,
+        ),
+      );
+
+      Navigator.pop(context, true);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Erro ao cadastrar o item')),
