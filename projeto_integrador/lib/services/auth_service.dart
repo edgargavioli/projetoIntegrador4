@@ -37,9 +37,6 @@ class AuthService {
     final apiUrl = await getApiUrl();
 
     final response = await post(
-    final apiUrl = await getApiUrl();
-
-    final response = await post(
       Uri.parse("$apiUrl/login"), // substituir pela URL do servidor
       headers: {
         'Content-Type': 'application/json',
