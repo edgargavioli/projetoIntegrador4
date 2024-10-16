@@ -19,14 +19,14 @@ class AuthService {
 
   // Simulação de login
   static Future<Token> login(username, password) async {
-      final body = {
-        'email': username,
-        'password': password,
-      };
+    final body = {
+      'email': username,
+      'password': password,
+    };
 
-      final apiUrl = await getApiUrl();
-      
-      final response = await post(
+    final apiUrl = await getApiUrl();
+
+    final response = await post(
       Uri.parse("$apiUrl/login"), // substituir pela URL do servidor
       headers: {
         'Content-Type': 'application/json',
