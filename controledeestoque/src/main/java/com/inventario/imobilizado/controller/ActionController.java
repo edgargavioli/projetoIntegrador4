@@ -32,16 +32,19 @@ public class ActionController {
     @Autowired
     private UserInterface userInterface;
 
+    @Autowired
+    private EmprestanteInterface emprestanteInterface;
+
     @PostMapping("/")
     public ResponseEntity<Action> postAction(@RequestBody ActionRequest data) {
         Action action = new Action();
-        action.setRa_rna(data.getRa_rna());
         action.setEntidade(data.getEntidade());
 //            action.setData_emprestimo(new Date(data.getData_emprestimo()));
 //            action.setData_devolucao(new Date(data.getData_devolucao()));
         action.setUsuario(userInterface.findById(data.getId_usuario()).get());
         action.setItem(itemInterface.findById(data.getId_item()).get());
         action.setAnexos(attachmentInterface.findById(data.getId_anexos()).get());
+        action.setEmprestante(emprestanteInterface.findByNumIdentificacao(data.getNum_identificacao_emprestante()));
 //            action.setLocalizacao(data.getItem().getLocalizacao_atual());
         actionInterface.save(action);
 

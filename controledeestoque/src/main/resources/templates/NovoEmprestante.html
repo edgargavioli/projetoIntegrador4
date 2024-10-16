@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KeepInventory</title>
+
+    <link rel="stylesheet" th:href="@{/stylesheets/style.css}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&family=Montserrat:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@100;200;300;400&display=swap" rel="stylesheet">
+
+</head>
+<body>
+
+<div class="navbar">
+    <div class="toggle-btn" onclick="toggleSidebar()">
+        <img src="/img/burguer.png" alt="Toggle" class="toggle-image">
+    </div>
+    <div class="navbar-right">
+        <a href="/page/Avisos">
+            <img src="/img/campainha-off.png" alt="Alerts" class="navbar-campainha">
+        </a>
+        <a href="/page/Usuarios">
+            <img src="/img/usuario.png" alt="User" class="navbar-user-image">
+        </a>
+    </div>
+</div>
+
+<div id="mySidebar" class="sidebar">
+    <a href="/page/infoGeral">
+        <button class="sidebar-btn" >
+            <img src="/img/inventario.png" alt="Toggle" class="sidebar-image">
+            <a class="sidebar-text">Inventário</a>
+        </button>
+    </a>
+    <a href="/page/NovoCadastro">
+        <button class="sidebar-btn" >
+            <img src="/img/cadastrar.png" alt="Toggle" class="sidebar-image">
+            <a class="sidebar-text">Cadastrar</a>
+        </button>
+    </a>
+    <a href="/page/activeFieldRegistration">
+        <button class="sidebar-btn" >
+            <img src="/img/active.png" alt="Toggle" class="sidebar-image">
+            <a class="sidebar-text">Campos Ativos</a>
+        </button>
+    </a>
+    <a href="/page/location">
+        <button class="sidebar-btn" >
+            <img src="/img/location.png" alt="Toggle" class="sidebar-image">
+            <a class="sidebar-text">Localização</a>
+        </button>
+    </a>
+    <a href="/page/Usuarios">
+        <button class="sidebar-btn" >
+            <img src="/img/user.png" alt="Toggle" class="sidebar-image">
+            <a class="sidebar-text">Usuários</a>
+        </button>
+    </a>
+    <a href="/page/Emprestantes">
+        <button class="sidebar-btn" >
+            <img src="/img/user.png" alt="Toggle" class="sidebar-image">
+            <a class="sidebar-text">Emprestantes</a>
+        </button>
+    </a>
+</div>
+
+<div class="main-content" th:object="${data}">
+
+    <div class="info-container">
+        <div class="info-text">
+            <a class="item-text" th:text="'Novo Emprestante'"></a>
+        </div>
+        <div class="info-buttons">
+            <div class="buttons">
+                <button type="submit" class="body-btn-salvar" form="formCadastro">
+                    Salvar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <form id="formCadastro" th:action="@{/page/NovoEmprestante}" th:method="post">
+        <div class="input-container-novo-cadastro">
+            <div class="input-group">
+                <label for="input2">Nome<span class="required">*</span></label>
+                <input id="input2" type="text" th:field="*{nome}" placeholder="Cleber" required>
+            </div>
+            <div class="input-group">
+                <label for="input5">RA/RNA<span class="required">*</span></label>
+                <input id="input5" type="text" th:field="*{num_identificacao}" th:placeholder="${#strings.defaultString(num_identificacao, '20222720')}" required>
+            </div>
+        </div>
+    </form>
+
+</div>
+
+<script th:src="@{/navbar.js}"></script>
+<script th:src="@{/input.js}"></script>
+
+</body>
+</html>
