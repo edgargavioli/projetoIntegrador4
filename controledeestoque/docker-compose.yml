@@ -59,16 +59,16 @@ services:
     depends_on:
       - collector-api
 
-  grafana:
-    container_name: grafana
-    image: grafana/grafana
-    volumes:
-      - ./grafana/grafana-datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml
-    restart: always
-    ports:
-      - "3000:3000"
-    depends_on:
-      - prometheus
+  # grafana:
+  #   container_name: grafana
+  #   image: grafana/grafana
+  #   volumes:
+  #     - ./grafana/grafana-datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml
+  #   restart: always
+  #   ports:
+  #     - "3000:3000"
+  #   depends_on:
+  #     - prometheus
 
 volumes:
   mysql_data:
