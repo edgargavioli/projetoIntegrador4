@@ -62,6 +62,12 @@
       <a class="sidebar-text">Usuários</a>
     </button>
   </a>
+  <a href="/page/Emprestantes">
+    <button class="sidebar-btn" >
+      <img src="/img/user.png" alt="Toggle" class="sidebar-image">
+      <a class="sidebar-text">Emprestantes</a>
+    </button>
+  </a>
 </div>
 
 <div class="main-content">
@@ -82,7 +88,7 @@
     <div class="input-container-novo-cadastro">
       <div class="input-group">
         <label for="input23">RA/RNA<span class="required">*</span></label>
-        <input id="input23" type="text" th:field="${data.ra_rna}" th:value="${action.ra_rna}" placeholder="20241234" required>
+        <input id="input23" type="text" th:field="${data.num_identificacao_emprestante}" placeholder="20241234" required>
       </div>
       <div class="input-group">
         <label for="input1">Entidade<span class="required">*</span></label>
