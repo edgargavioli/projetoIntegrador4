@@ -211,6 +211,7 @@ public class HtmlController {
         List<User> users = userInterface.findAll();
         List<Emprestante> emprestantes = emprestanteInterface.findAll();
 
+
         modelAndView.addObject("locations", locations);
         modelAndView.addObject("users", users);
         modelAndView.addObject("emprestantes", emprestantes);
