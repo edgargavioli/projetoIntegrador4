@@ -15,11 +15,22 @@ final TextEditingController _searchController = TextEditingController();
 
 class _UsersPageState extends State<UsersPage> {
   List<User> users = [];
+  String _selectedFilter = "Todos"; // Filtro inicial
 
   @override
   void initState() {
     super.initState();
     _loadUsers();
+
+    _searchController.addListener(() {
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 
   Future<void> _loadUsers() async {
@@ -27,7 +38,6 @@ class _UsersPageState extends State<UsersPage> {
       final fetchedUsers = await UserService.getUsers();
       setState(() {
         users = fetchedUsers;
-        print(users);
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -40,19 +50,19 @@ class _UsersPageState extends State<UsersPage> {
   }
 
   List<User> get filteredUsers {
-    if (_searchController.text.isEmpty) {
-      return users;
-    } else {
-      return users
-          .where((user) =>
-              user.nome
-                  .toLowerCase()
-                  .contains(_searchController.text.toLowerCase()) ||
-              user.sobrenome
-                  .toLowerCase()
-                  .contains(_searchController.text.toLowerCase()))
-          .toList();
-    }
+    return users.where((user) {
+      final matchesSearch = user.nome
+              .toLowerCase()
+              .contains(_searchController.text.toLowerCase()) ||
+          user.sobrenome
+              .toLowerCase()
+              .contains(_searchController.text.toLowerCase());
+
+      final matchesFilter = _selectedFilter == 'Todos' ||
+          user.tipo_usuario == _selectedFilter;
+
+      return matchesSearch && matchesFilter;
+    }).toList();
   }
 
   @override
@@ -76,11 +86,36 @@ class _UsersPageState extends State<UsersPage> {
           const SizedBox(height: 20),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 50),
-            child: CustomTextfield(
-              controller: _searchController,
-              icon: const Icon(Icons.search),
-              label: "Buscar...",
-              obscureText: false,
+            child: Column(
+              children: [
+                CustomTextfield(
+                  controller: _searchController,
+                  icon: const Icon(Icons.search),
+                  label: "Buscar...",
+                  obscureText: false,
+                ),
+                const SizedBox(height: 10), // Espaçamento entre os componentes
+                DropdownButton<String>(
+                  value: _selectedFilter,
+                  items: [
+                    'Todos',
+                    'Administrador',
+                    'Colaborador',
+                    'Aluno',
+                  ].map((String filter) {
+                    return DropdownMenuItem<String>(
+                      value: filter,
+                      child: Text(filter),
+                    );
+                  }).toList(),
+                  onChanged: (newValue) {
+                    setState(() {
+                      _selectedFilter = newValue!;
+                    });
+                  },
+                  isExpanded: true,
+                ),
+              ],
             ),
           ),
           const SizedBox(height: 20),
