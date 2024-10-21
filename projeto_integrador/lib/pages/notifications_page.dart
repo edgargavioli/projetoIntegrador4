@@ -1,6 +1,8 @@
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:projeto_integrador/components/custom_notification.dart';
+import 'package:projeto_integrador/main.dart';
 import 'package:projeto_integrador/models/item_notification.dart';
 import 'package:projeto_integrador/services/item_service.dart';
 
@@ -20,10 +22,37 @@ class _NotificationsPageState extends State<NotificationsPage> {
     carregarNotificacoes();
   }
 
+  Future<void> showNotification(String title, String body) async {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+      'your_channel_id',
+      'your_channel_name',
+      importance: Importance.max,
+      priority: Priority.high,
+    );
+
+    const NotificationDetails platformChannelSpecifics =
+        NotificationDetails(android: androidPlatformChannelSpecifics);
+
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      title,
+      body,
+      platformChannelSpecifics,
+    );
+  }
+
   void carregarNotificacoes() async {
     try {
       List<ItemNotification> fetchedItems =
           await ItemService.fetchItemsNotifications();
+
+      if (fetchedItems.length > itens.length) {
+        await showNotification(
+          'Novos alertas de manutenção',
+          'Você possui novos alertas de manutenção de itens',
+        );
+      }
 
       fetchedItems.sort((a, b) {
         if (a.proxima_qualificacao == null) return 1;
