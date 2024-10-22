@@ -44,6 +44,7 @@ public class ItemController {
     @PostMapping("/")
     public ResponseEntity<?> registrarProduto(@RequestBody RequestItem data) {
 
+        try {
         Brand brand = brandInterface.findById(data.getMarca()).get();
 
         Modelo modelo = modeloInterface.findById(data.getModelo()).get();
@@ -88,6 +89,9 @@ public class ItemController {
 
         itemInterface.save(item);
         return ResponseEntity.ok(item);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("{\"error\": \"" + e.getMessage() + "\"}");
+        }
 
     }
 
@@ -98,6 +102,12 @@ public class ItemController {
         List<Item> AllItems = itemInterface.findAll();
 
         return ResponseEntity.ok(AllItems);
+    }
+
+    @GetMapping("page")
+    public ResponseEntity<List<Item>> GetAllPaginated(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "12") int size) {
+        Page<Item> pagedResult = itemInterface.findAll(PageRequest.of(page, size));
+        return ResponseEntity.ok(pagedResult.getContent());
     }
 
     @PutMapping("/{id_item}")
