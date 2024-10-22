@@ -15,7 +15,7 @@ void main() {
       '/createAccount': (context) => CreateAccountPage(),
       '/home': (context) => AuthGuard(HomePage()),
       '/itemRegistration': (context) => AuthGuard(ItemRegistrationPage()),
-      '/emprestimo': (context) => AuthGuard(EmprestimoPage()),
+      // '/emprestimo': (context) => AuthGuard(EmprestimoPage()),
     },
     theme: lightMode,
     debugShowCheckedModeBanner: false,

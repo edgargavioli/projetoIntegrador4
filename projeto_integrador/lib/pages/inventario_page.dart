@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_integrador/components/custom_textfield.dart';
 import 'package:projeto_integrador/models/item_list.dart';
+import 'package:projeto_integrador/pages/emprestimo_page.dart';
 import 'package:projeto_integrador/services/item_service.dart';
 import 'package:projeto_integrador/pages/item_registration_page.dart';
 
@@ -24,7 +25,8 @@ class _InventarioPageState extends State<InventarioPage> {
     loading();
   }
 
-  void _navigateToEmprestimoPage() {
+void _navigateToEmprestimoPage(BuildContext context) {
+  try {
     final List<ItemList> selectedItems = _items
         .asMap()
         .entries
@@ -32,33 +34,23 @@ class _InventarioPageState extends State<InventarioPage> {
         .map((entry) => entry.value)
         .toList();
 
-    if (selectedItems.isNotEmpty) {
-      Navigator.pushNamed(
-        context,
-        '/emprestimo',
-        arguments: selectedItems,
-      );
-    } else {
-      // Mostrar um alerta se nenhum item foi selecionado
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Atenção'),
-            content: const Text('Por favor, selecione pelo menos um item.'),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('Ok'),
-              ),
-            ],
-          );
-        },
-      );
-    }
+    // Navega para a página de empréstimo sem animação
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => EmprestimoPage(
+          selectedItems: selectedItems,
+        ),
+        transitionDuration: Duration.zero, // Sem duração de transição
+        reverseTransitionDuration: Duration.zero, // Sem animação de volta também
+      ),
+    );
+  } catch (e) {
+    print(e);
   }
+}
+
+
+
 
   Future<void> _navigateToItemRegistrationPage() async {
     final bool? result = await Navigator.push(
@@ -93,6 +85,7 @@ class _InventarioPageState extends State<InventarioPage> {
       _isSelecting = _selectedItems.contains(true);
     });
   }
+
 
   void _showDeleteConfirmation(BuildContext context) {
     showDialog(
@@ -253,7 +246,7 @@ class _InventarioPageState extends State<InventarioPage> {
                 FloatingActionButton(
                   backgroundColor: const Color(0xFF28A745),
                   onPressed: () {
-                    _navigateToEmprestimoPage();
+                    _navigateToEmprestimoPage(context);
                   },
                   child: const Icon(Icons.add_circle_outline),
                 ),
