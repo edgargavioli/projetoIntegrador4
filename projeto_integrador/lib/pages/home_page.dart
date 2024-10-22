@@ -5,6 +5,7 @@ import 'package:projeto_integrador/components/custom_menu_bar.dart';
 import 'package:projeto_integrador/pages/inventario_page.dart';
 import 'package:projeto_integrador/pages/notifications_page.dart';
 import 'package:projeto_integrador/pages/users_page.dart';
+import 'package:projeto_integrador/pages/emprestantes_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -34,6 +35,7 @@ class _HomePageState extends State<HomePage> {
       body: <Widget>[
         AuthGuard(InventarioPage()),
         AuthGuard(UsersPage()),
+        AuthGuard(EmprestantesPage()),
         AuthGuard(NotificationsPage()),
       ][_currentPageIndex],
     );
