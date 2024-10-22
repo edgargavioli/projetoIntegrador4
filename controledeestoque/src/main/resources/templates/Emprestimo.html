@@ -88,7 +88,10 @@
     <div class="input-container-novo-cadastro">
       <div class="input-group">
         <label for="input23">RA/RNA<span class="required">*</span></label>
-        <input id="input23" type="text" th:field="${data.num_identificacao_emprestante}" placeholder="20241234" required>
+          <select id="input23" th:field="${data.num_identificacao_emprestante}" required>
+            <option value="">Selecione o Emprestante</option>
+            <option th:each="emprestantes : ${emprestantes}" th:value="${emprestantes.num_identificacao}" th:text="${emprestantes.nome}"></option>
+          </select>
       </div>
       <div class="input-group">
         <label for="input1">Entidade<span class="required">*</span></label>
