@@ -17,14 +17,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
+import java.util.*;
+import java.util.stream.IntStream;
 
 
 @RestController
@@ -97,40 +91,140 @@ public class ItemController {
 
     }
 
-    @GetMapping("/notificacoes")
-    public ResponseEntity<List<Item>> getItemsForNotifications() {
-        Date hoje = new Date();
-
-        List<Item> itensParaNotificacao = itemInterface.findAll().stream()
-                .filter(item -> {
-                    try {
-                        if (item.getProxima_qualificacao() == null) {
-                            return false;
-                        }
-
-                        Date dataProximaQualificacao = item.getProxima_qualificacao();
-
-                        long diferencaMillis = dataProximaQualificacao.getTime() - hoje.getTime();
-                        long diasRestantes = TimeUnit.DAYS.convert(diferencaMillis, TimeUnit.MILLISECONDS);
-                        diasRestantes += 1;
-
-                        return diasRestantes == 30 || diasRestantes == 15 ||
-                            diasRestantes == 7 || diasRestantes == 1 || diasRestantes == 0;
-
-                    } catch (Exception e) {
-                        return false;
-                    }
-                })
-                .collect(Collectors.toList());
-                
-        return ResponseEntity.ok(itensParaNotificacao);
-    }
-
     @GetMapping("/")
     public ResponseEntity<List<Item>> GetAll(){
         List<Item> AllItems = itemInterface.findAll();
+        List<Item> AllItemsAtivos = new List<Item>() {
+            @Override
+            public int size() {
+                return 0;
+            }
 
-        return ResponseEntity.ok(AllItems);
+            @Override
+            public boolean isEmpty() {
+                return false;
+            }
+
+            @Override
+            public boolean contains(Object o) {
+                return false;
+            }
+
+            @Override
+            public Iterator<Item> iterator() {
+                return null;
+            }
+
+            @Override
+            public Object[] toArray() {
+                return new Object[0];
+            }
+
+            @Override
+            public <T> T[] toArray(T[] a) {
+                return null;
+            }
+
+            @Override
+            public boolean add(Item item) {
+                return false;
+            }
+
+            @Override
+            public boolean remove(Object o) {
+                return false;
+            }
+
+            @Override
+            public boolean containsAll(Collection<?> c) {
+                return false;
+            }
+
+            @Override
+            public boolean addAll(Collection<? extends Item> c) {
+                return false;
+            }
+
+            @Override
+            public boolean addAll(int index, Collection<? extends Item> c) {
+                return false;
+            }
+
+            @Override
+            public boolean removeAll(Collection<?> c) {
+                return false;
+            }
+
+            @Override
+            public boolean retainAll(Collection<?> c) {
+                return false;
+            }
+
+            @Override
+            public void clear() {
+
+            }
+
+            @Override
+            public boolean equals(Object o) {
+                return false;
+            }
+
+            @Override
+            public int hashCode() {
+                return 0;
+            }
+
+            @Override
+            public Item get(int index) {
+                return null;
+            }
+
+            @Override
+            public Item set(int index, Item element) {
+                return null;
+            }
+
+            @Override
+            public void add(int index, Item element) {
+
+            }
+
+            @Override
+            public Item remove(int index) {
+                return null;
+            }
+
+            @Override
+            public int indexOf(Object o) {
+                return 0;
+            }
+
+            @Override
+            public int lastIndexOf(Object o) {
+                return 0;
+            }
+
+            @Override
+            public ListIterator<Item> listIterator() {
+                return null;
+            }
+
+            @Override
+            public ListIterator<Item> listIterator(int index) {
+                return null;
+            }
+
+            @Override
+            public List<Item> subList(int fromIndex, int toIndex) {
+                return List.of();
+            }
+        };
+        IntStream.iterate(0, i -> AllItems.size() < i, i -> i + 1)
+                .filter(i -> AllItems.get(i).getStatus().equals("Ativo"))
+                .mapToObj(AllItems::get)
+                .forEach(AllItemsAtivos::add);
+        return ResponseEntity.ok(AllItemsAtivos);
     }
 
     @PutMapping("/{id_item}")
