@@ -9,11 +9,8 @@ class UsersPage extends StatefulWidget {
   @override
   State<UsersPage> createState() => _UsersPageState();
 }
-
-// Controlador para o campo de busca
-final TextEditingController _searchController = TextEditingController();
-
 class _UsersPageState extends State<UsersPage> {
+  final TextEditingController _searchController = TextEditingController();
   List<User> users = [];
   String _selectedFilter = "Todos"; // Filtro inicial
 
