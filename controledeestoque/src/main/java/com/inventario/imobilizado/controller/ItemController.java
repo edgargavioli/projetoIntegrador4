@@ -134,9 +134,11 @@ public class ItemController {
     }
 
     @DeleteMapping("/deleteSelected")
-    public ResponseEntity<String> deleteSelectedItems(@RequestParam List<Integer> id_items) {
+    public ResponseEntity<String> deleteSelectedItems(@RequestBody Integer[] id_items) {
         for (Integer id_item : id_items) {
-            itemInterface.deleteById(id_item);
+            Item item = itemInterface.findById(id_item).get();
+            item.setStatus("Inativo");
+            itemInterface.save(item);
         }
         return ResponseEntity.ok("Selected items deletados com Sucesso");
     }

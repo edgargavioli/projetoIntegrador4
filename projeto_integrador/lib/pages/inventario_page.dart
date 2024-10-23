@@ -16,6 +16,7 @@ class _InventarioPageState extends State<InventarioPage> {
   bool _isLoading = true;
   bool _isSelecting = false;
   List<bool> _selectedItems = [];
+  List<int> _selectedItemsId = [];
 
   @override
   void initState() {
@@ -42,6 +43,7 @@ class _InventarioPageState extends State<InventarioPage> {
   void _toggleSelection(int index) {
     setState(() {
       _selectedItems[index] = !_selectedItems[index];
+      _selectedItemsId.add(_items[index].id);
       _isSelecting = _selectedItems.contains(true);
     });
   }
@@ -77,8 +79,10 @@ class _InventarioPageState extends State<InventarioPage> {
               ),
             ),
             ElevatedButton.icon(
-              onPressed: () {
+              onPressed: () async {
                 // Ação para excluir o item
+                await ItemService.deleteItem(_selectedItemsId);
+                await loading();
                 Navigator.of(context).pop();
               },
               icon: const Icon(Icons.delete, color: Colors.white),
