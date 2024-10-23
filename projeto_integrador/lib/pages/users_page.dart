@@ -15,6 +15,7 @@ final TextEditingController _searchController = TextEditingController();
 
 class _UsersPageState extends State<UsersPage> {
   List<User> users = [];
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -27,6 +28,7 @@ class _UsersPageState extends State<UsersPage> {
       final fetchedUsers = await UserService.getUsers();
       setState(() {
         users = fetchedUsers;
+        _isLoading = false;
         print(users);
       });
     } catch (e) {
@@ -86,32 +88,42 @@ class _UsersPageState extends State<UsersPage> {
           const SizedBox(height: 20),
           // Lista de usuários
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 50),
-              child: ListView.builder(
-                itemCount: filteredUsers.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(
-                      "${filteredUsers[index].nome} ${filteredUsers[index].sobrenome}",
+            child: _isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 50),
+                    child: ListView.builder(
+                      itemCount: filteredUsers.length,
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                          title: Text(
+                            "${filteredUsers[index].nome} ${filteredUsers[index].sobrenome}",
+                          ),
+                          subtitle: Text(
+                            filteredUsers[index].tipo_usuario,
+                            style: TextStyle(
+                              color: filteredUsers[index].tipo_usuario ==
+                                      "Administrador"
+                                  ? Theme.of(context).colorScheme.primary
+                                  : filteredUsers[index].tipo_usuario ==
+                                          "Colaborador"
+                                      ? Theme.of(context)
+                                          .colorScheme
+                                          .inversePrimary
+                                      : filteredUsers[index].tipo_usuario ==
+                                              "Aluno"
+                                          ? Theme.of(context)
+                                              .colorScheme
+                                              .tertiary
+                                          : Theme.of(context)
+                                              .colorScheme
+                                              .onSurface,
+                            ),
+                          ),
+                        );
+                      },
                     ),
-                    subtitle: Text(
-                      filteredUsers[index].tipo_usuario,
-                      style: TextStyle(
-                        color: filteredUsers[index].tipo_usuario ==
-                                "Administrador"
-                            ? Theme.of(context).colorScheme.primary
-                            : filteredUsers[index].tipo_usuario == "Colaborador"
-                                ? Theme.of(context).colorScheme.inversePrimary
-                                : filteredUsers[index].tipo_usuario == "Aluno"
-                                    ? Theme.of(context).colorScheme.tertiary
-                                    : Theme.of(context).colorScheme.onSurface,
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
+                  ),
           ),
         ],
       ),
