@@ -25,32 +25,34 @@ class _InventarioPageState extends State<InventarioPage> {
     loading();
   }
 
-void _navigateToEmprestimoPage(BuildContext context) {
-  try {
-    final List<ItemList> selectedItems = _items
-        .asMap()
-        .entries
-        .where((entry) => _selectedItems[entry.key])
-        .map((entry) => entry.value)
-        .toList();
+  void _navigateToEmprestimoPage(BuildContext context) async {
+    try {
+      final List<ItemList> selectedItems = _items
+          .asMap()
+          .entries
+          .where((entry) => _selectedItems[entry.key])
+          .map((entry) => entry.value)
+          .toList();
 
-    // Navega para a página de empréstimo sem animação
-    Navigator.of(context).push(
-      PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) => EmprestimoPage(
-          selectedItems: selectedItems,
+      final bool? result = await Navigator.of(context).push(
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              EmprestimoPage(
+            selectedItems: selectedItems,
+          ),
+          transitionDuration: Duration.zero,
+          reverseTransitionDuration: Duration.zero,
         ),
-        transitionDuration: Duration.zero, // Sem duração de transição
-        reverseTransitionDuration: Duration.zero, // Sem animação de volta também
-      ),
-    );
-  } catch (e) {
-    print(e);
+      );
+
+      if (result == true) {
+        _isSelecting = false;
+        loading();
+      }
+    } catch (e) {
+      print(e);
+    }
   }
-}
-
-
-
 
   Future<void> _navigateToItemRegistrationPage() async {
     final bool? result = await Navigator.push(
@@ -86,15 +88,12 @@ void _navigateToEmprestimoPage(BuildContext context) {
     });
   }
 
-
   void _showDeleteConfirmation(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: Theme.of(context)
-              .colorScheme
-              .secondary, // Cor de fundo personalizada
+          backgroundColor: Theme.of(context).colorScheme.secondary,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
           ),
@@ -113,19 +112,16 @@ void _navigateToEmprestimoPage(BuildContext context) {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Fechar o diálogo
+                Navigator.of(context).pop();
               },
               child: const Text('Cancelar'),
               style: TextButton.styleFrom(
                 foregroundColor: Colors.white,
-                backgroundColor: Theme.of(context)
-                    .colorScheme
-                    .secondary, // Cor do botão Cancelar
+                backgroundColor: Theme.of(context).colorScheme.secondary,
               ),
             ),
             ElevatedButton.icon(
               onPressed: () {
-                // Ação para excluir o item
                 Navigator.of(context).pop();
               },
               icon: const Icon(Icons.delete, color: Colors.white),

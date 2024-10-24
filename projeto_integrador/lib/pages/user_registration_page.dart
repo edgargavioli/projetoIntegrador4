@@ -72,6 +72,7 @@ class _UserRegistrationPageState extends State<UserRegistrationPage> {
     }
 
     User newUser = User(
+      id: null,
       nome: nomeController.text,
       sobrenome: sobrenomeController.text,
       email: emailController.text,
