@@ -15,14 +15,23 @@ class InventarioPage extends StatefulWidget {
 class _InventarioPageState extends State<InventarioPage> {
   final TextEditingController _searchController = TextEditingController();
   List<ItemList> _items = [];
+  List<ItemList> _filteredItems = [];
   bool _isLoading = true;
   bool _isSelecting = false;
   List<bool> _selectedItems = [];
+  String? _selectedStatus;
 
   @override
   void initState() {
     super.initState();
     loading();
+    _searchController.addListener(_filterItems);
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose(); // Certifique-se de descartar o controlador
+    super.dispose();
   }
 
   void _navigateToEmprestimoPage(BuildContext context) async {
@@ -70,6 +79,7 @@ class _InventarioPageState extends State<InventarioPage> {
       final items = await ItemService.fetchItemsInventarioPage();
       setState(() {
         _items = items;
+        _filteredItems = items; // Inicializa a lista filtrada
         _isLoading = false;
         _selectedItems = List<bool>.filled(_items.length, false);
       });
@@ -79,6 +89,19 @@ class _InventarioPageState extends State<InventarioPage> {
         _isLoading = false;
       });
     }
+  }
+
+  void _filterItems() {
+    final query = _searchController.text.toLowerCase();
+    setState(() {
+      _filteredItems = _items.where((item) {
+        final matchesSearch = item.descricao.toLowerCase().contains(query);
+        final matchesStatus = _selectedStatus == null || 
+                             _selectedStatus == "Todos" || 
+                             item.estado == _selectedStatus;
+        return matchesSearch && matchesStatus;
+      }).toList();
+    });
   }
 
   void _toggleSelection(int index) {
@@ -164,14 +187,41 @@ class _InventarioPageState extends State<InventarioPage> {
                   obscureText: false,
                 ),
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: 10),
+
+              // Dropdown para selecionar o status
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 50),
+                child: DropdownButton<String>(
+                  value: _selectedStatus,
+                  hint: const Text("Filtrar por Status"),
+                  items: <String>[
+                    'Todos', // Adicionado "Todos"
+                    'Disponível',
+                    'Emprestado',
+                    'Manutenção',
+                  ].map((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      _selectedStatus = newValue;
+                      _filterItems(); // Filtra a lista quando o status é alterado
+                    });
+                  },
+                ),
+              ),
+              const SizedBox(height: 20),
               Expanded(
                 child: _isLoading
                     ? const Center(child: CircularProgressIndicator())
                     : ListView.builder(
-                        itemCount: _items.length,
+                        itemCount: _filteredItems.length,
                         itemBuilder: (context, index) {
-                          final item = _items[index];
+                          final item = _filteredItems[index];
                           return GestureDetector(
                             onLongPress: () {
                               setState(() {
@@ -250,8 +300,7 @@ class _InventarioPageState extends State<InventarioPage> {
                 FloatingActionButton(
                   backgroundColor: const Color(0xFFB3261E),
                   onPressed: () {
-                    _showDeleteConfirmation(
-                        context); // Chama o diálogo de exclusão
+                    _showDeleteConfirmation(context); // Chama o diálogo de exclusão
                   },
                   child: const Icon(Icons.delete_outline),
                 ),

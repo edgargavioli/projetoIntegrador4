@@ -17,8 +17,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.IntStream;
 
 
 @RestController
@@ -91,13 +91,140 @@ public class ItemController {
 
     }
 
-
-
     @GetMapping("/")
     public ResponseEntity<List<Item>> GetAll(){
         List<Item> AllItems = itemInterface.findAll();
+        List<Item> AllItemsAtivos = new List<Item>() {
+            @Override
+            public int size() {
+                return 0;
+            }
 
-        return ResponseEntity.ok(AllItems);
+            @Override
+            public boolean isEmpty() {
+                return false;
+            }
+
+            @Override
+            public boolean contains(Object o) {
+                return false;
+            }
+
+            @Override
+            public Iterator<Item> iterator() {
+                return null;
+            }
+
+            @Override
+            public Object[] toArray() {
+                return new Object[0];
+            }
+
+            @Override
+            public <T> T[] toArray(T[] a) {
+                return null;
+            }
+
+            @Override
+            public boolean add(Item item) {
+                return false;
+            }
+
+            @Override
+            public boolean remove(Object o) {
+                return false;
+            }
+
+            @Override
+            public boolean containsAll(Collection<?> c) {
+                return false;
+            }
+
+            @Override
+            public boolean addAll(Collection<? extends Item> c) {
+                return false;
+            }
+
+            @Override
+            public boolean addAll(int index, Collection<? extends Item> c) {
+                return false;
+            }
+
+            @Override
+            public boolean removeAll(Collection<?> c) {
+                return false;
+            }
+
+            @Override
+            public boolean retainAll(Collection<?> c) {
+                return false;
+            }
+
+            @Override
+            public void clear() {
+
+            }
+
+            @Override
+            public boolean equals(Object o) {
+                return false;
+            }
+
+            @Override
+            public int hashCode() {
+                return 0;
+            }
+
+            @Override
+            public Item get(int index) {
+                return null;
+            }
+
+            @Override
+            public Item set(int index, Item element) {
+                return null;
+            }
+
+            @Override
+            public void add(int index, Item element) {
+
+            }
+
+            @Override
+            public Item remove(int index) {
+                return null;
+            }
+
+            @Override
+            public int indexOf(Object o) {
+                return 0;
+            }
+
+            @Override
+            public int lastIndexOf(Object o) {
+                return 0;
+            }
+
+            @Override
+            public ListIterator<Item> listIterator() {
+                return null;
+            }
+
+            @Override
+            public ListIterator<Item> listIterator(int index) {
+                return null;
+            }
+
+            @Override
+            public List<Item> subList(int fromIndex, int toIndex) {
+                return List.of();
+            }
+        };
+        IntStream.iterate(0, i -> AllItems.size() < i, i -> i + 1)
+                .filter(i -> AllItems.get(i).getStatus().equals("Ativo"))
+                .mapToObj(AllItems::get)
+                .forEach(AllItemsAtivos::add);
+        return ResponseEntity.ok(AllItemsAtivos);
     }
 
     @PutMapping("/{id_item}")
