@@ -52,22 +52,23 @@ public class EmprestanteController {
     }
 
     @PutMapping("/edit/{id}")
-    public Emprestante updateEmprestante(@PathVariable("id") Integer id, Emprestante emprestante) {
+    public Emprestante updateEmprestante(@PathVariable("id") Integer id, @RequestBody Emprestante emprestante) {
         Emprestante editEmprestante = emprestanteInterface.findById(id).orElse(null);
 
         if (editEmprestante == null) {
             throw new IllegalArgumentException("Emprestante não encontrado");
         }
+
         editEmprestante.setNome(emprestante.getNome());
         editEmprestante.setNum_identificacao(emprestante.getNum_identificacao());
 
         Emprestante existingEmprestante = emprestanteInterface.findByNumIdentificacao(editEmprestante.getNum_identificacao());
 
-        if (existingEmprestante != null) {
+        if (existingEmprestante != null && !Integer.valueOf(existingEmprestante.getId_emprestante()).equals(id)) {
             throw new IllegalArgumentException("Emprestante com essa identificação já existe");
-        }
+        }        
 
-        return emprestanteInterface.save(emprestante);
+        return emprestanteInterface.save(editEmprestante);
     }
 
     @DeleteMapping("/{id}")
