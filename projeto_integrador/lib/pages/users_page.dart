@@ -37,12 +37,14 @@ class _UsersPageState extends State<UsersPage> {
         users = fetchedUsers;
       });
     } catch (e) {
+      if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Erro ao carregar usuários: $e'),
-          backgroundColor: Colors.red,
+        content: Text('Erro ao carregar usuários: $e'),
+        backgroundColor: Colors.red,
         ),
       );
+      }
     }
   }
 

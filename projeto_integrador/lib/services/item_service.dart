@@ -68,12 +68,14 @@ class ItemService {
     }
   }
 
-  static Future<void> deleteItem(Map<String, dynamic> item) async {
+  static Future<void> deleteItem(List<int> item_array) async {
     final apiUrl = await getApiUrl();
+    print(jsonEncode(item_array));
 
     final response = await http.delete(
-      Uri.parse('$apiUrl/item/$item["id"]'),
+      Uri.parse('$apiUrl/item/deleteSelected'),
       headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(item_array),
     );
     if (response.statusCode != 200) {
       throw Exception('Erro ao deletar o item');
