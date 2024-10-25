@@ -129,7 +129,7 @@ class _InventarioPageState extends State<InventarioPage> {
             ],
           ),
           content: const Text(
-            'Você realmente deseja excluir o item selecionado permanentemente?',
+            'Você realmente deseja excluir o(s) item(s) selecionado permanentemente?',
             style: TextStyle(color: Colors.white70),
           ),
           actions: [
@@ -144,8 +144,16 @@ class _InventarioPageState extends State<InventarioPage> {
               ),
             ),
             ElevatedButton.icon(
-              onPressed: () {
+              onPressed: () async {
+                await ItemService.deleteItem(_items
+                    .asMap()
+                    .entries
+                    .where((entry) => _selectedItems[entry.key])
+                    .map((entry) => entry.value.id)
+                    .toList());
+                await loading();
                 Navigator.of(context).pop();
+                _isSelecting = false;
               },
               icon: const Icon(Icons.delete, color: Colors.white),
               label: const Text('Excluir'),
@@ -303,14 +311,6 @@ class _InventarioPageState extends State<InventarioPage> {
                     _showDeleteConfirmation(context); // Chama o diálogo de exclusão
                   },
                   child: const Icon(Icons.delete_outline),
-                ),
-                const SizedBox(height: 10),
-                FloatingActionButton(
-                  backgroundColor: const Color(0xFF1E88E5),
-                  onPressed: () {
-                    // Ação do terceiro botão extra
-                  },
-                  child: const Icon(Icons.groups_2_outlined),
                 ),
                 const SizedBox(height: 10),
               ],
