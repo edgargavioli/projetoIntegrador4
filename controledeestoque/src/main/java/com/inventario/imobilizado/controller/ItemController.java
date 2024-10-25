@@ -43,6 +43,8 @@ public class ItemController {
     @Autowired
     private BrandInterface brandInterface;
 
+
+
     @PostMapping("/")
     public ResponseEntity<?> registrarProduto(@RequestBody RequestItem data) {
 
@@ -159,6 +161,16 @@ public class ItemController {
                 .collect(Collectors.toList());
                 
         return ResponseEntity.ok(itensParaNotificacao);
+    }
+  
+    @DeleteMapping("/deleteSelected")
+    public ResponseEntity<String> deleteSelectedItems(@RequestBody Integer[] id_items) {
+        for (Integer id_item : id_items) {
+            Item item = itemInterface.findById(id_item).get();
+            item.setStatus("Inativo");
+            itemInterface.save(item);
+        }
+        return ResponseEntity.ok("Selected items deletados com Sucesso");
     }
 
     @GetMapping("/paged")
