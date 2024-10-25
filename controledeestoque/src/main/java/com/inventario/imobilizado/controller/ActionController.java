@@ -53,37 +53,28 @@ public class ActionController {
 
     @PostMapping("/emprestarItens")
     public ResponseEntity<?> postActionList(@RequestBody List<ActionRequest> data) {
-
         for (ActionRequest actionRequest : data) {
             Action action = new Action();
             action.setEntidade(actionRequest.getEntidade());
-
             // Setar data_emprestimo e data_devolucao diretamente como String
             action.setData_emprestimo(actionRequest.getData_emprestimo());
             action.setData_devolucao(actionRequest.getData_devolucao());
-
             // Verificar se o usuário está presente
             action.setUsuario(userInterface.findById(actionRequest.getId_usuario())
                     .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado")));
-
             // Verificar se o item está presente
             action.setItem(itemInterface.findById(actionRequest.getId_item())
                     .orElseThrow(() -> new IllegalArgumentException("Item não encontrado")));
-
             // Verificar se o anexo está presente
             action.setAnexos(attachmentInterface.findById(actionRequest.getId_anexos())
                     .orElseThrow(() -> new IllegalArgumentException("Anexo não encontrado")));
-
             action.setEmprestante(emprestanteInterface.findByNumIdentificacao(actionRequest.getNum_identificacao_emprestante()));
             action.getItem().setEstado(actionRequest.getEstado());
             action.setLocalizacao_id_localizacao(actionRequest.getId_localizacao_atual());
             actionInterface.save(action);
         }
-
         return ResponseEntity.ok("Itens emprestados com sucesso");
     }
-
-
 
     @GetMapping("/")
     public ResponseEntity<List<Action>> GetAll(){

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_integrador/components/custom_textfield.dart';
 import 'package:projeto_integrador/models/item_list.dart';
+import 'package:projeto_integrador/pages/emprestimo_page.dart';
 import 'package:projeto_integrador/services/item_service.dart';
 import 'package:projeto_integrador/pages/item_registration_page.dart';
 
@@ -31,6 +32,35 @@ class _InventarioPageState extends State<InventarioPage> {
   void dispose() {
     _searchController.dispose(); // Certifique-se de descartar o controlador
     super.dispose();
+  }
+
+  void _navigateToEmprestimoPage(BuildContext context) async {
+    try {
+      final List<ItemList> selectedItems = _items
+          .asMap()
+          .entries
+          .where((entry) => _selectedItems[entry.key])
+          .map((entry) => entry.value)
+          .toList();
+
+      final bool? result = await Navigator.of(context).push(
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              EmprestimoPage(
+            selectedItems: selectedItems,
+          ),
+          transitionDuration: Duration.zero,
+          reverseTransitionDuration: Duration.zero,
+        ),
+      );
+
+      if (result == true) {
+        _isSelecting = false;
+        loading();
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 
   Future<void> _navigateToItemRegistrationPage() async {
@@ -105,7 +135,7 @@ class _InventarioPageState extends State<InventarioPage> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Fechar o diálogo
+                Navigator.of(context).pop();
               },
               child: const Text('Cancelar'),
               style: TextButton.styleFrom(
@@ -115,7 +145,6 @@ class _InventarioPageState extends State<InventarioPage> {
             ),
             ElevatedButton.icon(
               onPressed: () {
-                // Ação para excluir o item
                 Navigator.of(context).pop();
               },
               icon: const Icon(Icons.delete, color: Colors.white),
@@ -263,7 +292,7 @@ class _InventarioPageState extends State<InventarioPage> {
                 FloatingActionButton(
                   backgroundColor: const Color(0xFF28A745),
                   onPressed: () {
-                    // Ação do primeiro botão extra
+                    _navigateToEmprestimoPage(context);
                   },
                   child: const Icon(Icons.add_circle_outline),
                 ),
