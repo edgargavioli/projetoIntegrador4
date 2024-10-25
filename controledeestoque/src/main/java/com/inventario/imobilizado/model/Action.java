@@ -21,9 +21,6 @@ public class Action {
 
     private String entidade;
 
-    @Column(name = "ra_rna")
-    private String ra_rna;
-
     @Temporal(TemporalType.DATE)
     private String data_emprestimo;
 
@@ -33,6 +30,10 @@ public class Action {
     @ManyToOne
     @JoinColumn(name = "usuario_id_usuario")
     private User usuario;
+
+    @ManyToOne
+    @JoinColumn(name = "emprestante_id_emprestante")
+    private Emprestante emprestante;
 
     @ManyToOne
     @JoinColumn(name = "item_id_item")

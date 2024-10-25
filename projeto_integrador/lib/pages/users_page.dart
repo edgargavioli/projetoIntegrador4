@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_integrador/components/custom_textfield.dart';
+import 'package:projeto_integrador/models/user.dart';
+import 'package:projeto_integrador/services/user_service.dart';
 
 class UsersPage extends StatefulWidget {
   const UsersPage({super.key});
@@ -7,32 +9,57 @@ class UsersPage extends StatefulWidget {
   @override
   State<UsersPage> createState() => _UsersPageState();
 }
-
-// Controlador para o campo de busca
-final TextEditingController _searchController = TextEditingController();
-
-class User {
-  String name;
-  User(this.name);
-}
-
 class _UsersPageState extends State<UsersPage> {
-  List<User> users = [
-    User("User 1"),
-    User("User 2"),
-    User("User 3"),
-    User("User 4"),
-  ];
+  final TextEditingController _searchController = TextEditingController();
+  List<User> users = [];
+  String _selectedFilter = "Todos"; // Filtro inicial
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUsers();
+
+    _searchController.addListener(() {
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _loadUsers() async {
+    try {
+      final fetchedUsers = await UserService.getUsers();
+      setState(() {
+        users = fetchedUsers;
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Erro ao carregar usuários: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
 
   List<User> get filteredUsers {
-    if (_searchController.text.isEmpty) {
-      return users;
-    } else {
-      return users
-          .where((user) =>
-              user.name.toLowerCase().contains(_searchController.text.toLowerCase()))
-          .toList();
-    }
+    return users.where((user) {
+      final matchesSearch = user.nome
+              .toLowerCase()
+              .contains(_searchController.text.toLowerCase()) ||
+          user.sobrenome
+              .toLowerCase()
+              .contains(_searchController.text.toLowerCase());
+
+      final matchesFilter = _selectedFilter == 'Todos' ||
+          user.tipo_usuario == _selectedFilter;
+
+      return matchesSearch && matchesFilter;
+    }).toList();
   }
 
   @override
@@ -56,11 +83,36 @@ class _UsersPageState extends State<UsersPage> {
           const SizedBox(height: 20),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 50),
-            child: CustomTextfield(
-              controller: _searchController,
-              icon: const Icon(Icons.search),
-              label: "Buscar...",
-              obscureText: false,
+            child: Column(
+              children: [
+                CustomTextfield(
+                  controller: _searchController,
+                  icon: const Icon(Icons.search),
+                  label: "Buscar...",
+                  obscureText: false,
+                ),
+                const SizedBox(height: 10), // Espaçamento entre os componentes
+                DropdownButton<String>(
+                  value: _selectedFilter,
+                  items: [
+                    'Todos',
+                    'Administrador',
+                    'Colaborador',
+                    'Aluno',
+                  ].map((String filter) {
+                    return DropdownMenuItem<String>(
+                      value: filter,
+                      child: Text(filter),
+                    );
+                  }).toList(),
+                  onChanged: (newValue) {
+                    setState(() {
+                      _selectedFilter = newValue!;
+                    });
+                  },
+                  isExpanded: true,
+                ),
+              ],
             ),
           ),
           const SizedBox(height: 20),
@@ -72,7 +124,22 @@ class _UsersPageState extends State<UsersPage> {
                 itemCount: filteredUsers.length,
                 itemBuilder: (context, index) {
                   return ListTile(
-                    title: Text(filteredUsers[index].name),
+                    title: Text(
+                      "${filteredUsers[index].nome} ${filteredUsers[index].sobrenome}",
+                    ),
+                    subtitle: Text(
+                      filteredUsers[index].tipo_usuario,
+                      style: TextStyle(
+                        color: filteredUsers[index].tipo_usuario ==
+                                "Administrador"
+                            ? Theme.of(context).colorScheme.primary
+                            : filteredUsers[index].tipo_usuario == "Colaborador"
+                                ? Theme.of(context).colorScheme.inversePrimary
+                                : filteredUsers[index].tipo_usuario == "Aluno"
+                                    ? Theme.of(context).colorScheme.tertiary
+                                    : Theme.of(context).colorScheme.onSurface,
+                      ),
+                    ),
                   );
                 },
               ),

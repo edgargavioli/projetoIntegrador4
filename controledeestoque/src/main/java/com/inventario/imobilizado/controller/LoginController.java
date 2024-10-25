@@ -24,7 +24,6 @@ public class LoginController {
     @PostMapping("/login")
     public ResponseEntity<?> userLogin(@RequestBody LoginDTO user){
         User usuarioBanco = userInterface.findByEmail(user.getEmail());
-
         if (usuarioBanco != null) {
             if (usuarioBanco.getSenha().equals(user.getPassword())) {
                 return ResponseEntity.ok().body(jwtUtils.generateToken(usuarioBanco.get(), 3600000));

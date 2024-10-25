@@ -126,11 +126,29 @@ class _ItemRegistrationPageState extends State<ItemRegistrationPage> {
 
   Future<void> cadastrarProduto() async {
     try {
+      DateTime dataEntrada = DateTime.parse(dataEntradaController.text)
+          .add(const Duration(days: 1));
+      DateTime ultimaQualificacao =
+          DateTime.parse(ultimaQualificacaoController.text)
+              .add(const Duration(days: 1));
+      DateTime dataNotaFiscal = DateTime.parse(dataNotaFiscalController.text)
+          .add(const Duration(days: 1));
+      DateTime proximaQualificacao =
+          DateTime.parse(proximaQualificacaoController.text)
+              .add(const Duration(days: 1));
+      DateTime prazoManutencao = DateTime.parse(prazoManutencaoController.text)
+          .add(const Duration(days: 1));
+
+        int? potencia;
+        if(potenciaController.text.isNotEmpty){
+          potencia = int.tryParse(potenciaController.text);
+        }
+
       Item item = Item(
         id: 0,
         descricao: descricaoController.text,
         localizacaoAtual: selectedLocalAtual!,
-        potencia: int.parse(potenciaController.text),
+        potencia: potencia,
         estado: selectedEstado!,
         numeroDeSerie: numeroSerieController.text,
         numeroNotaFiscal: notaFiscalController.text,
@@ -141,16 +159,23 @@ class _ItemRegistrationPageState extends State<ItemRegistrationPage> {
         modelo: int.parse(selectedModelo!),
         marca: selectedMarca!,
         localizacao: int.parse(selectedLocalOrigem!),
-        dataEntrada: DateTime.parse(dataEntradaController.text),
-        ultimaQualificacao: DateTime.parse(ultimaQualificacaoController.text),
-        dataNotaFiscal: DateTime.parse(dataNotaFiscalController.text),
-        proximaQualificacao: DateTime.parse(proximaQualificacaoController.text),
-        prazoManutencao: DateTime.parse(prazoManutencaoController.text),
+        dataEntrada: dataEntrada,
+        ultimaQualificacao: ultimaQualificacao,
+        dataNotaFiscal: dataNotaFiscal,
+        proximaQualificacao: proximaQualificacao,
+        prazoManutencao: prazoManutencao,
       );
 
       await ItemService.createItem(item.toJson());
 
-      Navigator.pop(context, true); // retorna para o inventário apos o cadastro, mas não atualiza a lista
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Item cadastrado com sucesso!'),
+          backgroundColor: Colors.green,
+        ),
+      );
+
+      Navigator.pop(context, true);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Erro ao cadastrar o item')),
@@ -187,18 +212,18 @@ class _ItemRegistrationPageState extends State<ItemRegistrationPage> {
               const SizedBox(height: 16),
               CustomTextfield(
                 controller: descricaoController,
-                label: 'Item',
+                label: '*Item',
                 obscureText: false,
               ),
               const SizedBox(height: 16),
               CustomTextfield(
                 controller: numeroSerieController,
-                label: 'Número de Série',
+                label: '*Número de Série',
                 obscureText: false,
               ),
               const SizedBox(height: 16),
               CustomSelectField(
-                label: 'Disponibilidade',
+                label: '*Disponibilidade',
                 items: const [
                   DropdownMenuItem(
                       value: 'Disponível', child: Text('Disponível')),
@@ -216,7 +241,7 @@ class _ItemRegistrationPageState extends State<ItemRegistrationPage> {
               ),
               const SizedBox(height: 16),
               CustomSelectField(
-                label: 'Marca',
+                label: '*Marca',
                 items: marcas,
                 selectedValue: selectedMarca,
                 onChanged: (value) {
@@ -230,7 +255,7 @@ class _ItemRegistrationPageState extends State<ItemRegistrationPage> {
               ),
               const SizedBox(height: 16),
               CustomSelectField(
-                label: 'Modelo',
+                label: '*Modelo',
                 items: modelos,
                 selectedValue: selectedModelo,
                 onChanged: isModeloEnabled
@@ -243,7 +268,7 @@ class _ItemRegistrationPageState extends State<ItemRegistrationPage> {
               ),
               const SizedBox(height: 16),
               CustomSelectField(
-                label: 'Categoria',
+                label: '*Categoria',
                 items: categorias,
                 selectedValue: selectedCategoria,
                 onChanged: (value) {
@@ -254,7 +279,7 @@ class _ItemRegistrationPageState extends State<ItemRegistrationPage> {
               ),
               const SizedBox(height: 16),
               CustomSelectField(
-                label: 'Origem',
+                label: '*Origem',
                 items: locaisOrigem,
                 selectedValue: selectedLocalOrigem,
                 onChanged: (value) {
@@ -265,7 +290,7 @@ class _ItemRegistrationPageState extends State<ItemRegistrationPage> {
               ),
               const SizedBox(height: 16),
               CustomSelectField(
-                label: 'Local Atual',
+                label: '*Local Atual',
                 items: locaisAtual,
                 selectedValue: selectedLocalAtual,
                 onChanged: (value) {
@@ -283,28 +308,28 @@ class _ItemRegistrationPageState extends State<ItemRegistrationPage> {
               const SizedBox(height: 16),
               CustomTextfield(
                 controller: notaFiscalController,
-                label: 'Nota Fiscal',
+                label: '*Nota Fiscal',
                 obscureText: false,
               ),
               const SizedBox(height: 16),
               CustomDateField(
                   controller: dataNotaFiscalController,
-                  label: 'Data da Nota Fiscal'),
+                  label: '*Data da Nota Fiscal'),
               const SizedBox(height: 16),
               CustomDateField(
-                  controller: dataEntradaController, label: 'Data de Entrada'),
+                  controller: dataEntradaController, label: '*Data de Entrada'),
               const SizedBox(height: 16),
               CustomDateField(
                   controller: ultimaQualificacaoController,
-                  label: 'Última Manutenção'),
+                  label: '*Última Manutenção'),
               const SizedBox(height: 16),
               CustomDateField(
                   controller: proximaQualificacaoController,
-                  label: 'Próxima Manutenção'),
+                  label: '*Próxima Manutenção'),
               const SizedBox(height: 16),
               CustomDateField(
                   controller: prazoManutencaoController,
-                  label: 'Prazo de Manutenção'),
+                  label: '*Prazo de Manutenção'),
               const SizedBox(height: 16),
               CustomTextfield(
                 controller: comentarioManutencaoController,
@@ -314,12 +339,12 @@ class _ItemRegistrationPageState extends State<ItemRegistrationPage> {
               const SizedBox(height: 16),
               CustomTextfield(
                 controller: patrimonioController,
-                label: 'Patrimônio',
+                label: '*Patrimônio',
                 obscureText: false,
               ),
               const SizedBox(height: 16),
               CustomSelectField(
-                label: 'Status',
+                label: '*Status',
                 items: const [
                   DropdownMenuItem(value: 'Ativo', child: Text('Ativo')),
                   DropdownMenuItem(value: 'Inativo', child: Text('Inativo')),

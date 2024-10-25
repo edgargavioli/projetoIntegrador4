@@ -15,8 +15,6 @@ import java.util.Date;
 @ToString
 public class ActionRequest {
 
-    private String ra_rna;
-
     private String entidade;
 
     private String data_emprestimo;
@@ -26,6 +24,8 @@ public class ActionRequest {
     private int id_usuario;
 
     private int id_item;
+
+    private String num_identificacao_emprestante;
 
     private int id_localizacao_atual;
 
