@@ -20,6 +20,7 @@ import java.io.InputStream;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.concurrent.TimeUnit;
 
 
 @RestController
@@ -134,6 +135,30 @@ public class ItemController {
     public  ResponseEntity<String> DeleteUser(@PathVariable Integer id_item){
         itemInterface.deleteById(id_item);
         return ResponseEntity.ok("Item deletado com Sucesso");
+    }
+
+    @GetMapping("/notificacoes")
+    public ResponseEntity<List<Item>> getItemsForNotifications() {
+        Date hoje = new Date();
+        List<Item> itensParaNotificacao = itemInterface.findAll().stream()
+                .filter(item -> {
+                    try {
+                        if (item.getProxima_qualificacao() == null) {
+                            return false;
+                        }
+                        Date dataProximaQualificacao = item.getProxima_qualificacao();
+                        long diferencaMillis = dataProximaQualificacao.getTime() - hoje.getTime();
+                        long diasRestantes = TimeUnit.DAYS.convert(diferencaMillis, TimeUnit.MILLISECONDS);
+                        diasRestantes += 1;
+                        return diasRestantes == 30 || diasRestantes == 15 ||
+                            diasRestantes == 7 || diasRestantes == 1 || diasRestantes == 0;
+                    } catch (Exception e) {
+                        return false;
+                    }
+                })
+                .collect(Collectors.toList());
+                
+        return ResponseEntity.ok(itensParaNotificacao);
     }
 
     @GetMapping("/paged")
