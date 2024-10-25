@@ -15,7 +15,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   _initializeNotifications();
   runApp(MaterialApp(
-    initialRoute: '/login',
+    initialRoute: '/home',
     routes: {
       '/login': (context) => LoginPage(),
       '/createAccount': (context) => CreateAccountPage(),
