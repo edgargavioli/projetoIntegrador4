@@ -13,6 +13,7 @@ class _UsersPageState extends State<UsersPage> {
   final TextEditingController _searchController = TextEditingController();
   List<User> users = [];
   bool _isLoading = true;
+  String _selectedFilter = 'Todos';
 
   @override
   void initState() {

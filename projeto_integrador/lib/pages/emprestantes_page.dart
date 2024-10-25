@@ -131,6 +131,7 @@ class _EmprestantesPageState extends State<EmprestantesPage> {
                   }
                 }
                 _isSelecting = false;
+                Navigator.of(context).pop();
                 _loadEmprestantes();
               },
               icon: const Icon(Icons.delete, color: Colors.white),
