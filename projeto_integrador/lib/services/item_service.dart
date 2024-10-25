@@ -5,7 +5,6 @@ import 'package:projeto_integrador/models/item_list.dart';
 import 'package:projeto_integrador/models/item_notification.dart';
 
 class ItemService {
-
   static Future<String> getApiUrl() async {
     await dotenv.load(fileName: ".env");
     return dotenv.env['API_URL'] ?? '';
@@ -13,15 +12,18 @@ class ItemService {
 
   static Future<List<ItemList>> fetchItemsInventarioPage() async {
     try {
-
       final apiUrl = await getApiUrl();
 
       final response = await http.get(Uri.parse('$apiUrl/item/'));
 
       if (response.statusCode == 200) {
-        List<dynamic> jsonResponse = json.decode(utf8.decode(response.bodyBytes));
-        return jsonResponse.map((json) => ItemList.fromJson(json)).toList(); // problema: aqui é onde acontece o erro de marca dentro modelo
-      } else { // Quando resolver o problema descrito em modelo.dart, trocar Item_List por Item, como era originalmente
+        List<dynamic> jsonResponse =
+            json.decode(utf8.decode(response.bodyBytes));
+        return jsonResponse
+            .map((json) => ItemList.fromJson(json))
+            .toList(); // problema: aqui é onde acontece o erro de marca dentro modelo
+      } else {
+        // Quando resolver o problema descrito em modelo.dart, trocar Item_List por Item, como era originalmente
         throw Exception('Failed to load items');
       }
     } catch (e) {
@@ -32,14 +34,16 @@ class ItemService {
 
   static Future<List<ItemNotification>> fetchItemsNotificationsPage() async {
     try {
-
       final apiUrl = await getApiUrl();
 
       final response = await http.get(Uri.parse('$apiUrl/item/'));
 
       if (response.statusCode == 200) {
-        List<dynamic> jsonResponse = json.decode(utf8.decode(response.bodyBytes));
-        return jsonResponse.map((json) => ItemNotification.fromJson(json)).toList();
+        List<dynamic> jsonResponse =
+            json.decode(utf8.decode(response.bodyBytes));
+        return jsonResponse
+            .map((json) => ItemNotification.fromJson(json))
+            .toList();
       } else {
         throw Exception('Failed to load items');
       }
@@ -64,15 +68,29 @@ class ItemService {
     }
   }
 
-  static Future<void> deleteItem(Map<String, dynamic> item) async {
+  static Future<void> deleteItem(List<int> item_array) async {
     final apiUrl = await getApiUrl();
+    print(jsonEncode(item_array));
 
     final response = await http.delete(
-      Uri.parse('$apiUrl/item/$item["id"]'),
+      Uri.parse('$apiUrl/item/deleteSelected'),
       headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(item_array),
     );
     if (response.statusCode != 200) {
       throw Exception('Erro ao deletar o item');
+    }
+  }
+
+  static Future<List<ItemNotification>> fetchItemsNotifications() async {
+    final apiUrl = await getApiUrl();
+
+    final response = await http.get(Uri.parse('$apiUrl/item/notificacoes'));
+    if (response.statusCode == 200) {
+      List<dynamic> jsonData = json.decode(response.body);
+      return jsonData.map((item) => ItemNotification.fromJson(item)).toList();
+    } else {
+      throw Exception('Erro ao carregar notificações');
     }
   }
 }

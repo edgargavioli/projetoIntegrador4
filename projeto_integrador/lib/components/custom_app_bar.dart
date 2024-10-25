@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projeto_integrador/services/auth_service.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppBar({super.key});
@@ -13,6 +14,15 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       foregroundColor: Theme.of(context).colorScheme.surface,
       automaticallyImplyLeading: currentRoute != '/home',
       title: Image.asset("assets/images/logoAppBar.png"),
+      actions: [
+        IconButton(
+          icon: Icon(Icons.logout),
+          onPressed: () {
+            AuthService.logout();
+            Navigator.pushReplacementNamed(context, '/login');
+          },
+        ),
+      ],
     );
   }
 

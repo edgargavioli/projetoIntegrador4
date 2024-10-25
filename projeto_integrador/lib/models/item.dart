@@ -2,7 +2,7 @@ class Item {
   final int id;
   final String descricao;
   final String localizacaoAtual;
-  final int potencia;
+  final int? potencia;
   final String estado;
   final String numeroDeSerie;
   final String numeroNotaFiscal;

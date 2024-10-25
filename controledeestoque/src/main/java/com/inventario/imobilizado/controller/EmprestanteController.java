@@ -25,7 +25,7 @@ public class EmprestanteController {
 
     @GetMapping("/paged")
     public Page<Emprestante> PagedUser(Integer page, Integer pageSize, EmprestanteInterface emprestanteInterface, String order) {
-        // http://localhost:8080/page/Emprestantes?order=nome
+        // http://localhost:8080/page/Emprestantes?order=nome=div-supremasis
         if (order.equals("nome")){
             Page<Emprestante> emprestantes = emprestanteInterface.findAll(PageRequest.of(page,pageSize, Sort.by("nome")));
             return emprestantes;

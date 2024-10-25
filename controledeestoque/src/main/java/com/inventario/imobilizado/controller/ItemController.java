@@ -17,8 +17,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 
 @RestController
@@ -40,6 +41,8 @@ public class ItemController {
     private ModeloInterface modeloInterface;
     @Autowired
     private BrandInterface brandInterface;
+
+
 
     @PostMapping("/")
     public ResponseEntity<?> registrarProduto(@RequestBody RequestItem data) {
@@ -91,14 +94,18 @@ public class ItemController {
 
     }
 
-
-
     @GetMapping("/")
-    public ResponseEntity<List<Item>> GetAll(){
-        List<Item> AllItems = itemInterface.findAll();
+    public ResponseEntity<List<Item>> getAll() {
+        List<Item> allItems = itemInterface.findAll();
 
-        return ResponseEntity.ok(AllItems);
+        // Filter the items with status "Ativo"
+        List<Item> allItemsAtivos = allItems.stream()
+                                            .filter(item -> "Ativo".equals(item.getStatus()))
+                                            .collect(Collectors.toList());
+
+        return ResponseEntity.ok(allItemsAtivos);
     }
+
 
     @PutMapping("/{id_item}")
     public ResponseEntity<Item> PutUser(@PathVariable Integer id_item,@RequestBody Item newItem){
@@ -130,6 +137,17 @@ public class ItemController {
         itemInterface.deleteById(id_item);
         return ResponseEntity.ok("Item deletado com Sucesso");
     }
+
+    @DeleteMapping("/deleteSelected")
+    public ResponseEntity<String> deleteSelectedItems(@RequestBody Integer[] id_items) {
+        for (Integer id_item : id_items) {
+            Item item = itemInterface.findById(id_item).get();
+            item.setStatus("Inativo");
+            itemInterface.save(item);
+        }
+        return ResponseEntity.ok("Selected items deletados com Sucesso");
+    }
+
 
     @GetMapping("/paged")
     public Page<Item> PagedItem(Integer page, Integer pageSize, ItemInterface itemInterface, String order) {

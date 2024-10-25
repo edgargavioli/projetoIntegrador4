@@ -8,12 +8,20 @@ class AuthGuard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Verifica se o usuário está autenticado
-    if (AuthService.isAuthenticated()) {
-      return page;  // Se estiver autenticado, mostra a página protegida
-    } else {
-      // Se não estiver autenticado, redireciona para a tela de login
-      return LoginPage();
-    }
+    return FutureBuilder<bool>(
+      future: AuthService.isAuthenticated(), // Chama a função assíncrona
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          // Exibe um indicador de carregamento enquanto aguarda a resposta
+          return Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasData && snapshot.data == true) {
+          // Usuário autenticado, mostra a página protegida
+          return page;
+        } else {
+          // Usuário não autenticado, redireciona para a página de login
+          return LoginPage();
+        }
+      },
+    );
   }
 }
