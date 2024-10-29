@@ -20,6 +20,7 @@ import java.io.InputStream;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.concurrent.TimeUnit;
 
 
 @RestController
@@ -138,6 +139,30 @@ public class ItemController {
         return ResponseEntity.ok("Item deletado com Sucesso");
     }
 
+    @GetMapping("/notificacoes")
+    public ResponseEntity<List<Item>> getItemsForNotifications() {
+        Date hoje = new Date();
+        List<Item> itensParaNotificacao = itemInterface.findAll().stream()
+                .filter(item -> {
+                    try {
+                        if (item.getProxima_qualificacao() == null) {
+                            return false;
+                        }
+                        Date dataProximaQualificacao = item.getProxima_qualificacao();
+                        long diferencaMillis = dataProximaQualificacao.getTime() - hoje.getTime();
+                        long diasRestantes = TimeUnit.DAYS.convert(diferencaMillis, TimeUnit.MILLISECONDS);
+                        diasRestantes += 1;
+                        return diasRestantes == 30 || diasRestantes == 15 ||
+                            diasRestantes == 7 || diasRestantes == 1 || diasRestantes == 0;
+                    } catch (Exception e) {
+                        return false;
+                    }
+                })
+                .collect(Collectors.toList());
+                
+        return ResponseEntity.ok(itensParaNotificacao);
+    }
+  
     @DeleteMapping("/deleteSelected")
     public ResponseEntity<String> deleteSelectedItems(@RequestBody Integer[] id_items) {
         for (Integer id_item : id_items) {
@@ -147,7 +172,6 @@ public class ItemController {
         }
         return ResponseEntity.ok("Selected items deletados com Sucesso");
     }
-
 
     @GetMapping("/paged")
     public Page<Item> PagedItem(Integer page, Integer pageSize, ItemInterface itemInterface, String order) {
