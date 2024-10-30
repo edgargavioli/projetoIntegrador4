@@ -34,6 +34,41 @@ class _InventarioPageState extends State<InventarioPage> {
     super.dispose();
   }
 
+  void _devolucaoItem() async {
+  try {
+    final List<int> itemIds = _items
+        .asMap()
+        .entries
+        .where((entry) => _selectedItems[entry.key])
+        .map((entry) => entry.value.id)
+        .toList();
+
+    if (itemIds.isNotEmpty) {
+      await ItemService.returnItems(itemIds);
+
+      // Atualiza o estado local dos itens apenas para os que foram devolvidos
+      this.loading();
+
+      this._isSelecting = false;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Itens devolvidos com sucesso'),
+        backgroundColor: Colors.green,
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Nenhum item selecionado para devolução')),
+      );
+    }
+  } catch (e) {
+    print("Erro ao devolver itens: $e");
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Erro ao devolver itens')),
+    );
+  }
+}
+
   void _navigateToEmprestimoPage(BuildContext context) async {
     try {
       final List<ItemList> selectedItems = _items
@@ -311,6 +346,14 @@ class _InventarioPageState extends State<InventarioPage> {
                     _showDeleteConfirmation(context); // Chama o diálogo de exclusão
                   },
                   child: const Icon(Icons.delete_outline),
+                ),
+                
+                const SizedBox(height: 10),
+                FloatingActionButton(
+                  backgroundColor: const Color.fromARGB(255, 30, 95, 179),
+                  onPressed: () { _devolucaoItem(); 
+                  },
+                  child: const Icon(Icons.reply),
                 ),
                 const SizedBox(height: 10),
               ],
