@@ -107,6 +107,12 @@ public class ItemController {
         return ResponseEntity.ok(allItemsAtivos);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Item> getById(@PathVariable Integer id) {
+        return itemInterface.findById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
 
     @PutMapping("/{id_item}")
     public ResponseEntity<Item> PutUser(@PathVariable Integer id_item,@RequestBody Item newItem){

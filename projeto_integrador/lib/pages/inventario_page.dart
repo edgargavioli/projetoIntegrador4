@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_integrador/components/custom_textfield.dart';
+import 'package:projeto_integrador/models/item.dart';
 import 'package:projeto_integrador/models/item_list.dart';
 import 'package:projeto_integrador/pages/emprestimo_page.dart';
+import 'package:projeto_integrador/pages/inventario_item_selecionado.dart';
 import 'package:projeto_integrador/services/item_service.dart';
 import 'package:projeto_integrador/pages/item_registration_page.dart';
+// Importando a tela de edição
 
 class InventarioPage extends StatefulWidget {
   const InventarioPage({super.key});
@@ -30,7 +33,7 @@ class _InventarioPageState extends State<InventarioPage> {
 
   @override
   void dispose() {
-    _searchController.dispose(); // Certifique-se de descartar o controlador
+    _searchController.dispose();
     super.dispose();
   }
 
@@ -74,12 +77,26 @@ class _InventarioPageState extends State<InventarioPage> {
     }
   }
 
+  // Método de navegação para tela de edição
+  void _navigateToEditItem(int id) async {
+    final bool? result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ItemEditPage(id: id), // Passando o item selecionado
+      ),
+    );
+
+    if (result == true) {
+      loading(); // Recarrega a lista após a edição
+    }
+  }
+
   Future<void> loading() async {
     try {
       final items = await ItemService.fetchItemsInventarioPage();
       setState(() {
         _items = items;
-        _filteredItems = items; // Inicializa a lista filtrada
+        _filteredItems = items;
         _isLoading = false;
         _selectedItems = List<bool>.filled(_items.length, false);
       });
@@ -96,9 +113,9 @@ class _InventarioPageState extends State<InventarioPage> {
     setState(() {
       _filteredItems = _items.where((item) {
         final matchesSearch = item.descricao.toLowerCase().contains(query);
-        final matchesStatus = _selectedStatus == null || 
-                             _selectedStatus == "Todos" || 
-                             item.estado == _selectedStatus;
+        final matchesStatus = _selectedStatus == null ||
+            _selectedStatus == "Todos" ||
+            item.estado == _selectedStatus;
         return matchesSearch && matchesStatus;
       }).toList();
     });
@@ -197,14 +214,13 @@ class _InventarioPageState extends State<InventarioPage> {
               ),
               const SizedBox(height: 10),
 
-              // Dropdown para selecionar o status
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 50),
                 child: DropdownButton<String>(
                   value: _selectedStatus,
                   hint: const Text("Filtrar por Status"),
                   items: <String>[
-                    'Todos', // Adicionado "Todos"
+                    'Todos',
                     'Disponível',
                     'Emprestado',
                     'Manutenção',
@@ -217,7 +233,7 @@ class _InventarioPageState extends State<InventarioPage> {
                   onChanged: (String? newValue) {
                     setState(() {
                       _selectedStatus = newValue;
-                      _filterItems(); // Filtra a lista quando o status é alterado
+                      _filterItems();
                     });
                   },
                 ),
@@ -240,6 +256,8 @@ class _InventarioPageState extends State<InventarioPage> {
                             onTap: () {
                               if (_isSelecting) {
                                 _toggleSelection(index);
+                              } else {
+                                _navigateToEditItem(_items[index].id); // Navegando para a tela de edição
                               }
                             },
                             child: ListTile(
@@ -298,30 +316,17 @@ class _InventarioPageState extends State<InventarioPage> {
             children: [
               if (_isSelecting) ...[
                 FloatingActionButton(
-                  backgroundColor: const Color(0xFF28A745),
-                  onPressed: () {
-                    _navigateToEmprestimoPage(context);
-                  },
-                  child: const Icon(Icons.add_circle_outline),
+                  backgroundColor: Colors.red,
+                  heroTag: 'delete',
+                  onPressed: () => _showDeleteConfirmation(context),
+                  child: const Icon(Icons.delete),
                 ),
-                const SizedBox(height: 10),
-                FloatingActionButton(
-                  backgroundColor: const Color(0xFFB3261E),
-                  onPressed: () {
-                    _showDeleteConfirmation(context); // Chama o diálogo de exclusão
-                  },
-                  child: const Icon(Icons.delete_outline),
-                ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 20),
               ],
-              if (!_isSelecting)
-                FloatingActionButton(
-                  backgroundColor: Theme.of(context).colorScheme.secondary,
-                  onPressed: () {
-                    _navigateToItemRegistrationPage();
-                  },
-                  child: const Icon(Icons.add),
-                ),
+              FloatingActionButton(
+                onPressed: _navigateToItemRegistrationPage,
+                child: const Icon(Icons.add),
+              ),
             ],
           ),
         ),

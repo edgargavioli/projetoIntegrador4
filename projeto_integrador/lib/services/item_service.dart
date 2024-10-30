@@ -1,8 +1,10 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:projeto_integrador/models/item.dart';
 import 'package:projeto_integrador/models/item_list.dart';
 import 'package:projeto_integrador/models/item_notification.dart';
+import 'package:projeto_integrador/models/item_vizualizar.dart';
 
 class ItemService {
   static Future<String> getApiUrl() async {
@@ -25,6 +27,24 @@ class ItemService {
       } else {
         // Quando resolver o problema descrito em modelo.dart, trocar Item_List por Item, como era originalmente
         throw Exception('Failed to load items');
+      }
+    } catch (e) {
+      print('Error fetching items: $e');
+      throw Exception('Failed to load items');
+    }
+  }
+
+  static Future<ItemVizualizar> fetchItemId(int id) async {
+    try {
+      final apiUrl = await getApiUrl();
+
+      final response = await http.get(Uri.parse('$apiUrl/item/$id'));
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> itemJson = json.decode(response.body);
+        return ItemVizualizar.fromJson(itemJson);
+      } else {
+        throw Exception('Failed to load item');
       }
     } catch (e) {
       print('Error fetching items: $e');
@@ -93,4 +113,6 @@ class ItemService {
       throw Exception('Erro ao carregar notificações');
     }
   }
+
+  static update(int id, Map<String, dynamic> json) {}
 }
