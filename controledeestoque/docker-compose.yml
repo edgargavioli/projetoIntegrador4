@@ -9,6 +9,8 @@ services:
       - "8080:8080"
     depends_on:
       - db
+    volumes:
+      - maven_cache:/root/.m2  # Add this line to cache Maven dependencies
 
   db:
     image: mysql:5.7
@@ -16,7 +18,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
     ulimits:
-      nofile: # Fix memory leak issue on some systems when LimitCORE=infinity (containerd)
+      nofile:
         soft: 1048576
         hard: 1048576
     volumes:
@@ -33,7 +35,6 @@ services:
       - collector-api
 
   collector-api:
-    # image: otel/opentelemetry-collector:latest
     image: otel/opentelemetry-collector-contrib:0.91.0
     container_name: collector-api
     volumes:
@@ -72,4 +73,4 @@ services:
 
 volumes:
   mysql_data:
-
+  maven_cache:  # Define the Maven cache volume
