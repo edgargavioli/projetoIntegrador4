@@ -96,7 +96,7 @@ class LoginPage extends StatelessWidget {
                           Checkbox(
                             value: true,
                             onChanged: null,
-                            fillColor: MaterialStateProperty.all(
+                            fillColor: WidgetStateProperty.all(
                               Theme.of(context).colorScheme.secondary,
                             ),
                           ),

@@ -18,7 +18,7 @@ void main() async {
     routes: {
       '/login': (context) => LoginPage(),
       '/createAccount': (context) => CreateAccountPage(),
-      '/home': (context) => AuthGuard(HomePage()),
+      '/home': (context) => AuthGuard(const HomePage()),
     },
     theme: lightMode,
     debugShowCheckedModeBanner: false,

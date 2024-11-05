@@ -16,7 +16,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: Image.asset("assets/images/logoAppBar.png"),
       actions: [
         IconButton(
-          icon: Icon(Icons.logout),
+          icon: const Icon(Icons.logout),
           onPressed: () {
             AuthService.logout();
             Navigator.pushReplacementNamed(context, '/login');

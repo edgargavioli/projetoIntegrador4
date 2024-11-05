@@ -33,10 +33,10 @@ class _HomePageState extends State<HomePage> {
         onPageSelected: _updatePageIndex,
       ),
       body: <Widget>[
-        AuthGuard(InventarioPage()),
-        AuthGuard(UsersPage()),
-        AuthGuard(EmprestantesPage()),
-        AuthGuard(NotificationsPage()),
+        AuthGuard(const InventarioPage()),
+        AuthGuard(const UsersPage()),
+        AuthGuard(const EmprestantesPage()),
+        AuthGuard(const NotificationsPage()),
       ][_currentPageIndex],
     );
   }

@@ -19,7 +19,7 @@ class CustomDateField extends StatelessWidget {
       controller: controller,
       readOnly: true,
       decoration: InputDecoration(
-        suffixIcon: icon ?? Icon(Icons.calendar_today),
+        suffixIcon: icon ?? const Icon(Icons.calendar_today),
         label: Text(label),
         labelStyle: const TextStyle(color: Color(0xFF8F8F8F)),
         enabledBorder: const OutlineInputBorder(

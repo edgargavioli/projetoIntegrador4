@@ -1,39 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_integrador/components/custom_app_bar.dart';
-import 'package:projeto_integrador/components/custom_textfield.dart';
-import 'package:projeto_integrador/components/custom_select_field.dart';
 import 'package:projeto_integrador/components/custom_date_field.dart';
+import 'package:projeto_integrador/components/custom_select_field.dart';
+import 'package:projeto_integrador/components/custom_textfield.dart';
 import 'package:projeto_integrador/models/item.dart';
+import 'package:projeto_integrador/models/item_vizualizar.dart';
 import 'package:projeto_integrador/services/brand_service.dart';
 import 'package:projeto_integrador/services/category_service.dart';
 import 'package:projeto_integrador/services/item_service.dart';
 import 'package:projeto_integrador/services/location_service.dart';
 import 'package:projeto_integrador/services/model_service.dart';
 
-class ItemRegistrationPage extends StatefulWidget {
-  const ItemRegistrationPage({super.key});
+class ItemEditPage extends StatefulWidget {
+  final int id;
+
+  const ItemEditPage({super.key, required this.id});
 
   @override
-  State<ItemRegistrationPage> createState() => _ItemRegistrationPageState();
+  State<ItemEditPage> createState() => _ItemEditPageState();
 }
 
-class _ItemRegistrationPageState extends State<ItemRegistrationPage> {
+class _ItemEditPageState extends State<ItemEditPage> {
   final TextEditingController descricaoController = TextEditingController();
   final TextEditingController numeroSerieController = TextEditingController();
   final TextEditingController potenciaController = TextEditingController();
   final TextEditingController notaFiscalController = TextEditingController();
   final TextEditingController patrimonioController = TextEditingController();
-  final TextEditingController comentarioManutencaoController =
-      TextEditingController();
+  final TextEditingController comentarioManutencaoController = TextEditingController();
   final TextEditingController dataEntradaController = TextEditingController();
-  final TextEditingController ultimaQualificacaoController =
-      TextEditingController();
-  final TextEditingController dataNotaFiscalController =
-      TextEditingController();
-  final TextEditingController proximaQualificacaoController =
-      TextEditingController();
-  final TextEditingController prazoManutencaoController =
-      TextEditingController();
+  final TextEditingController ultimaQualificacaoController = TextEditingController();
+  final TextEditingController dataNotaFiscalController = TextEditingController();
+  final TextEditingController proximaQualificacaoController = TextEditingController();
+  final TextEditingController prazoManutencaoController = TextEditingController();
+  final TextEditingController localAtualController = TextEditingController();
 
   String? selectedEstado;
   String? selectedMarca;
@@ -50,12 +49,7 @@ class _ItemRegistrationPageState extends State<ItemRegistrationPage> {
   List<DropdownMenuItem<String>> locaisAtual = [];
 
   bool isModeloEnabled = false;
-
-  @override
-  void initState() {
-    super.initState();
-    carregarDados();
-  }
+  late Future<ItemVizualizar> itemFuture;
 
   Future<void> carregarDados() async {
     try {
@@ -124,30 +118,56 @@ class _ItemRegistrationPageState extends State<ItemRegistrationPage> {
     }
   }
 
-  Future<void> cadastrarProduto() async {
-    try {
-      DateTime dataEntrada = DateTime.parse(dataEntradaController.text)
-          .add(const Duration(days: 1));
-      DateTime ultimaQualificacao =
-          DateTime.parse(ultimaQualificacaoController.text)
-              .add(const Duration(days: 1));
-      DateTime dataNotaFiscal = DateTime.parse(dataNotaFiscalController.text)
-          .add(const Duration(days: 1));
-      DateTime proximaQualificacao =
-          DateTime.parse(proximaQualificacaoController.text)
-              .add(const Duration(days: 1));
-      DateTime prazoManutencao = DateTime.parse(prazoManutencaoController.text)
-          .add(const Duration(days: 1));
+  @override
+  void initState() {
+    super.initState();
+    carregarDados();
 
-        int? potencia;
-        if(potenciaController.text.isNotEmpty){
-          potencia = int.tryParse(potenciaController.text);
-        }
+    itemFuture = ItemService.fetchItemId(widget.id).then((item) {
+      // Preenche os controladores e seleções com os dados do item para edição
+      descricaoController.text = item.descricao;
+      numeroSerieController.text = item.numeroDeSerie;
+      potenciaController.text = item.potencia?.toString() ?? '';
+      notaFiscalController.text = item.numeroNotaFiscal;
+      patrimonioController.text = item.patrimonio;
+      comentarioManutencaoController.text = item.comentarioManutencao;
+      dataEntradaController.text = item.dataEntrada.toIso8601String();
+      ultimaQualificacaoController.text = item.ultimaQualificacao.toIso8601String();
+      dataNotaFiscalController.text = item.dataNotaFiscal.toIso8601String();
+      proximaQualificacaoController.text = item.proximaQualificacao.toIso8601String();
+      prazoManutencaoController.text = item.prazoManutencao.toIso8601String();
+
+      print(item);
+
+      selectedEstado = item.estado;
+      selectedMarca = item.modelo.marca.idMarca.toString();
+      selectedModelo = item.modelo.idModelo.toString();
+      selectedCategoria = item.categoria.idCategoria.toString();
+      selectedLocalOrigem = item.localizacao.idLocalizacao.toString();
+      localAtualController.text = item.localizacaoAtual.toString();
+      selectedStatus = item.status.toString();
+
+      return item;
+    });
+  }
+
+  Future<void> salvarItem() async {
+    try {
+      DateTime dataEntrada = DateTime.parse(dataEntradaController.text).add(const Duration(days: 1));
+      DateTime ultimaQualificacao = DateTime.parse(ultimaQualificacaoController.text).add(const Duration(days: 1));
+      DateTime dataNotaFiscal = DateTime.parse(dataNotaFiscalController.text).add(const Duration(days: 1));
+      DateTime proximaQualificacao = DateTime.parse(proximaQualificacaoController.text).add(const Duration(days: 1));
+      DateTime prazoManutencao = DateTime.parse(prazoManutencaoController.text).add(const Duration(days: 1));
+
+      int? potencia;
+      if (potenciaController.text.isNotEmpty) {
+        potencia = int.tryParse(potenciaController.text);
+      }
 
       Item item = Item(
-        id: 0,
+        id: widget.id,
         descricao: descricaoController.text,
-        localizacaoAtual: selectedLocalAtual!,
+        localizacaoAtual: localAtualController.text,
         potencia: potencia,
         estado: selectedEstado!,
         numeroDeSerie: numeroSerieController.text,
@@ -165,20 +185,21 @@ class _ItemRegistrationPageState extends State<ItemRegistrationPage> {
         proximaQualificacao: proximaQualificacao,
         prazoManutencao: prazoManutencao,
       );
-
-      await ItemService.createItem(item.toJson());
+      
+      await ItemService.update(item.id, item.toJson());
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Item cadastrado com sucesso!'),
+          content: Text('Item salvo com sucesso!'),
           backgroundColor: Colors.green,
         ),
       );
 
       Navigator.pop(context, true);
     } catch (e) {
+      print(e);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Erro ao cadastrar o item')),
+        const SnackBar(content: Text('hello')),
       );
     }
   }
@@ -187,42 +208,50 @@ class _ItemRegistrationPageState extends State<ItemRegistrationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const CustomAppBar(),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Padding(
-                padding: EdgeInsets.only(top: 40),
-                child: Center(
-                  child: Text(
-                    "Novo Item",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 36,
-                        fontWeight: FontWeight.w600),
-                  ),
-                ),
-              ),
-              const Divider(
-                thickness: 1,
-                color: Color(0xFFCAC4D0),
-              ),
-              const SizedBox(height: 16),
-              CustomTextfield(
-                controller: descricaoController,
-                label: '*Item',
-                obscureText: false,
-              ),
-              const SizedBox(height: 16),
-              CustomTextfield(
-                controller: numeroSerieController,
-                label: '*Número de Série',
-                obscureText: false,
-              ),
-              const SizedBox(height: 16),
-              CustomSelectField(
+      body: FutureBuilder<ItemVizualizar>(
+        future: itemFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Erro ao carregar item: ${snapshot.error}'));
+          } else if (snapshot.hasData) {
+            return SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.only(top: 40),
+                      child: Center(
+                        child: Text(
+                          "Editar Item",
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 36,
+                              fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                    ),
+                    const Divider(
+                      thickness: 1,
+                      color: Color(0xFFCAC4D0),
+                    ),
+                    const SizedBox(height: 16),
+                    CustomTextfield(
+                      controller: descricaoController,
+                      label: '*Item',
+                      obscureText: false,
+                    ),
+                    const SizedBox(height: 16),
+                    CustomTextfield(
+                      controller: numeroSerieController,
+                      label: '*Numero de Serie',
+                      obscureText: false,
+                    ),
+                    const SizedBox(height: 16),
+               CustomSelectField(
                 label: '*Disponibilidade',
                 items: const [
                   DropdownMenuItem(
@@ -289,15 +318,10 @@ class _ItemRegistrationPageState extends State<ItemRegistrationPage> {
                 },
               ),
               const SizedBox(height: 16),
-              CustomSelectField(
-                label: '*Local Atual',
-                items: locaisAtual,
-                selectedValue: selectedLocalAtual,
-                onChanged: (value) {
-                  setState(() {
-                    selectedLocalAtual = value;
-                  });
-                },
+              CustomTextfield(
+                controller: localAtualController, 
+                label: 'Local Atual', 
+                obscureText: false
               ),
               const SizedBox(height: 16),
               CustomTextfield(
@@ -356,20 +380,25 @@ class _ItemRegistrationPageState extends State<ItemRegistrationPage> {
                   });
                 },
               ),
-              const SizedBox(height: 16),
-              Align(
-                alignment: Alignment.bottomRight,
-                child: FloatingActionButton(
-                  onPressed: () {
-                    cadastrarProduto();
-                  },
-                  backgroundColor: Colors.green,
-                  child: const Icon(Icons.check),
+                    // Adicione aqui outros campos para editar o item
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: FloatingActionButton(
+                        onPressed: (){
+                          salvarItem();
+                        },
+                        backgroundColor: Colors.green,
+                        child: const Icon(Icons.check),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
+            );
+          } else {
+            return const Center(child: Text('Item não encontrado.'));
+          }
+        },
       ),
     );
   }

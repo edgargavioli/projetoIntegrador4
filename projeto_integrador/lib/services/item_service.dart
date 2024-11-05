@@ -1,8 +1,10 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:projeto_integrador/models/item.dart';
 import 'package:projeto_integrador/models/item_list.dart';
 import 'package:projeto_integrador/models/item_notification.dart';
+import 'package:projeto_integrador/models/item_vizualizar.dart';
 
 class ItemService {
   static Future<String> getApiUrl() async {
@@ -25,6 +27,24 @@ class ItemService {
       } else {
         // Quando resolver o problema descrito em modelo.dart, trocar Item_List por Item, como era originalmente
         throw Exception('Failed to load items');
+      }
+    } catch (e) {
+      print('Error fetching items: $e');
+      throw Exception('Failed to load items');
+    }
+  }
+
+  static Future<ItemVizualizar> fetchItemId(int id) async {
+    try {
+      final apiUrl = await getApiUrl();
+
+      final response = await http.get(Uri.parse('$apiUrl/item/$id'));
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> itemJson = json.decode(response.body);
+        return ItemVizualizar.fromJson(itemJson);
+      } else {
+        throw Exception('Failed to load item');
       }
     } catch (e) {
       print('Error fetching items: $e');
@@ -68,14 +88,14 @@ class ItemService {
     }
   }
 
-  static Future<void> deleteItem(List<int> item_array) async {
+  static Future<void> deleteItem(List<int> itemArray) async {
     final apiUrl = await getApiUrl();
-    print(jsonEncode(item_array));
+    print(jsonEncode(itemArray));
 
     final response = await http.delete(
       Uri.parse('$apiUrl/item/deleteSelected'),
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode(item_array),
+      body: jsonEncode(itemArray),
     );
     if (response.statusCode != 200) {
       throw Exception('Erro ao deletar o item');
@@ -110,5 +130,28 @@ class ItemService {
     } else {
       throw Exception('Erro ao carregar notificações');
     }
+  }
+
+  static update(int id, Map<String, dynamic> json) async {
+    final apiUrl = await getApiUrl();
+
+    print(id);
+
+    try {
+      final response = await http.put(
+        Uri.parse('$apiUrl/item/$id'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(json),
+      );
+
+        print(response.body);
+      if (response.statusCode == 200) {
+        return "Item atualizado com sucesso";
+      }
+    } catch (e) {
+      print('Error updating item: $e');
+      throw Exception('Failed to update item');
+    }
+
   }
 }

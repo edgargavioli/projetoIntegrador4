@@ -48,7 +48,7 @@ static Future<Token> login(username, password) async {
       await prefs.setString('token', responseBody['token']); // Adicione 'await' aqui
       return Token.fromJson(jsonDecode(response.body));
     } else {
-      throw FormatException("Usuário ou senha inválidos");
+      throw const FormatException("Usuário ou senha inválidos");
     }
   } catch (e) {
     // Trate erros, como falhas na inicialização do SharedPreferences
