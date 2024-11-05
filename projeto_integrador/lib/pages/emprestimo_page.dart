@@ -4,6 +4,7 @@ import 'package:projeto_integrador/components/custom_date_field.dart';
 import 'package:projeto_integrador/components/custom_select_field.dart';
 import 'package:projeto_integrador/components/custom_textfield.dart';
 import 'package:projeto_integrador/models/item_list.dart';
+import 'package:projeto_integrador/services/emprestante_service.dart';
 import 'package:projeto_integrador/services/emprestimo_service.dart';
 import 'package:projeto_integrador/services/location_service.dart';
 import 'package:projeto_integrador/services/user_service.dart';
@@ -30,15 +31,39 @@ class _EmprestimoPageState extends State<EmprestimoPage> {
   String? selectedEstado;
   String? selectedUsuario;
   String? selectedLocalizacao;
+  String? selectedEmprestante;
 
   List<DropdownMenuItem<String>> locaisAtual = [];
   List<DropdownMenuItem<String>> usuariosDropdown = [];
+  List<DropdownMenuItem<String>> emprestantesDropdown = [];
+
   bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
     carregarDados();
+  }
+
+  Future<void> carregarEmprestantes() async {
+    try {
+      final emprestantes = await EmprestanteService.getEmprestantes();
+      setState(() {
+        emprestantesDropdown = emprestantes.map((emprestante) {
+          final displayName =
+              "${emprestante.nome} (${emprestante.num_identificacao})";
+          return DropdownMenuItem<String>(
+            value: emprestante.num_identificacao,
+            child: Text(displayName),
+          );
+        }).toList();
+      });
+    } catch (e) {
+      print('Erro ao carregar emprestantes: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Erro ao carregar emprestantes')),
+      );
+    }
   }
 
   Future<void> carregarLocais() async {
@@ -86,6 +111,7 @@ class _EmprestimoPageState extends State<EmprestimoPage> {
 
     await carregarLocais();
     await carregarUsuarios();
+    await carregarEmprestantes();
 
     setState(() {
       isLoading = false;
@@ -105,7 +131,7 @@ class _EmprestimoPageState extends State<EmprestimoPage> {
           "id_localizacao_atual": int.parse(selectedLocalizacao!),
           "status_emprestimo": false,
           "estado": selectedEstado,
-          "id_anexos": int.parse(anexoController.text),
+          "id_anexos": 1,
           "prazo_manutencao": prazoManutencaoController.text,
         };
       }).toList();
@@ -205,10 +231,16 @@ class _EmprestimoPageState extends State<EmprestimoPage> {
                       obscureText: false,
                     ),
                     const SizedBox(height: 16),
-                    CustomTextfield(
-                      controller: emprestanteController,
-                      label: "Número de Identificação do Emprestante",
-                      obscureText: false,
+                    CustomSelectField(
+                      label: "Emprestante",
+                      items: emprestantesDropdown,
+                      selectedValue: selectedEmprestante,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedEmprestante = value;
+                          emprestanteController.text = value!;
+                        });
+                      },
                     ),
                     const SizedBox(height: 16),
                     CustomDateField(
@@ -264,12 +296,6 @@ class _EmprestimoPageState extends State<EmprestimoPage> {
                     CustomDateField(
                       controller: prazoManutencaoController,
                       label: "Prazo de Manutenção",
-                    ),
-                    const SizedBox(height: 16),
-                    CustomTextfield(
-                      controller: anexoController,
-                      label: "Anexo",
-                      obscureText: false,
                     ),
                     const SizedBox(height: 16),
                     Align(

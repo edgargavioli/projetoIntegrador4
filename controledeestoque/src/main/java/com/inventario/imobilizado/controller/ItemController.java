@@ -5,6 +5,9 @@ import com.inventario.imobilizado.model.*;
 import com.inventario.imobilizado.repository.*;
 import com.inventario.imobilizado.service.ExcelExportService;
 import com.inventario.imobilizado.service.ExcelImportService;
+
+import jakarta.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -108,12 +111,32 @@ public class ItemController {
         return ResponseEntity.ok(allItemsAtivos);
     }
 
+
     @GetMapping("/{id}")
     public ResponseEntity<Item> getById(@PathVariable Integer id) {
         return itemInterface.findById(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
+@PatchMapping("/devolucao")
+@Transactional
+public ResponseEntity<?> Devolucao(@RequestBody List<Integer> id_itens) {
+    List<String> messages = new ArrayList<>();
+    for (Integer id : id_itens) {
+        Optional<Item> optionalItem = itemInterface.findById(id);
+        if (optionalItem.isPresent()) {
+            Item item = optionalItem.get();
+            item.setEstado("Disponível");
+            itemInterface.save(item);
+            messages.add("Item com ID " + id + " atualizado para 'Disponível'.");
+        } else {
+            messages.add("Item com ID " + id + " não encontrado.");
+        }
+    }
+
+    // Retorna um resultado resumido
+    return ResponseEntity.ok(messages);
+}
 
     @PutMapping("/{id_item}")
     public ResponseEntity<Item> PutUser(@PathVariable Integer id_item,@RequestBody ItemDTO newItem){

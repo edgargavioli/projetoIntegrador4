@@ -102,6 +102,24 @@ class ItemService {
     }
   }
 
+  static Future<void> returnItems(List<int> itemIds) async {
+  final apiUrl = await getApiUrl();
+  final url = Uri.parse('$apiUrl/item/devolucao');
+
+  try {
+    final response = await http.patch(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(itemIds),
+    );
+  } catch (e) {
+    print('Erro ao processar devolução: $e');
+    throw Exception('Erro ao devolver os itens');
+  }
+}
+
+
+
   static Future<List<ItemNotification>> fetchItemsNotifications() async {
     final apiUrl = await getApiUrl();
 
