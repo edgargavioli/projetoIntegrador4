@@ -154,11 +154,11 @@ class _InventarioPageState extends State<InventarioPage> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('Cancelar'),
               style: TextButton.styleFrom(
                 foregroundColor: Colors.white,
                 backgroundColor: Theme.of(context).colorScheme.secondary,
               ),
+              child: const Text('Cancelar'),
             ),
             ElevatedButton.icon(
               onPressed: () async {
@@ -221,9 +221,9 @@ class _InventarioPageState extends State<InventarioPage> {
                   hint: const Text("Filtrar por Status"),
                   items: <String>[
                     'Todos',
-                    'Disponível',
+                    'Disponivel',
                     'Emprestado',
-                    'Manutenção',
+                    'Manutencao',
                   ].map((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
@@ -272,12 +272,12 @@ class _InventarioPageState extends State<InventarioPage> {
                                 child: Text(
                                   item.estado,
                                   style: TextStyle(
-                                    color: item.estado == "Disponível"
+                                    color: item.estado == "Disponivel"     //acho valido usar um text e não mudar no banco
                                         ? Theme.of(context)
                                             .colorScheme
                                             .inversePrimary
-                                        : item.estado == "Manutenção" ||
-                                                item.estado == "Manutenção"
+                                        : item.estado == "Emprestado" ||
+                                                item.estado == "Manutencao"
                                             ? Theme.of(context)
                                                 .colorScheme
                                                 .inverseSurface

@@ -101,11 +101,11 @@ class _EmprestantesPageState extends State<EmprestantesPage> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('Cancelar'),
               style: TextButton.styleFrom(
                 foregroundColor: Colors.white,
                 backgroundColor: Theme.of(context).colorScheme.secondary,
               ),
+              child: const Text('Cancelar'),
             ),
             ElevatedButton.icon(
               onPressed: () async {

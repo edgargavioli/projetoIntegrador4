@@ -223,7 +223,7 @@ class _EmprestimoPageState extends State<EmprestimoPage> {
                     const SizedBox(height: 16),
                     CustomSelectField(
                       label: "Estado do Item",
-                      items: [
+                      items: const [
                         DropdownMenuItem(
                             value: "Disponível", child: Text("Disponível")),
                         DropdownMenuItem(

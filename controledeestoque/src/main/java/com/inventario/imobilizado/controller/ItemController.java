@@ -1,5 +1,6 @@
 package com.inventario.imobilizado.controller;
 
+import com.inventario.imobilizado.dto.ItemDTO;
 import com.inventario.imobilizado.model.*;
 import com.inventario.imobilizado.repository.*;
 import com.inventario.imobilizado.service.ExcelExportService;
@@ -115,8 +116,8 @@ public class ItemController {
     }
 
     @PutMapping("/{id_item}")
-    public ResponseEntity<Item> PutUser(@PathVariable Integer id_item,@RequestBody Item newItem){
-        itemInterface.findById(id_item).map(item -> {
+    public ResponseEntity<Item> PutUser(@PathVariable Integer id_item,@RequestBody ItemDTO newItem){
+        Item itemFinal = itemInterface.findById(id_item).map(item -> {
             item.setDescricao(newItem.getDescricao());
             item.setPotencia(newItem.getPotencia());
             item.setPatrimonio(newItem.getPatrimonio());
@@ -126,17 +127,17 @@ public class ItemController {
             item.setUltima_qualificacao(newItem.getUltima_qualificacao());
             item.setProxima_qualificacao(newItem.getProxima_qualificacao());
             item.setEstado(newItem.getEstado());
-            item.setCategoria(newItem.getCategoria());
+            item.setCategoria(categoryInterface.findById(newItem.getCategoria()).get());
             item.setStatus(newItem.getStatus());
             item.setNumero_de_serie(newItem.getNumero_de_serie());
-            item.setModelo(newItem.getModelo());
-            item.setLocalizacao(newItem.getLocalizacao());
+            item.setModelo(modeloInterface.findById(newItem.getModelo()).get());
+            item.setLocalizacao(locationInterface.findById(newItem.getLocalizacao()).get());
             item.setNumero_de_serie(newItem.getNumero_de_serie());
             item.setComentario_manutencao(newItem.getComentario_manutencao());
             item.setPrazo_manutencao(newItem.getPrazo_manutencao());
             return itemInterface.save(item);
         }).orElseThrow();
-        return ResponseEntity.ok(newItem);
+        return ResponseEntity.ok(itemFinal);
     }
 
     @DeleteMapping("/{id_item}")

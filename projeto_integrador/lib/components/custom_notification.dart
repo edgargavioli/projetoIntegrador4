@@ -5,10 +5,10 @@ class CustomNotification extends StatefulWidget{
   final String message;
   
     const CustomNotification({
-    Key? key,
+    super.key,
     required this.title,
     required this.message,
-  }) : super(key: key);
+  });
 
   @override
   _CustomNotificationState createState()=> _CustomNotificationState();

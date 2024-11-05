@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_integrador/components/custom_app_bar.dart';
+import 'package:projeto_integrador/components/custom_date_field.dart';
+import 'package:projeto_integrador/components/custom_select_field.dart';
 import 'package:projeto_integrador/components/custom_textfield.dart';
 import 'package:projeto_integrador/models/item.dart';
 import 'package:projeto_integrador/models/item_vizualizar.dart';
+import 'package:projeto_integrador/services/brand_service.dart';
+import 'package:projeto_integrador/services/category_service.dart';
 import 'package:projeto_integrador/services/item_service.dart';
+import 'package:projeto_integrador/services/location_service.dart';
+import 'package:projeto_integrador/services/model_service.dart';
 
 class ItemEditPage extends StatefulWidget {
   final int id;
@@ -26,6 +32,7 @@ class _ItemEditPageState extends State<ItemEditPage> {
   final TextEditingController dataNotaFiscalController = TextEditingController();
   final TextEditingController proximaQualificacaoController = TextEditingController();
   final TextEditingController prazoManutencaoController = TextEditingController();
+  final TextEditingController localAtualController = TextEditingController();
 
   String? selectedEstado;
   String? selectedMarca;
@@ -44,9 +51,78 @@ class _ItemEditPageState extends State<ItemEditPage> {
   bool isModeloEnabled = false;
   late Future<ItemVizualizar> itemFuture;
 
+  Future<void> carregarDados() async {
+    try {
+      final data = await BrandService.fetchMarcas();
+      setState(() {
+        marcas = data
+            .map((item) => DropdownMenuItem<String>(
+                  value: item['id_marca'].toString(),
+                  child: Text(item['nome']),
+                ))
+            .toList();
+      });
+    } catch (e) {
+      print('Erro ao buscar marcas: $e');
+    }
+
+    try {
+      final data = await CategoryService.fetchCategorias();
+      setState(() {
+        categorias = data
+            .map((item) => DropdownMenuItem<String>(
+                  value: item['id_categoria'].toString(),
+                  child: Text(item['nome']),
+                ))
+            .toList();
+      });
+    } catch (e) {
+      print('Erro ao buscar categorias: $e');
+    }
+
+    try {
+      final data = await LocationService.fetchLocais();
+      setState(() {
+        locaisOrigem = data
+            .map((item) => DropdownMenuItem<String>(
+                  value: item['id_localizacao'].toString(),
+                  child: Text(item['nome']),
+                ))
+            .toList();
+
+        locaisAtual = data
+            .map((item) => DropdownMenuItem<String>(
+                  value: item['nome'],
+                  child: Text(item['nome']),
+                ))
+            .toList();
+      });
+    } catch (e) {
+      print('Erro ao buscar locais: $e');
+    }
+  }
+
+  Future<void> carregarModelos(String marcaId) async {
+    try {
+      final data = await ModelService.fetchModelos(marcaId);
+      setState(() {
+        modelos = data
+            .map((item) => DropdownMenuItem<String>(
+                  value: item['id_modelo'].toString(),
+                  child: Text(item['nome']),
+                ))
+            .toList();
+      });
+    } catch (e) {
+      print('Erro ao buscar modelos: $e');
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    carregarDados();
+
     itemFuture = ItemService.fetchItemId(widget.id).then((item) {
       // Preenche os controladores e seleções com os dados do item para edição
       descricaoController.text = item.descricao;
@@ -61,13 +137,15 @@ class _ItemEditPageState extends State<ItemEditPage> {
       proximaQualificacaoController.text = item.proximaQualificacao.toIso8601String();
       prazoManutencaoController.text = item.prazoManutencao.toIso8601String();
 
+      print(item);
+
       selectedEstado = item.estado;
-      selectedMarca = item.modelo.marca.toString();
-      selectedModelo = item.modelo.toString();
-      selectedCategoria = item.categoria.toString();
-      selectedLocalOrigem = item.localizacao.toString();
-      selectedLocalAtual = item.localizacaoAtual;
-      selectedStatus = item.status;
+      selectedMarca = item.modelo.marca.idMarca.toString();
+      selectedModelo = item.modelo.idModelo.toString();
+      selectedCategoria = item.categoria.idCategoria.toString();
+      selectedLocalOrigem = item.localizacao.idLocalizacao.toString();
+      localAtualController.text = item.localizacaoAtual.toString();
+      selectedStatus = item.status.toString();
 
       return item;
     });
@@ -89,7 +167,7 @@ class _ItemEditPageState extends State<ItemEditPage> {
       Item item = Item(
         id: widget.id,
         descricao: descricaoController.text,
-        localizacaoAtual: selectedLocalAtual!,
+        localizacaoAtual: localAtualController.text,
         potencia: potencia,
         estado: selectedEstado!,
         numeroDeSerie: numeroSerieController.text,
@@ -107,7 +185,7 @@ class _ItemEditPageState extends State<ItemEditPage> {
         proximaQualificacao: proximaQualificacao,
         prazoManutencao: prazoManutencao,
       );
-
+      
       await ItemService.update(item.id, item.toJson());
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -119,8 +197,9 @@ class _ItemEditPageState extends State<ItemEditPage> {
 
       Navigator.pop(context, true);
     } catch (e) {
+      print(e);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Erro ao salvar o item')),
+        const SnackBar(content: Text('hello')),
       );
     }
   }
@@ -165,11 +244,149 @@ class _ItemEditPageState extends State<ItemEditPage> {
                       label: '*Item',
                       obscureText: false,
                     ),
+                    const SizedBox(height: 16),
+                    CustomTextfield(
+                      controller: numeroSerieController,
+                      label: '*Numero de Serie',
+                      obscureText: false,
+                    ),
+                    const SizedBox(height: 16),
+               CustomSelectField(
+                label: '*Disponibilidade',
+                items: const [
+                  DropdownMenuItem(
+                      value: 'Disponivel', child: Text('Disponível')),
+                  DropdownMenuItem(
+                      value: 'Emprestado', child: Text('Emprestado')),
+                  DropdownMenuItem(
+                      value: 'Manutencao', child: Text('Manutenção')),
+                ],
+                selectedValue: selectedEstado,
+                onChanged: (value) {
+                  setState(() {
+                    selectedEstado = value;
+                  });
+                },
+              ),
+              const SizedBox(height: 16),
+              CustomSelectField(
+                label: '*Marca',
+                items: marcas,
+                selectedValue: selectedMarca,
+                onChanged: (value) {
+                  setState(() {
+                    selectedMarca = value;
+                    selectedModelo = null;
+                    isModeloEnabled = true;
+                  });
+                  carregarModelos(value!);
+                },
+              ),
+              const SizedBox(height: 16),
+              CustomSelectField(
+                label: '*Modelo',
+                items: modelos,
+                selectedValue: selectedModelo,
+                onChanged: isModeloEnabled
+                    ? (value) {
+                        setState(() {
+                          selectedModelo = value;
+                        });
+                      }
+                    : null,
+              ),
+              const SizedBox(height: 16),
+              CustomSelectField(
+                label: '*Categoria',
+                items: categorias,
+                selectedValue: selectedCategoria,
+                onChanged: (value) {
+                  setState(() {
+                    selectedCategoria = value;
+                  });
+                },
+              ),
+              const SizedBox(height: 16),
+              CustomSelectField(
+                label: '*Origem',
+                items: locaisOrigem,
+                selectedValue: selectedLocalOrigem,
+                onChanged: (value) {
+                  setState(() {
+                    selectedLocalOrigem = value;
+                  });
+                },
+              ),
+              const SizedBox(height: 16),
+              CustomTextfield(
+                controller: localAtualController, 
+                label: 'Local Atual', 
+                obscureText: false
+              ),
+              const SizedBox(height: 16),
+              CustomTextfield(
+                controller: potenciaController,
+                label: 'Potência',
+                obscureText: false,
+              ),
+              const SizedBox(height: 16),
+              CustomTextfield(
+                controller: notaFiscalController,
+                label: '*Nota Fiscal',
+                obscureText: false,
+              ),
+              const SizedBox(height: 16),
+              CustomDateField(
+                  controller: dataNotaFiscalController,
+                  label: '*Data da Nota Fiscal'),
+              const SizedBox(height: 16),
+              CustomDateField(
+                  controller: dataEntradaController, label: '*Data de Entrada'),
+              const SizedBox(height: 16),
+              CustomDateField(
+                  controller: ultimaQualificacaoController,
+                  label: '*Última Manutenção'),
+              const SizedBox(height: 16),
+              CustomDateField(
+                  controller: proximaQualificacaoController,
+                  label: '*Próxima Manutenção'),
+              const SizedBox(height: 16),
+              CustomDateField(
+                  controller: prazoManutencaoController,
+                  label: '*Prazo de Manutenção'),
+              const SizedBox(height: 16),
+              CustomTextfield(
+                controller: comentarioManutencaoController,
+                label: 'Comentário Sobre a Última Manutenção',
+                obscureText: false,
+              ),
+              const SizedBox(height: 16),
+              CustomTextfield(
+                controller: patrimonioController,
+                label: '*Patrimônio',
+                obscureText: false,
+              ),
+              const SizedBox(height: 16),
+              CustomSelectField(
+                label: '*Status',
+                items: const [
+                  DropdownMenuItem(value: 'Ativo', child: Text('Ativo')),
+                  DropdownMenuItem(value: 'Inativo', child: Text('Inativo')),
+                ],
+                selectedValue: selectedStatus,
+                onChanged: (value) {
+                  setState(() {
+                    selectedStatus = value;
+                  });
+                },
+              ),
                     // Adicione aqui outros campos para editar o item
                     Align(
                       alignment: Alignment.bottomRight,
                       child: FloatingActionButton(
-                        onPressed: salvarItem,
+                        onPressed: (){
+                          salvarItem();
+                        },
                         backgroundColor: Colors.green,
                         child: const Icon(Icons.check),
                       ),

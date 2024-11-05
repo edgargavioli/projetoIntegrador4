@@ -4,7 +4,7 @@ import 'package:projeto_integrador/services/auth_service.dart';
 
 class AuthGuard extends StatelessWidget {
   final Widget page;
-  AuthGuard(this.page);
+  const AuthGuard(this.page, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +13,7 @@ class AuthGuard extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           // Exibe um indicador de carregamento enquanto aguarda a resposta
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasData && snapshot.data == true) {
           // Usuário autenticado, mostra a página protegida
           return page;

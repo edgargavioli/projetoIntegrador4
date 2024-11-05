@@ -88,14 +88,14 @@ class ItemService {
     }
   }
 
-  static Future<void> deleteItem(List<int> item_array) async {
+  static Future<void> deleteItem(List<int> itemArray) async {
     final apiUrl = await getApiUrl();
-    print(jsonEncode(item_array));
+    print(jsonEncode(itemArray));
 
     final response = await http.delete(
       Uri.parse('$apiUrl/item/deleteSelected'),
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode(item_array),
+      body: jsonEncode(itemArray),
     );
     if (response.statusCode != 200) {
       throw Exception('Erro ao deletar o item');
@@ -114,5 +114,26 @@ class ItemService {
     }
   }
 
-  static update(int id, Map<String, dynamic> json) {}
+  static update(int id, Map<String, dynamic> json) async {
+    final apiUrl = await getApiUrl();
+
+    print(id);
+
+    try {
+      final response = await http.put(
+        Uri.parse('$apiUrl/item/$id'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(json),
+      );
+
+        print(response.body);
+      if (response.statusCode == 200) {
+        return "Item atualizado com sucesso";
+      }
+    } catch (e) {
+      print('Error updating item: $e');
+      throw Exception('Failed to update item');
+    }
+
+  }
 }
