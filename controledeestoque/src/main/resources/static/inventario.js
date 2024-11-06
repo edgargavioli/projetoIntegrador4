@@ -4,11 +4,14 @@ document.addEventListener('DOMContentLoaded', function() {
         var estadoText = lastCell.textContent.trim();
         lastCell.innerHTML = '<span>' + estadoText + '</span>';
 
-        if (estadoText === 'Disponível') {
+        if (estadoText === 'Disponivel') {
+            lastCell.textContent = 'Disponível';
         lastCell.classList.add('disponibilidade-disponivel');
         } else if (estadoText === 'Emprestado') {
+            lastCell.textContent = 'Emprestado';
         lastCell.classList.add('disponibilidade-emprestado');
-        } else if (estadoText === 'Manutenção') {
+        } else if (estadoText === 'Manutencao') {
+            lastCell.textContent = 'Manutenção';
         lastCell.classList.add('disponibilidade-manutencao');
         }
 
