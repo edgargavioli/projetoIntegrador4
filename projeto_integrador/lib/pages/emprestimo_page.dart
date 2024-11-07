@@ -257,11 +257,11 @@ class _EmprestimoPageState extends State<EmprestimoPage> {
                       label: "Estado do Item",
                       items: const [
                         DropdownMenuItem(
-                            value: "Disponível", child: Text("Disponível")),
+                            value: "Disponivel", child: Text("Disponível")),
                         DropdownMenuItem(
                             value: "Emprestado", child: Text("Emprestado")),
                         DropdownMenuItem(
-                            value: "Manutenção", child: Text("Manutenção")),
+                            value: "Manutencao", child: Text("Manutenção")),
                       ],
                       selectedValue: selectedEstado,
                       onChanged: (value) {

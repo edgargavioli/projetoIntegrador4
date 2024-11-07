@@ -364,17 +364,24 @@ class _InventarioPageState extends State<InventarioPage> {
                 ),
                 const SizedBox(height: 20),
                 FloatingActionButton(
+                  onPressed: () => _navigateToEmprestimoPage(context),
+                  child: const Icon(Icons.subdirectory_arrow_right),
+                  backgroundColor: const Color.fromARGB(255, 30, 180, 63),
+                ),
+                const SizedBox(height: 20),
+                FloatingActionButton(
                   backgroundColor: const Color.fromARGB(255, 30, 95, 179),
                   onPressed: () { _devolucaoItem(); 
                   },
                   child: const Icon(Icons.subdirectory_arrow_left),
                 ),
                 const SizedBox(height: 10),
-              ],
-              FloatingActionButton(
-                onPressed: () => _navigateToEmprestimoPage(context),
-                child: const Icon(Icons.subdirectory_arrow_right),
-              ),
+              ] else ...[
+                FloatingActionButton(
+                  onPressed: _navigateToItemRegistrationPage,
+                  child: const Icon(Icons.add),
+                ),
+              ]
             ],
           ),
         ),
