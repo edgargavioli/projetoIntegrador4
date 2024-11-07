@@ -9,7 +9,7 @@ class EmprestimoService {
   }
 
   static Future<void> realizarEmprestimo(
-      List<Map<String, dynamic>> emprestimos) async {
+    List<Map<String, dynamic>> emprestimos) async {
     var body = jsonEncode(emprestimos);
 
     final apiUrl = await getApiUrl();
@@ -21,7 +21,8 @@ class EmprestimoService {
     );
 
     if (response.statusCode != 200) {
-      throw Exception('Erro ao realizar o empréstimo');
+      print(response.body);
+      throw Exception(response.body);
     }
   }
 }
