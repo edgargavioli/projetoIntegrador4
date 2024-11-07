@@ -305,7 +305,13 @@ class _InventarioPageState extends State<InventarioPage> {
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 50),
                                 child: Text(
-                                  item.estado,
+                                  item.estado == "Disponivel"
+                                      ? "Disponível"
+                                      : item.estado == "Emprestado"
+                                          ? "Emprestado"
+                                          : item.estado == "Manutencao"
+                                              ? "Manutenção"
+                                              : "Indefinido",
                                   style: TextStyle(
                                     color: item.estado == "Disponivel"     //acho valido usar um text e não mudar no banco
                                         ? Theme.of(context)
@@ -361,13 +367,13 @@ class _InventarioPageState extends State<InventarioPage> {
                   backgroundColor: const Color.fromARGB(255, 30, 95, 179),
                   onPressed: () { _devolucaoItem(); 
                   },
-                  child: const Icon(Icons.reply),
+                  child: const Icon(Icons.subdirectory_arrow_left),
                 ),
                 const SizedBox(height: 10),
               ],
               FloatingActionButton(
-                onPressed: _navigateToItemRegistrationPage,
-                child: const Icon(Icons.add),
+                onPressed: () => _navigateToEmprestimoPage(context),
+                child: const Icon(Icons.subdirectory_arrow_right),
               ),
             ],
           ),
