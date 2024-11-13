@@ -126,7 +126,7 @@ public ResponseEntity<?> Devolucao(@RequestBody List<Integer> id_itens) {
         Optional<Item> optionalItem = itemInterface.findById(id);
         if (optionalItem.isPresent()) {
             Item item = optionalItem.get();
-            item.setEstado("Disponível");
+            item.setEstado("Disponivel");
             itemInterface.save(item);
             messages.add("Item com ID " + id + " atualizado para 'Disponível'.");
         } else {
