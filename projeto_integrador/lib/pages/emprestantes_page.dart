@@ -231,6 +231,9 @@ class _EmprestantesPageState extends State<EmprestantesPage> {
                                 });
                               },
                               onTap: () {
+                                if (!_isSelecting) {
+                                  _editEmprestante(index);
+                                }
                                 if (_isSelecting) {
                                   _toggleSelection(index);
                                 }
@@ -277,18 +280,6 @@ class _EmprestantesPageState extends State<EmprestantesPage> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 if (_isSelecting) ...[
-                  FloatingActionButton(
-                    backgroundColor: const Color(0xFF1E88E5),
-                    onPressed: () {
-                      final selectedIndex = _selectedEmprestantes
-                          .indexWhere((isSelected) => isSelected);
-                      if (selectedIndex != -1) {
-                        _editEmprestante(selectedIndex);
-                      }
-                    },
-                    child: const Icon(Icons.edit_outlined),
-                  ),
-                  const SizedBox(height: 10),
                   FloatingActionButton(
                     backgroundColor: const Color(0xFFB3261E),
                     onPressed: () => _showDeleteConfirmation(context),
