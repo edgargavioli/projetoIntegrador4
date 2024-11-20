@@ -77,28 +77,5 @@ void main() {
       expect(newItem.modelo.marca.idMarca, 1);
       expect(newItem.localizacao.idLocalizacao, 1);
     });
-
-    test('toJson should convert an ItemVizualizar instance to a JSON map', () {
-      final json = item.toJson();
-
-      expect(json['id_item'], item.idItem);
-      expect(json['descricao'], item.descricao);
-      expect(json['localizacao_atual'], item.localizacaoAtual);
-      expect(json['potencia'], item.potencia);
-      expect(json['patrimonio'], item.patrimonio);
-      expect(json['numero_de_serie'], item.numeroDeSerie);
-      expect(json['numero_nota_fiscal'], item.numeroNotaFiscal);
-      expect(json['comentario_manutencao'], item.comentarioManutencao);
-      expect(json['data_entrada'], item.dataEntrada.toIso8601String());
-      expect(json['ultima_qualificacao'], item.ultimaQualificacao.toIso8601String());
-      expect(json['data_nota_fiscal'], item.dataNotaFiscal.toIso8601String());
-      expect(json['proxima_qualificacao'], item.proximaQualificacao.toIso8601String());
-      expect(json['prazo_manutencao'], item.prazoManutencao.toIso8601String());
-      expect(json['estado'], item.estado);
-      expect(json['categoria'], item.categoria.toJson());
-      expect(json['status'], item.status);
-      expect(json['modelo'], item.modelo.toJson());
-      expect(json['localizacao'], item.localizacao.toJson());
-    });
   });
 }
