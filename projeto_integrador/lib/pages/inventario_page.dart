@@ -38,39 +38,41 @@ class _InventarioPageState extends State<InventarioPage> {
   }
 
   void _devolucaoItem() async {
-  try {
-    final List<int> itemIds = _items
-        .asMap()
-        .entries
-        .where((entry) => _selectedItems[entry.key])
-        .map((entry) => entry.value.id)
-        .toList();
+    try {
+      final List<int> itemIds = _items
+          .asMap()
+          .entries
+          .where((entry) => _selectedItems[entry.key])
+          .map((entry) => entry.value.id)
+          .toList();
 
-    if (itemIds.isNotEmpty) {
-      await ItemService.returnItems(itemIds);
+      if (itemIds.isNotEmpty) {
+        await ItemService.returnItems(itemIds);
 
-      // Atualiza o estado local dos itens apenas para os que foram devolvidos
-      this.loading();
+        // Atualiza o estado local dos itens apenas para os que foram devolvidos
+        this.loading();
 
-      this._isSelecting = false;
+        this._isSelecting = false;
 
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Itens devolvidos com sucesso'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text('Nenhum item selecionado para devolução')),
+        );
+      }
+    } catch (e) {
+      print("Erro ao devolver itens: $e");
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Itens devolvidos com sucesso'),
-        backgroundColor: Colors.green,
-        ),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Nenhum item selecionado para devolução')),
+        const SnackBar(content: Text('Erro ao devolver itens')),
       );
     }
-  } catch (e) {
-    print("Erro ao devolver itens: $e");
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Erro ao devolver itens')),
-    );
   }
-}
 
   void _navigateToEmprestimoPage(BuildContext context) async {
     try {
@@ -117,7 +119,8 @@ class _InventarioPageState extends State<InventarioPage> {
     final bool? result = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ItemEditPage(id: id), // Passando o item selecionado
+        builder: (context) =>
+            ItemEditPage(id: id), // Passando o item selecionado
       ),
     );
 
@@ -248,7 +251,6 @@ class _InventarioPageState extends State<InventarioPage> {
                 ),
               ),
               const SizedBox(height: 10),
-
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 50),
                 child: DropdownButton<String>(
@@ -292,7 +294,8 @@ class _InventarioPageState extends State<InventarioPage> {
                               if (_isSelecting) {
                                 _toggleSelection(index);
                               } else {
-                                _navigateToEditItem(_items[index].id); // Navegando para a tela de edição
+                                _navigateToEditItem(_items[index]
+                                    .id); // Navegando para a tela de edição
                               }
                             },
                             child: ListTile(
@@ -313,7 +316,8 @@ class _InventarioPageState extends State<InventarioPage> {
                                               ? "Manutenção"
                                               : "Indefinido",
                                   style: TextStyle(
-                                    color: item.estado == "Disponivel"     //acho valido usar um text e não mudar no banco
+                                    color: item.estado ==
+                                            "Disponivel" //acho valido usar um text e não mudar no banco
                                         ? Theme.of(context)
                                             .colorScheme
                                             .inversePrimary
@@ -371,7 +375,8 @@ class _InventarioPageState extends State<InventarioPage> {
                 const SizedBox(height: 20),
                 FloatingActionButton(
                   backgroundColor: const Color.fromARGB(255, 30, 95, 179),
-                  onPressed: () { _devolucaoItem(); 
+                  onPressed: () {
+                    _devolucaoItem();
                   },
                   child: const Icon(Icons.subdirectory_arrow_left),
                 ),
