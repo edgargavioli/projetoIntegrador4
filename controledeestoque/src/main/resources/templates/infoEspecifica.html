@@ -109,7 +109,7 @@
       </div>
       <div class="input-group">
         <label for="input-disponibilidade">Disponibilidade</label>
-        <input id="input-disponibilidade" type="text" th:value="${item.estado}" th:classappend="${item.estado.equals('Disponível') ? 'green' : item.estado.equals('Emprestado') ? 'blue' : 'yellow'}" readonly>
+        <input id="input-disponibilidade" type="text" th:value="${item.estado}" th:classappend="${item.estado.equals('Disponivel') ? 'green' : item.estado.equals('Emprestado') ? 'blue' : 'yellow'}" readonly>
       </div>
     </div>
     <div class="input-container">
@@ -198,8 +198,8 @@
       <div id="content1" th:class="'tab-content ' + (${action.item.estado.equals('Emprestado') ? 'status-yellow' :
     (action.item.estado.equals('Manutencao') ? 'status-blue' : 'status-green')})">
       <p>
-        <span th:text="${action.usuario.nome}"></span> <span th:text="${action.item.estado.equals('Disponível') ? 'devolveu' : action.item.estado.equals('Emprestado') ? 'emprestou' : 'mandou para manutenção'}"></span>
-          para  <span th:text="${action.item.estado.equals('Disponível') ? action.item.localizacao.nome : 'empresa ' + action.entidade}"></span> no dia <span th:text="${action.data_emprestimo}"></span>.
+        <span th:text="${action.usuario.nome}"></span> <span th:text="${action.item.estado.equals('Disponivel') ? 'devolveu' : action.item.estado.equals('Emprestado') ? 'emprestou' : 'mandou para manutenção'}"></span>
+          para  <span th:text="${action.item.estado.equals('Disponivel') ? action.item.localizacao.nome : 'empresa ' + action.entidade}"></span> no dia <span th:text="${action.data_emprestimo}"></span>.
       </div>
       </p>
       <button class="content-button" id="button1" style="display: none;"></button>

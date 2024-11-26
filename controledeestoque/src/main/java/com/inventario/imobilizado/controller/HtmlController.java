@@ -258,7 +258,7 @@ public class HtmlController {
         }
 
         itemInterface.findById(id).map(item -> {
-            item.setEstado("Disponível");
+            item.setEstado("Disponivel");
             return itemInterface.save(item);
         }).orElseThrow();
 

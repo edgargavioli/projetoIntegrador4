@@ -12,9 +12,8 @@ class EmprestantesPage extends StatefulWidget {
   State<EmprestantesPage> createState() => _EmprestantesPageState();
 }
 
-final TextEditingController _searchController = TextEditingController();
-
 class _EmprestantesPageState extends State<EmprestantesPage> {
+  final TextEditingController _searchController = TextEditingController();
   List<Emprestante> emprestantes = [];
   bool _isSelecting = false;
   List<bool> _selectedEmprestantes = [];
@@ -24,6 +23,15 @@ class _EmprestantesPageState extends State<EmprestantesPage> {
   void initState() {
     super.initState();
     _loadEmprestantes();
+    _searchController.addListener(() {
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 
   Future<void> _navigateToEmprestanteRegistrationPage() async {
@@ -57,15 +65,11 @@ class _EmprestantesPageState extends State<EmprestantesPage> {
   }
 
   List<Emprestante> get filteredEmprestantes {
-    if (_searchController.text.isEmpty) {
-      return emprestantes;
-    } else {
-      return emprestantes
-          .where((emprestante) => emprestante.nome
-              .toLowerCase()
-              .contains(_searchController.text.toLowerCase()))
-          .toList();
-    }
+    return emprestantes.where((emprestante) {
+      return emprestante.nome
+          .toLowerCase()
+          .contains(_searchController.text.toLowerCase());
+    }).toList();
   }
 
   void _toggleSelection(int index) {
@@ -147,20 +151,6 @@ class _EmprestantesPageState extends State<EmprestantesPage> {
 
   void _navigateToEmprestanteEditPage(
       BuildContext context, Emprestante selectedEmprestante) async {
-    final selectedCount =
-        _selectedEmprestantes.where((selected) => selected).length;
-
-    if (selectedCount != 1) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content:
-              Text('Por favor, selecione apenas um emprestante para editar.'),
-          backgroundColor: Colors.red,
-        ),
-      );
-      return;
-    }
-
     try {
       final bool? result = await Navigator.of(context).push(
         PageRouteBuilder(
