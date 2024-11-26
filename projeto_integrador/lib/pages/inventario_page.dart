@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_integrador/components/custom_textfield.dart';
-import 'package:projeto_integrador/models/item.dart';
 import 'package:projeto_integrador/models/item_list.dart';
 import 'package:projeto_integrador/pages/emprestimo_page.dart';
 import 'package:projeto_integrador/pages/inventario_item_selecionado.dart';
@@ -294,7 +293,7 @@ class _InventarioPageState extends State<InventarioPage> {
                               if (_isSelecting) {
                                 _toggleSelection(index);
                               } else {
-                                _navigateToEditItem(_items[index]
+                                _navigateToEditItem(_filteredItems[index]
                                     .id); // Navegando para a tela de edição
                               }
                             },

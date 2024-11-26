@@ -173,7 +173,7 @@ class _EmprestantesPageState extends State<EmprestantesPage> {
   }
 
   void _editEmprestante(int index) {
-    final selectedEmprestante = emprestantes[index];
+    final selectedEmprestante = filteredEmprestantes[index];
     _navigateToEmprestanteEditPage(context, selectedEmprestante);
   }
 
