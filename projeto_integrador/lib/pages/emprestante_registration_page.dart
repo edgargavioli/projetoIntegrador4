@@ -24,6 +24,7 @@ class _EmprestanteRegistrationPageState
         id_emprestante: 0,
         num_identificacao: numIdentificacaoController.text,
         nome: nomeController.text,
+        status_emprestante: 'Ativo',
       );
 
       await EmprestanteService.createEmprestante(emprestante.toJson());

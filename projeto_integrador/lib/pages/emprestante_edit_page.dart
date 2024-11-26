@@ -51,6 +51,7 @@ class EmprestanteEditPageState extends State<EmprestanteEditPage> {
       id_emprestante: widget.emprestante.id_emprestante,
       nome: nomeController.text,
       num_identificacao: numIdentificacaoController.text,
+      status_emprestante: 'Ativo',
     );
 
     try {

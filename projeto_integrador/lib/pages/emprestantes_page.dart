@@ -50,6 +50,8 @@ class _EmprestantesPageState extends State<EmprestantesPage> {
     try {
       final fetchedEmprestantes = await EmprestanteService.getEmprestantes();
       setState(() {
+        fetchedEmprestantes.removeWhere(
+            (emprestante) => emprestante.status_emprestante != 'Ativo');
         emprestantes = fetchedEmprestantes;
         _selectedEmprestantes = List<bool>.filled(emprestantes.length, false);
         _isLoading = false;

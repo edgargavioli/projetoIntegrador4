@@ -20,10 +20,13 @@ public class Emprestante {
     private String num_identificacao;
     @Column(name = "nome")
     private String nome;
+    @Column(name = "status_emprestante")
+    private String status_emprestante;
 
-    public Emprestante(String num_identificacao, String nome) {
+    public Emprestante(String num_identificacao, String nome, String status_emprestante) {
         this.num_identificacao = num_identificacao;
         this.nome = nome;
+        this.status_emprestante = status_emprestante;
     }
 
     @Override
@@ -31,11 +34,11 @@ public class Emprestante {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Emprestante that = (Emprestante) o;
-        return id_emprestante == that.id_emprestante && num_identificacao == that.num_identificacao && Objects.equals(nome, that.nome);
+        return id_emprestante == that.id_emprestante && num_identificacao == that.num_identificacao && Objects.equals(nome, that.nome) && Objects.equals(status_emprestante, that.status_emprestante);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id_emprestante, num_identificacao, nome);
+        return Objects.hash(id_emprestante, num_identificacao, nome, status_emprestante);
     }
 }
