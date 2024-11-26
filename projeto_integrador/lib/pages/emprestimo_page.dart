@@ -49,6 +49,8 @@ class _EmprestimoPageState extends State<EmprestimoPage> {
     try {
       final emprestantes = await EmprestanteService.getEmprestantes();
       setState(() {
+        emprestantes.removeWhere(
+            (emprestante) => emprestante.status_emprestante != 'Ativo');
         emprestantesDropdown = emprestantes.map((emprestante) {
           final displayName =
               "${emprestante.nome} (${emprestante.num_identificacao})";

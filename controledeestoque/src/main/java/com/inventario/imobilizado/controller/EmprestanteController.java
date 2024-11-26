@@ -23,6 +23,11 @@ public class EmprestanteController {
         return emprestanteInterface.findAll();
     }
 
+    @GetMapping("/{id}")
+    public Emprestante getEmprestanteById(@PathVariable("id") Integer id) {
+        return emprestanteInterface.findById(id).orElse(null);
+    }
+
     @GetMapping("/paged")
     public Page<Emprestante> PagedUser(Integer page, Integer pageSize, EmprestanteInterface emprestanteInterface, String order) {
         // http://localhost:8080/page/Emprestantes?order=nome=div-supremasis
@@ -73,10 +78,14 @@ public class EmprestanteController {
 
     @DeleteMapping("/{id}")
     public void deleteEmprestante(@PathVariable("id") Integer id) {
-        if (!emprestanteInterface.existsById(id)) {
+        Emprestante emprestante = emprestanteInterface.findById(id).orElse(null);
+
+        if (emprestante == null) {
             throw new IllegalArgumentException("Emprestante não encontrado");
         }
 
-        emprestanteInterface.deleteById(id);
+        emprestante.setStatus_emprestante("Inativo");
+
+        emprestanteInterface.save(emprestante);
     }
 }
