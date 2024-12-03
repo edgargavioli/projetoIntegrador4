@@ -3,13 +3,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:projeto_integrador/components/custom_menu_bar.dart';
 
 void main() {
-  testWidgets('CustomMenuBar displays correct labels and handles selection', (WidgetTester tester) async {
+  testWidgets('CustomMenuBar exibe os rótulos corretos e lida com a seleção', (WidgetTester tester) async {
     // Variável para verificar qual página foi selecionada
-    int selectedPageIndex = 0;
+    int indicePaginaSelecionada = 0;
 
     // Função para capturar a seleção da página
-    void onPageSelected(int index) {
-      selectedPageIndex = index;
+    void aoSelecionarPagina(int indice) {
+      indicePaginaSelecionada = indice;
     }
 
     // Monta o widget CustomMenuBar
@@ -17,8 +17,8 @@ void main() {
       MaterialApp(
         home: Scaffold(
           body: CustomMenuBar(
-            currentPageIndex: selectedPageIndex,
-            onPageSelected: onPageSelected,
+            currentPageIndex: indicePaginaSelecionada,
+            onPageSelected: aoSelecionarPagina,
           ),
         ),
       ),
@@ -35,13 +35,13 @@ void main() {
     await tester.pumpAndSettle(); // Aguarda a animação de transição
 
     // Verifica se a página selecionada foi atualizada corretamente
-    expect(selectedPageIndex, 1);
+    expect(indicePaginaSelecionada, 1);
 
     // Simula a seleção da terceira página (Emprestantes)
     await tester.tap(find.text('Emprestantes'));
     await tester.pumpAndSettle(); // Aguarda a animação de transição
 
     // Verifica se a página selecionada foi atualizada corretamente
-    expect(selectedPageIndex, 2);
+    expect(indicePaginaSelecionada, 2);
   });
 }

@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:projeto_integrador/models/user.dart'; // Altere para o caminho correto do seu arquivo
 
 void main() {
-  group('User', () {
+  group('Usuário', () {
     late User user;
 
     setUp(() {
@@ -17,7 +17,7 @@ void main() {
       );
     });
 
-    test('fromJson should create a User instance from a JSON map', () {
+    test('fromJson deve criar uma instância de User a partir de um mapa JSON', () {
       final json = {
         'id_usuario': 1,
         'nome': 'João',
@@ -36,7 +36,7 @@ void main() {
       expect(newUser.tipo_usuario, 'admin');
     });
 
-    test('toJson should convert a User instance to a JSON map', () {
+    test('toJson deve converter uma instância de User para um mapa JSON', () {
       final json = user.toJson();
 
       expect(json['nome'], user.nome);
@@ -46,7 +46,7 @@ void main() {
       expect(json['tipo_usuario'], user.tipo_usuario);
     });
 
-    test('toJson should not include the id field', () {
+    test('toJson não deve incluir o campo id', () {
       final json = user.toJson();
 
       // O campo 'id' não é convertido para o JSON

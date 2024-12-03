@@ -11,7 +11,7 @@ void main() {
       token = Token(token: 'abc123', expiration: DateTime.now().millisecondsSinceEpoch + 10000); // 10 segundos para expirar
     });
 
-    test('fromJson should create a Token instance from a JSON map', () {
+    test('fromJson deve criar uma instância de Token a partir de um mapa JSON', () {
       final json = {
         'token': 'abc123',
         'expiration': DateTime.now().millisecondsSinceEpoch + 10000,
@@ -22,19 +22,19 @@ void main() {
       expect(newToken.expiration, json['expiration']);
     });
 
-    test('toJson should convert a Token instance to a JSON map', () {
+    test('toJson deve converter uma instância de Token para um mapa JSON', () {
       final json = token.toJson();
 
       expect(json['token'], token.token);
       expect(json['expiration'], token.expiration);
     });
 
-    test('isExpired should return false if the token has not expired', () {
+    test('isExpired deve retornar falso se o token não expirou', () {
       // O token ainda não expirou
       expect(token.isExpired(), isFalse);
     });
 
-    test('isExpired should return true if the token has expired', () async {
+    test('isExpired deve retornar verdadeiro se o token expirou', () async {
       // Espera 11 segundos para garantir que o token expire
       await Future.delayed(Duration(seconds: 11));
       expect(token.isExpired(), isTrue);

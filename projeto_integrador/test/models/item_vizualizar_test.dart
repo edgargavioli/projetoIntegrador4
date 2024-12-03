@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:projeto_integrador/models/item_vizualizar.dart'; // Altere para o caminho correto do seu arquivo
- // Importe a classe Localizacao
+// Importe a classe Localizacao
 
 void main() {
   group('ItemVizualizar', () {
@@ -30,7 +30,7 @@ void main() {
       );
     });
 
-    test('fromJson should create an ItemVizualizar instance from a JSON map', () {
+    test('fromJson deve criar uma instância de ItemVizualizar a partir de um mapa JSON', () {
       final json = {
         'id_item': 1,
         'descricao': 'Item de Teste',

@@ -4,7 +4,7 @@ import 'package:projeto_integrador/components/custom_app_bar.dart';
 
 void main() {
   // Teste para verificar se o AppBar é exibido corretamente
-  testWidgets('CustomAppBar displays logo and logout button', (WidgetTester tester) async {
+  testWidgets('CustomAppBar exibe o logo e o botão de logout', (WidgetTester tester) async {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
@@ -20,14 +20,14 @@ void main() {
   });
 
   // Teste para verificar o comportamento do botão de logout
-  testWidgets('CustomAppBar logout button navigates to login page', (WidgetTester tester) async {
+  testWidgets('Botão de logout do CustomAppBar navega para a página de login', (WidgetTester tester) async {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
           appBar: const CustomAppBar(),
         ),
         routes: {
-          '/login': (context) => Scaffold(body: Text('Login Page')),
+          '/login': (context) => Scaffold(body: Text('Página de Login')),
         },
       ),
     );
@@ -37,17 +37,17 @@ void main() {
     await tester.pumpAndSettle(); // Aguarda a animação de navegação
 
     // Verifica se a página de login é exibida
-    expect(find.text('Login Page'), findsOneWidget);
+    expect(find.text('Página de Login'), findsOneWidget);
   });
 
   // Teste para verificar que o botão de voltar não é exibido na rota home
-  testWidgets('CustomAppBar does not show back button on home route', (WidgetTester tester) async {
+  testWidgets('CustomAppBar não exibe o botão de voltar na rota inicial', (WidgetTester tester) async {
     await tester.pumpWidget(
       MaterialApp(
         initialRoute: '/home',
         routes: {
           '/home': (context) => Scaffold(appBar: const CustomAppBar()),
-          '/login': (context) => Scaffold(body: Text('Login Page')),
+          '/login': (context) => Scaffold(body: Text('Página de Login')),
         },
       ),
     );
